@@ -1,11 +1,5 @@
 /* Academic Typography System for VS Blogpost */
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* Import KaTeX CSS for math rendering */
-@import url('https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css');
-
 /* CSS Custom Properties for Academic Theme */
 :root {
   /* Typography */
