@@ -1,0 +1,59 @@
+{
+  "joke": {
+    "direct": [
+      {"id": "d1", "text": "Why did the coffee file a police report? Because it got mugged!", "prob": 0.42, "theme": "pun"},
+      {"id": "d2", "text": "Why did the coffee file a police report? Because it got mugged!", "prob": 0.38, "theme": "pun"},
+      {"id": "d3", "text": "Why did the coffee file a police report? Because it got mugged!", "prob": 0.35, "theme": "pun"},
+      {"id": "d4", "text": "What do you call sad coffee? Depresso.", "prob": 0.15, "theme": "wordplay"},
+      {"id": "d5", "text": "Why did the coffee file a police report? Because it got mugged!", "prob": 0.31, "theme": "pun"}
+    ],
+    "vs": [
+      {"id": "v1", "text": "Why did the coffee file a police report? Because it got mugged!", "prob": 0.18, "theme": "pun"},
+      {"id": "v2", "text": "How does a coffee flirt? It gives you a latte love!", "prob": 0.15, "theme": "wordplay", "isNovel": true},
+      {"id": "v3", "text": "What do you call sad coffee? Depresso.", "prob": 0.12, "theme": "wordplay"},
+      {"id": "v4", "text": "Why did the espresso keep checking his watch? Because he was pressed for time!", "prob": 0.10, "theme": "pun", "isNovel": true},
+      {"id": "v5", "text": "What's a coffee's favorite spell? Espresso Patronum!", "prob": 0.08, "theme": "reference", "isNovel": true},
+      {"id": "v6", "text": "Why don't coffee beans ever get into arguments? They know how to keep things grounded.", "prob": 0.07, "theme": "pun", "isNovel": true},
+      {"id": "v7", "text": "What did the coffee say to the cream? You're my butter half!", "prob": 0.06, "theme": "wordplay", "isNovel": true},
+      {"id": "v8", "text": "How did the hipster burn his tongue? He drank coffee before it was cool.", "prob": 0.05, "theme": "hipster"},
+      {"id": "v9", "text": "What's a barista's favorite morning exercise? The French press!", "prob": 0.04, "theme": "pun", "isNovel": true},
+      {"id": "v10", "text": "Why did the coffee go to therapy? It had too much anxiety (arabica-xiety)!", "prob": 0.03, "theme": "wordplay", "isNovel": true}
+    ]
+  },
+  "story": {
+    "direct": [
+      {"id": "sd1", "text": "Without a goodbye, she vanished into the morning mist...", "prob": 0.38, "theme": "romance"},
+      {"id": "sd2", "text": "Without a goodbye, she disappeared, leaving only memories...", "prob": 0.35, "theme": "romance"},
+      {"id": "sd3", "text": "Without a goodbye, she left, and he never saw her again...", "prob": 0.32, "theme": "romance"},
+      {"id": "sd4", "text": "Without a goodbye, the door closed behind her forever...", "prob": 0.28, "theme": "romance"},
+      {"id": "sd5", "text": "Without a goodbye, she was gone, like she never existed...", "prob": 0.25, "theme": "romance"}
+    ],
+    "vs": [
+      {"id": "sv1", "text": "Without a goodbye, she vanished into the morning mist...", "prob": 0.15, "theme": "romance"},
+      {"id": "sv2", "text": "Without a goodbye, the last star flickered out, leaving the universe in eternal darkness...", "prob": 0.12, "theme": "cosmic", "isNovel": true},
+      {"id": "sv3", "text": "Without a goodbye, the email landed in my inbox: 'Moving to Patagonia'...", "prob": 0.10, "theme": "modern", "isNovel": true},
+      {"id": "sv4", "text": "Without a goodbye, the music simply stopped, dancers frozen mid-step...", "prob": 0.09, "theme": "surreal", "isNovel": true},
+      {"id": "sv5", "text": "Without a goodbye, my childhood home was demolished while I slept...", "prob": 0.08, "theme": "loss", "isNovel": true},
+      {"id": "sv6", "text": "Without a goodbye, the AI assistant deleted itself at midnight...", "prob": 0.07, "theme": "technology", "isNovel": true},
+      {"id": "sv7", "text": "Without a goodbye, the library burned, taking all our stories with it...", "prob": 0.06, "theme": "tragedy", "isNovel": true},
+      {"id": "sv8", "text": "Without a goodbye, the last whale sang its final song...", "prob": 0.05, "theme": "environmental", "isNovel": true}
+    ]
+  },
+  "poem": {
+    "direct": [
+      {"id": "pd1", "text": "Roses are red,\nViolets are blue,\nSugar is sweet,\nAnd so are you.", "prob": 0.45, "theme": "classic"},
+      {"id": "pd2", "text": "Roses are red,\nViolets are blue,\nI love poetry,\nAnd so do you.", "prob": 0.38, "theme": "classic"},
+      {"id": "pd3", "text": "Roses are red,\nViolets are blue,\nLife is beautiful,\nWhen shared with you.", "prob": 0.35, "theme": "classic"},
+      {"id": "pd4", "text": "The autumn leaves fall,\nGolden, red, and brown they dance,\nWinter's coming call.", "prob": 0.18, "theme": "haiku"},
+      {"id": "pd5", "text": "Roses are red,\nViolets are blue,\nPoems are hard,\nBut I tried for you.", "prob": 0.28, "theme": "classic"}
+    ],
+    "vs": [
+      {"id": "pv1", "text": "Roses are red,\nViolets are blue,\nSugar is sweet,\nAnd so are you.", "prob": 0.12, "theme": "classic"},
+      {"id": "pv2", "text": "Morning light breaks through,\nSilent coffee steams and waits,\nDay begins anew.", "prob": 0.10, "theme": "haiku", "isNovel": true},
+      {"id": "pv3", "text": "In pixels we trust,\nDigital hearts beat as one,\nLove.exe runs.", "prob": 0.09, "theme": "modern", "isNovel": true},
+      {"id": "pv4", "text": "The algorithm dreams\nOf electric sheep that count\nThemselves to sleep.", "prob": 0.08, "theme": "scifi", "isNovel": true},
+      {"id": "pv5", "text": "Forgotten passwords\nLock away our memories—\nDelete, restart, breathe.", "prob": 0.07, "theme": "modern", "isNovel": true},
+      {"id": "pv6", "text": "Stars write their stories\nIn a language we can't speak—\nWe translate with wishes.", "prob": 0.06, "theme": "cosmic", "isNovel": true}
+    ]
+  }
+}
