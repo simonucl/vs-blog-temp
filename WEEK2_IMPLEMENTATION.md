@@ -82,7 +82,7 @@
 
 ## Access Points
 - Main blog: http://localhost:4321/
-- Evidence demo: http://localhost:4323/evidence-demo-fixed
+- Evidence demo: http://localhost:4323/evidence-demo
 - Chart tests: http://localhost:4323/test-charts
 
 ## Dependencies Added
