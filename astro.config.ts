@@ -22,7 +22,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  site: SITE.website,
+  site: 'https://dcx.github.io',
+  base: '/vs-blog-temp',
   integrations: [
     react(),
     mdx(),
