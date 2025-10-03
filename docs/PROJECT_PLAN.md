@@ -444,17 +444,23 @@ For each, return text and confidence ∈ [0,1]. Only include items with confiden
 * [x] Add copy buttons; basic evidence cards implemented.
 * [x] Typicality Bias Explainer, US States Demo, initial visualizations.
 
-**Day 4 (Priority Tasks)**
-* [ ] **Temperature ablation interactive** - Show VS + temperature synergy
-* [ ] **Scaling trend visualization** - Emphasize larger models benefit more
-* [ ] **VS variants comparison table** - Clarify when to use each variant
-* [ ] **Enhanced qualitative examples** - Feature Table 2 story comparisons
+**Day 4 (COMPLETE)**
+* [x] **Opening hook section** - Relatable mode collapse examples
+* [x] **Aha Moment section** - Core insight with interactive visualization
+* [x] **FAQ section** - Comprehensive Q&A addressing objections
+* [x] **Scaling trend visualization** - Shows larger models benefit 1.5-2× more
+* [x] **Training-Free badges** - Prominent messaging throughout
+* [x] **VS beats fine-tuning callout** - Evidence comparison box
+* [x] **Synthetic data performance chart** - Math accuracy improvements shown
+* [x] **VS variants comparison table** - Already existed, verified working
+* [x] **Integration** - All components added to main blog post
 
-**Day 5 (Application Evidence)**
-* [ ] **Dialogue simulation visualization** - Donation distributions matching human data
-* [ ] **Open-ended QA metrics display** - KL divergence, coverage, precision
-* [ ] **Synthetic data performance chart** - Math accuracy improvements
+**Day 5 (Remaining Tasks)**
+* [ ] **Temperature ablation refinement** - Simplify explanation
+* [ ] **Dialogue simulation visualization** - Donation distributions (optional)
+* [ ] **Open-ended QA metrics display** - KL divergence, coverage (optional)
 * [ ] **Complete accessibility audit** - WCAG AA compliance
+* [ ] **Performance optimization** - Check load times
 
 **Week 3 — Polish & Testing**
 

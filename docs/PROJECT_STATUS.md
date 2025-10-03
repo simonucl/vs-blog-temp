@@ -1,8 +1,8 @@
 # Verbalized Sampling Blogpost - Project Status
 
 **Last Updated:** October 3, 2025
-**Current Status:** Week 2, Day 3 Complete
-**Live URL:** http://localhost:4321/
+**Current Status:** Week 2, Day 4 Complete
+**Live URL:** http://localhost:4323/
 
 ## 📊 Project Overview
 
@@ -43,16 +43,20 @@ An interactive academic blogpost that explains **Verbalized Sampling (VS)** - a 
 - ✅ Documentation reorganization
 
 #### Day 4: Critical Features (Complete)
-- ✅ Temperature ablation interactive - Shows VS + temperature synergy
+- ✅ Opening hook section - Interactive mode collapse demonstration
+- ✅ Aha Moment section - Core insight explained with visualizations
+- ✅ FAQ section - 10 comprehensive Q&As addressing all objections
 - ✅ Scaling trend visualization - Larger models benefit 1.5-2× more
+- ✅ Training-free badges & callouts - Prominent messaging throughout
+- ✅ "VS beats fine-tuning" callout - GPT-4+VS matches Llama fine-tuned
+- ✅ Synthetic data performance - Math accuracy 32.8% → 37.5%
 - ✅ VS variants comparison table - Clear guidance on when to use each
-- ✅ Training-free emphasis badges - No training/fine-tuning required
-- ✅ "VS beats fine-tuned models" callout - GPT-4+VS matches Llama fine-tuned
-- ✅ Comprehensive FAQ section - Addresses common questions
+- ✅ Full integration - All components added to main blog post
 
 #### Day 5: Remaining Tasks
-- ⏳ Dialogue simulation visualization
-- ⏳ Open-ended QA metrics display
+- ⏳ Temperature ablation refinement
+- ⏳ Dialogue simulation visualization (optional)
+- ⏳ Open-ended QA metrics display (optional)
 - ⏳ Performance optimization
 - ⏳ Cross-browser testing
 - ⏳ Accessibility audit
@@ -79,8 +83,11 @@ An interactive academic blogpost that explains **Verbalized Sampling (VS)** - a 
 | US States Demo (KL=0.12) | ✅ | Interactive distribution chart |
 | Typicality Bias (ρ>1) | ✅ | Interactive explainer |
 | Qualitative Examples | ✅ | Table 2 story comparisons |
-| Temperature Orthogonality | ⏳ | Planned for Day 4 |
-| Scaling Trend | ⏳ | Data ready, viz pending |
+| Scaling Trend (1.5-2× for large) | ✅ | Interactive visualization with key finding |
+| VS Beats Fine-tuning | ✅ | Prominent callout with comparison |
+| Synthetic Data Impact | ✅ | Performance charts showing 37.5% accuracy |
+| Training-Free Nature | ✅ | Badges and callouts throughout |
+| Temperature Orthogonality | ⏳ | Component exists, needs refinement |
 
 ## 📁 Technical Architecture
 
@@ -90,9 +97,11 @@ components/
 ├── academic/          # Figure, Table, Equation, Sidenote
 ├── charts/            # DiversityBarChart, PostTrainingLineChart, DistributionChart
 ├── evidence/          # DiversityGainsVisual, PostTrainingVisual, USStatesDemo
+│                      # ScalingTrendVisualization, SyntheticDataPerformance
 ├── interactives/      # VSPlayground, TypicalityBiasExplainer
-├── sections/          # QuickStart, QualitativeExamples
-└── ui/                # CopyButton, CodeBlock, PromptCard
+├── sections/          # QuickStart, QualitativeExamples, VSVariantsComparison
+│                      # OpeningHook, AhaMoment, FAQ
+└── ui/                # CopyButton, CodeBlock, PromptCard, TrainingFreeBadge
 ```
 
 ### Data Organization
