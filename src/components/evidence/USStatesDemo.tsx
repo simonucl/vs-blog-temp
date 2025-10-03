@@ -1,6 +1,7 @@
 import { DistributionChart } from '@/components/charts';
 import { transformDistributionData } from '@/utils/chartDataTransformers';
 import usStatesData from '@/data/paper-evidence/us-states.json';
+import Equation from '@/components/academic/Equation';
 
 export default function USStatesDemo() {
   const chartData = transformDistributionData(
@@ -21,6 +22,12 @@ export default function USStatesDemo() {
           <strong className="text-red-600">KL divergence = 0.12</strong>.
           Direct prompting collapses to a few popular states (KL = 2.34).
         </p>
+      </div>
+
+      <div className="flex justify-center">
+        <Equation id="kl-vs-pre" displayMode>
+          {`D_{\\mathrm{KL}}(p_{\\mathrm{VS}} \\Vert p_{\\mathrm{pre}}) = ${usStatesData.kl_divergence.vs.toFixed(2)}`}
+        </Equation>
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md">

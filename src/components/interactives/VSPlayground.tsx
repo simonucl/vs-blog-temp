@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { create } from 'zustand';
 import playgroundData from '../../data/precomputed/playground-data.json';
+import Equation from '@/components/academic/Equation';
 
 type Candidate = {
   id: string;
@@ -232,22 +233,20 @@ export default function VSPlayground() {
       {mode === 'Show Math' && (
         <div className="mt-6 p-6 bg-muted/20 rounded-lg">
           <h4 className="font-semibold mb-3">Mathematical Intuition</h4>
-          <p className="mb-3">
-            The sharpening effect under typicality bias (Equation 3 from the paper):
-          </p>
-          <div className="katex-display text-center my-4">
-            <code className="text-lg">ρ = 1 + ε/β {'>'} 1</code>
+          <p className="mb-3">The sharpening effect under typicality bias (Equation 3):</p>
+          <div className="flex justify-center my-4">
+            <Equation id="sharpening-playground" displayMode>
+              {"\\rho = 1 + \\varepsilon/\\beta > 1"}
+            </Equation>
           </div>
           <p className="text-sm">
-            Where ρ {'>'} 1 increases concentration on typical completions. Verbalized Sampling
-            asks for a distribution to approximate the pretraining diversity, recovering what
-            was lost during alignment. The threshold τ allows you to tune this diversity by
-            filtering the verbalized probability distribution.
+            Where ρ &gt; 1 increases concentration on typical completions. Verbalized Sampling asks for a
+            distribution to approximate the pretraining diversity, recovering what was lost during alignment.
+            The threshold τ allows you to tune this diversity by filtering the verbalized probability distribution.
           </p>
           <p className="text-sm mt-3">
-            Notice how Direct Prompting produces multiple identical responses with high
-            probability (mode collapse), while VS generates diverse responses with a more
-            spread-out probability distribution.
+            Notice how Direct Prompting produces multiple identical responses with high probability (mode collapse),
+            while VS generates diverse responses with a more spread-out probability distribution.
           </p>
         </div>
       )}

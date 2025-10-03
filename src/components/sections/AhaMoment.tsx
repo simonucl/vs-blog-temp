@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, ArrowRight, Sparkles, Target, Layers } from 'lucide-react';
+import Equation from '@/components/academic/Equation';
 
 interface PromptType {
   level: 'instance' | 'list' | 'distribution';
@@ -280,9 +281,15 @@ export default function AhaMoment() {
                     Why It Works: The Math
                   </h4>
                   <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
-                    <p>
-                      <strong>Mode collapse equation:</strong> ω*(y|x) ∝ ω_ref(y|x)^ρ where ρ = 1 + ε/β &gt; 1
-                    </p>
+                    <p className="font-semibold">Mode collapse equations:</p>
+                    <div className="flex flex-col items-center gap-2 my-2">
+                      <Equation id="aha-collapse-rel" displayMode>
+                        {"\\omega^*(y|x) \\propto \\omega_{\\mathrm{ref}}(y|x)^{\\rho}"}
+                      </Equation>
+                      <Equation id="aha-rho-def" displayMode>
+                        {"\\rho = 1 + \\varepsilon/\\beta > 1"}
+                      </Equation>
+                    </div>
                     <p>
                       The sharpening factor ρ compresses probability mass toward typical completions.
                     </p>

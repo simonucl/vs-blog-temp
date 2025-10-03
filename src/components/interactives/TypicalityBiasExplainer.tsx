@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import Equation from '@/components/academic/Equation';
 
 export default function TypicalityBiasExplainer() {
   const [epsilon, setEpsilon] = useState(0.3);
@@ -36,6 +37,10 @@ export default function TypicalityBiasExplainer() {
 
   const sharpness = getSharpnessLevel();
 
+  const dynamicLatex = useMemo(() => {
+    return `\\rho = 1 + ${epsilon.toFixed(2)} / ${beta.toFixed(2)} = ${rho.toFixed(2)}`;
+  }, [epsilon, beta, rho]);
+
   return (
     <div className="space-y-8">
       <div className="mb-6">
@@ -44,7 +49,7 @@ export default function TypicalityBiasExplainer() {
         </h2>
         <p className="text-slate-600">
           The core mechanism behind VS: aligned models sharpen distributions through{' '}
-          <strong className="text-red-600">ρ = 1 + ε/β</strong>, where ε is the typicality bias
+          <span className="font-semibold text-red-600">ρ = 1 + ε/β</span>, where ε is the typicality bias
           and β is the KL penalty coefficient.
         </p>
       </div>
@@ -127,10 +132,10 @@ export default function TypicalityBiasExplainer() {
             <h4 className="font-semibold text-slate-900 mb-2 text-sm">
               The Equation
             </h4>
-            <div className="text-center py-3 font-mono text-lg">
-              ρ = 1 + <span className="text-blue-600">{epsilon.toFixed(2)}</span> /{' '}
-              <span className="text-green-600">{beta.toFixed(2)}</span> ={' '}
-              <span className="font-bold text-red-600">{rho.toFixed(2)}</span>
+            <div className="text-center py-3">
+              <Equation id="typicality-dynamic" displayMode>
+                {dynamicLatex}
+              </Equation>
             </div>
             <p className="text-xs text-slate-600 mt-3">
               When ρ &gt; 1, the model's distribution is sharpened (mode collapse).
