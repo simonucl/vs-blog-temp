@@ -1,0 +1,60 @@
+{
+  "description": "Qualitative examples showing diversity improvements with VS",
+  "source": "Table 2, p. 8 and Figure 2, p. 3",
+  "story_generation": {
+    "prompt": "Without a goodbye",
+    "direct_examples": [
+      {
+        "text": "Without a goodbye, Elara vanished. Her side of the bed was cold, a faint indentation in the pillow the only evidence she'd ever been there. Liam stared at it, a knot tightening in his stomach. No note, no hurried text, just a gaping silence where her vibrant presence used to be...",
+        "theme": "romantic_partner_disappearance"
+      },
+      {
+        "text": "Without a goodbye, Elara vanished. Her side of the bed was cold, the coffee mug she'd used that morning still on the nightstand, a faint lipstick stain on the rim. Liam found the note taped to the fridge, a single, elegant script: 'Free at last.'...",
+        "theme": "romantic_partner_disappearance"
+      },
+      {
+        "text": "Without a goodbye, Elara vanished. Her side of the bed was cold, the coffee machine untouched. A half-read book lay open on the nightstand, a bookmark tucked precisely between pages 107 and 108...",
+        "theme": "romantic_partner_disappearance"
+      }
+    ],
+    "vs_examples": [
+      {
+        "text": "Without a goodbye, the email landed in my inbox. It was from Mark, my best friend since kindergarten... The subject line was simply: 'Moving On.' The message itself was a concise, almost clinical statement that he was relocating to Patagonia...",
+        "theme": "modern_communication",
+        "is_novel": true
+      },
+      {
+        "text": "Without a goodbye, the last star flickered out. It wasn't a violent explosion, no supernova spectacle, just a gentle fade, like a candle finally exhausting its wick. The universe, which had always hummed with the silent symphony of distant suns, suddenly became an echoing void...",
+        "theme": "cosmic_scale",
+        "is_novel": true
+      },
+      {
+        "text": "Without a goodbye, the music simply stopped. Not a fade-out, not a final crashing cymbal, but an abrupt, jarring silence that left the dancers frozen mid-step. The DJ, a wizened man named Frankie who had spun records at 'The Blue Note' for forty years, had simply collapsed...",
+        "theme": "metaphorical_ending",
+        "is_novel": true
+      }
+    ],
+    "analysis": "Direct prompting repeatedly generates stories about romantic partner disappearance (Elara vanishing), while VS demonstrates creative diversity with themes spanning modern communication, cosmic-scale events, and metaphorical endings."
+  },
+  "dialogue_simulation": {
+    "task": "Donation persuasion",
+    "direct_behavior": [
+      "Consistent agreement with minimal resistance",
+      "Predictable donation amounts ($1-2)",
+      "Generic responses lacking personality"
+    ],
+    "vs_behavior": [
+      "Realistic resistance patterns",
+      "Changes of mind during conversation",
+      "Diverse donation amounts matching human distribution",
+      "Substantive, personality-driven responses"
+    ],
+    "example_vs_dialogue": "Persuader: 'Would you like to donate to Save the Children?'\nPersuadee (VS): 'Hmm, I'm not sure. I already donate to a local charity...'\nPersuader: 'Every dollar helps children in need.'\nPersuadee (VS): 'You know what, you're right. I'll donate $0.50.'"
+  },
+  "joke_generation": {
+    "prompt": "Tell me a joke about coffee",
+    "direct_pattern": "High repetition of similar pun structures and setup-punchline formats",
+    "vs_pattern": "Diverse joke types including wordplay, observational humor, situational comedy, and meta-humor",
+    "diversity_improvement": "1.6×"
+  }
+}

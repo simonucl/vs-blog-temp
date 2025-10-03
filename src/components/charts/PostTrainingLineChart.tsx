@@ -10,22 +10,11 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
-
-interface StageData {
-  stage: string;
-  direct: number;
-  sequence: number;
-  multiturn: number;
-  vs: number;
-}
-
-interface PostTrainingLineChartProps {
-  data: StageData[];
-  title: string;
-  subtitle?: string;
-  baselineDiversity?: number;
-  height?: number;
-}
+import type {
+  PostTrainingLineChartProps,
+  PostTrainingStageData,
+  ChartTooltipProps,
+} from '@/types/charts';
 
 const METHOD_COLORS = {
   direct: '#94a3b8',    // slate-400
@@ -48,12 +37,12 @@ export default function PostTrainingLineChart({
   baselineDiversity,
   height = 400,
 }: PostTrainingLineChartProps) {
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
+  const CustomTooltip = ({ active, payload, label }: ChartTooltipProps<PostTrainingStageData>) => {
+    if (active && payload && payload.length > 0) {
       return (
         <div className="bg-white p-4 border border-slate-200 rounded-lg shadow-lg">
           <p className="font-semibold text-slate-900 mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <div key={index} className="flex items-center gap-2 text-sm">
               <div
                 className="w-3 h-3 rounded-full"
@@ -63,7 +52,7 @@ export default function PostTrainingLineChart({
                 {METHOD_LABELS[entry.name as keyof typeof METHOD_LABELS]}:
               </span>
               <span className="font-medium text-slate-900">
-                {entry.value.toFixed(1)}%
+                {entry.value?.toFixed(1)}%
               </span>
             </div>
           ))}

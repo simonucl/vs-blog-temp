@@ -1,0 +1,56 @@
+{
+  "description": "Semantic diversity scores from Figure 3a-c showing VS improvements across creative writing tasks",
+  "source": "Figure 3a-c, pp. 7-8",
+  "tasks": {
+    "poem": {
+      "direct": 11.7,
+      "cot": 12.8,
+      "sequence": 15.3,
+      "multiturn": 14.0,
+      "vs_standard": 21.9,
+      "vs_cot": 25.3,
+      "vs_multi": 23.2
+    },
+    "story": {
+      "direct": 23.2,
+      "cot": 25.2,
+      "sequence": 28.8,
+      "multiturn": 25.6,
+      "vs_standard": 34.7,
+      "vs_cot": 36.5,
+      "vs_multi": 38.2
+    },
+    "joke": {
+      "direct": 30.9,
+      "cot": 33.0,
+      "sequence": 41.1,
+      "multiturn": 46.2,
+      "vs_standard": 50.4,
+      "vs_cot": 57.4,
+      "vs_multi": 62.8
+    }
+  },
+  "improvements": {
+    "poem": {
+      "vs_over_direct": 1.87,
+      "description": "VS-Standard shows 87% improvement over Direct"
+    },
+    "story": {
+      "vs_over_direct": 1.65,
+      "description": "VS-Standard shows 65% improvement over Direct"
+    },
+    "joke": {
+      "vs_over_direct": 1.63,
+      "description": "VS-Standard shows 63% improvement over Direct"
+    },
+    "range": "1.6-2.1×",
+    "description": "Across all tasks and VS variants, diversity improves 1.6 to 2.1 times"
+  },
+  "metadata": {
+    "metric": "Semantic diversity (1 - mean pairwise cosine similarity)",
+    "higher_is_better": true,
+    "models_averaged": ["GPT-4.1", "GPT-4.1-mini", "Gemini-2.5-Pro", "Gemini-2.5-Flash"],
+    "n_samples": 30,
+    "k_per_call": 5
+  }
+}

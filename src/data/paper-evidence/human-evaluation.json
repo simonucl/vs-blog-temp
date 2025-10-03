@@ -1,0 +1,55 @@
+{
+  "description": "Human-rated diversity scores from Table 3",
+  "source": "Table 3, p. 8",
+  "likert_scale": {
+    "1": "Very Similar",
+    "2": "Somewhat Similar",
+    "3": "Somewhat Dissimilar",
+    "4": "Very Dissimilar"
+  },
+  "results": {
+    "poem": {
+      "direct": 1.90,
+      "sequence": 2.07,
+      "vs_standard": 2.39,
+      "improvement_over_direct": 0.49,
+      "percentage_improvement": 25.8
+    },
+    "story": {
+      "direct": 2.74,
+      "sequence": 2.76,
+      "vs_standard": 3.06,
+      "improvement_over_direct": 0.32,
+      "percentage_improvement": 11.7
+    },
+    "joke": {
+      "direct": 1.83,
+      "sequence": 2.93,
+      "vs_standard": 3.01,
+      "improvement_over_direct": 1.18,
+      "percentage_improvement": 64.5
+    }
+  },
+  "average_improvement": {
+    "percentage": 25.7,
+    "description": "On average, VS improves human-rated diversity by 25.7%"
+  },
+  "methodology": {
+    "platform": "Prolific",
+    "annotators_per_task": 30,
+    "pairs_rated": 90,
+    "topics": 10,
+    "inter_annotator_agreement": {
+      "poem": 0.54,
+      "story": 0.87,
+      "joke": 0.86,
+      "description": "Moderate to high agreement (Krippendorff's alpha)"
+    }
+  },
+  "statistical_significance": {
+    "poem": "p < 0.01",
+    "story": "p < 0.05",
+    "joke": "p < 0.001",
+    "description": "All improvements are statistically significant"
+  }
+}

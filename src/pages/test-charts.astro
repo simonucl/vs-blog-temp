@@ -1,0 +1,69 @@
+---
+import { DiversityBarChart } from '@/components/charts';
+import SimpleBarChartTest from '@/components/charts/SimpleBarChartTest';
+
+// Transform data for testing
+const testData = [
+  { method: 'direct' as const, value: 11.7, category: 'poem' },
+  { method: 'cot' as const, value: 12.8, category: 'poem' },
+  { method: 'sequence' as const, value: 15.3, category: 'poem' },
+  { method: 'vs_standard' as const, value: 21.9, category: 'poem' },
+  { method: 'vs_cot' as const, value: 25.3, category: 'poem' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart Integration Test</title>
+  </head>
+  <body class="p-8 bg-slate-50">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold text-slate-900 mb-8">
+        Chart Integration Test
+      </h1>
+
+      <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-xl font-semibold text-slate-800 mb-4">
+          Simple Bar Chart Test (Recharts only)
+        </h2>
+        <SimpleBarChartTest client:load />
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-slate-800 mb-4">
+          Full Diversity Bar Chart Test
+        </h2>
+
+        <DiversityBarChart
+          client:load
+          data={testData}
+          title="Poem Generation Diversity"
+          subtitle="Comparison across prompting methods"
+        />
+      </div>
+
+      <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 class="font-semibold text-blue-900">Test Instructions:</h3>
+        <ul class="mt-2 text-sm text-blue-800 space-y-1">
+          <li>✓ Chart should render without errors</li>
+          <li>✓ Hover tooltips should work</li>
+          <li>✓ Colors should match VS theme (reds for VS methods)</li>
+          <li>✓ Loading skeleton should appear briefly on page load</li>
+          <li>✓ Error boundary should catch any rendering issues</li>
+        </ul>
+      </div>
+
+      <div class="mt-4">
+        <a
+          href="/"
+          class="text-blue-600 hover:text-blue-800 underline"
+        >
+          ← Back to home
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

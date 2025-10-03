@@ -10,41 +10,12 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
-
-interface DataPoint {
-  method: string;
-  value: number;
-  category: string;
-}
-
-interface DiversityBarChartProps {
-  data: DataPoint[];
-  title: string;
-  subtitle?: string;
-  yAxisLabel?: string;
-  height?: number;
-  showLegend?: boolean;
-}
-
-const METHOD_COLORS: Record<string, string> = {
-  direct: '#94a3b8',      // slate-400
-  cot: '#64748b',         // slate-500
-  sequence: '#475569',    // slate-600
-  multiturn: '#334155',   // slate-700
-  vs_standard: '#dc2626', // red-600 (primary VS)
-  vs_cot: '#b91c1c',      // red-700
-  vs_multi: '#991b1b',    // red-800
-};
-
-const METHOD_LABELS: Record<string, string> = {
-  direct: 'Direct',
-  cot: 'CoT',
-  sequence: 'Sequence',
-  multiturn: 'Multi-turn',
-  vs_standard: 'VS-Standard',
-  vs_cot: 'VS-CoT',
-  vs_multi: 'VS-Multi',
-};
+import type {
+  DiversityBarChartProps,
+  ChartTooltipProps,
+  DiversityDataPoint,
+} from '@/types/charts';
+import { METHOD_COLORS, METHOD_LABELS } from '@/types/charts';
 
 export default function DiversityBarChart({
   data,
@@ -54,15 +25,27 @@ export default function DiversityBarChart({
   height = 400,
   showLegend = true,
 }: DiversityBarChartProps) {
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
+  // Check if data exists
+  if (!data || data.length === 0) {
+    return (
+      <div className="w-full h-64 flex items-center justify-center bg-slate-50 rounded-lg border border-slate-200">
+        <p className="text-slate-500">No data available for chart</p>
+      </div>
+    );
+  }
+
+  const CustomTooltip = ({ active, payload }: ChartTooltipProps<DiversityDataPoint>) => {
+    if (active && payload && payload.length > 0) {
+      const data = payload[0].payload;
+      const methodLabels = METHOD_LABELS as Record<string, string>;
+
       return (
         <div className="bg-white p-3 border border-slate-200 rounded-lg shadow-lg">
           <p className="font-semibold text-slate-900">
-            {METHOD_LABELS[payload[0].payload.method] || payload[0].payload.method}
+            {methodLabels[data.method] || data.method}
           </p>
           <p className="text-sm text-slate-600">
-            {payload[0].value.toFixed(1)}%
+            {payload[0].value?.toFixed(1)}%
           </p>
         </div>
       );
@@ -96,7 +79,10 @@ export default function DiversityBarChart({
             textAnchor="end"
             height={80}
             tick={{ fill: '#475569', fontSize: 12 }}
-            tickFormatter={(value) => METHOD_LABELS[value] || value}
+            tickFormatter={(value) => {
+              const methodLabels = METHOD_LABELS as Record<string, string>;
+              return methodLabels[value] || value;
+            }}
           />
           <YAxis
             label={{
@@ -111,16 +97,22 @@ export default function DiversityBarChart({
           {showLegend && (
             <Legend
               wrapperStyle={{ paddingTop: '20px' }}
-              formatter={(value) => METHOD_LABELS[value] || value}
+              formatter={(value) => {
+                const methodLabels = METHOD_LABELS as Record<string, string>;
+                return methodLabels[value] || value;
+              }}
             />
           )}
           <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={METHOD_COLORS[entry.method] || '#64748b'}
-              />
-            ))}
+            {data.map((entry, index) => {
+              const methodColors = METHOD_COLORS as Record<string, string>;
+              return (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={methodColors[entry.method] || '#64748b'}
+                />
+              );
+            })}
           </Bar>
         </BarChart>
       </ResponsiveContainer>

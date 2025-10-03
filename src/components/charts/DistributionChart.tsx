@@ -11,24 +11,11 @@ import {
 } from 'recharts';
 import { useState } from 'react';
 import clsx from 'clsx';
-
-interface DistributionDataPoint {
-  name: string;
-  pretraining?: number;
-  direct?: number;
-  vs?: number;
-}
-
-interface DistributionChartProps {
-  data: DistributionDataPoint[];
-  title: string;
-  subtitle?: string;
-  klDivergence?: {
-    direct: number;
-    vs: number;
-  };
-  height?: number;
-}
+import type {
+  DistributionChartProps,
+  DistributionDataPoint,
+  ChartTooltipProps,
+} from '@/types/charts';
 
 type ViewMode = 'all' | 'pretraining' | 'direct' | 'vs';
 
@@ -52,12 +39,12 @@ export default function DistributionChart({
     return { name: item.name, vs: item.vs, pretraining: item.pretraining };
   });
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
+  const CustomTooltip = ({ active, payload, label }: ChartTooltipProps<DistributionDataPoint>) => {
+    if (active && payload && payload.length > 0) {
       return (
         <div className="bg-white p-3 border border-slate-200 rounded-lg shadow-lg max-w-xs">
           <p className="font-semibold text-slate-900 mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <div key={index} className="flex items-center justify-between gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <div
@@ -69,7 +56,7 @@ export default function DistributionChart({
                 </span>
               </div>
               <span className="font-medium text-slate-900">
-                {(entry.value * 100).toFixed(1)}%
+                {((entry.value ?? 0) * 100).toFixed(1)}%
               </span>
             </div>
           ))}

@@ -1,0 +1,60 @@
+{
+  "description": "Emergent scaling trend showing larger models benefit more from VS",
+  "source": "Figure 3e-f, p. 7",
+  "diversity_gains": {
+    "small_models": {
+      "models": ["GPT-4.1-mini", "Gemini-2.5-Flash"],
+      "methods": {
+        "sequence": 6.6,
+        "multiturn": 5.5,
+        "vs_standard": 10.8,
+        "vs_cot": 14.8,
+        "vs_multi": 16.1
+      },
+      "vs_over_direct_avg": 12.4
+    },
+    "large_models": {
+      "models": ["GPT-4.1", "Gemini-2.5-Pro"],
+      "methods": {
+        "sequence": 9.7,
+        "multiturn": 11.4,
+        "vs_standard": 18.9,
+        "vs_cot": 19.9,
+        "vs_multi": 22.4
+      },
+      "vs_over_direct_avg": 19.5
+    }
+  },
+  "scaling_ratio": {
+    "diversity": 1.57,
+    "description": "Large models achieve 1.57× greater diversity gains with VS"
+  },
+  "quality_impact": {
+    "small_models": {
+      "sequence": -1.1,
+      "multiturn": -2.2,
+      "vs_standard": 0.0,
+      "vs_cot": 1.1,
+      "vs_multi": 0.7
+    },
+    "large_models": {
+      "sequence": 1.0,
+      "multiturn": -0.1,
+      "vs_standard": 1.4,
+      "vs_cot": 4.1,
+      "vs_multi": 5.0
+    }
+  },
+  "cognitive_burden": {
+    "observation": "VS-CoT and VS-Multi overcome cognitive burden in larger models",
+    "small_model_quality_change": 0.9,
+    "large_model_quality_change": 4.6,
+    "description": "Larger models turn complexity into benefits with VS variants"
+  },
+  "metadata": {
+    "task": "Poem continuation",
+    "metric_diversity": "Δ Diversity vs Direct",
+    "metric_quality": "Δ Quality vs Direct",
+    "baseline": "Direct prompting"
+  }
+}

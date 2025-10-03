@@ -1,0 +1,85 @@
+---
+import { DiversityGainsVisual, PostTrainingVisual, USStatesDemo } from '@/components/evidence';
+import { TypicalityBiasExplainer } from '@/components/interactives';
+import '@/styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evidence Visualizations Demo</title>
+  </head>
+  <body class="bg-slate-50">
+    <div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <header class="mb-12">
+        <h1 class="text-4xl font-bold text-slate-900 mb-4">
+          VS Paper Evidence Visualizations
+        </h1>
+        <p class="text-lg text-slate-600">
+          Interactive visualizations of key findings from the Verbalized Sampling paper
+        </p>
+        <nav class="mt-4 flex gap-4">
+          <a href="/test-charts" class="text-blue-600 hover:text-blue-800 underline">
+            ← Chart Tests
+          </a>
+          <a href="/" class="text-blue-600 hover:text-blue-800 underline">
+            Home
+          </a>
+        </nav>
+      </header>
+
+      <div class="space-y-16">
+        <!-- Typicality Bias Interactive -->
+        <section id="typicality-bias">
+          <TypicalityBiasExplainer client:load />
+        </section>
+
+        <hr class="border-t-2 border-slate-200" />
+
+        <!-- Diversity Gains (Figure 3a-c) -->
+        <section id="diversity-gains">
+          <DiversityGainsVisual client:load showAll={true} />
+        </section>
+
+        <hr class="border-t-2 border-slate-200" />
+
+        <!-- Post-Training Retention (Figure 4) -->
+        <section id="post-training">
+          <PostTrainingVisual client:load />
+        </section>
+
+        <hr class="border-t-2 border-slate-200" />
+
+        <!-- US States Distribution (Figure 2) -->
+        <section id="us-states">
+          <USStatesDemo client:load />
+        </section>
+      </div>
+
+      <footer class="mt-16 p-6 bg-slate-100 rounded-lg border border-slate-200">
+        <h3 class="font-semibold text-slate-900 mb-2">About These Visualizations</h3>
+        <p class="text-sm text-slate-700">
+          All data shown here is extracted directly from the Verbalized Sampling preprint.
+          These interactive charts can be embedded in the main blog post or used as
+          standalone reference materials.
+        </p>
+        <div class="mt-4 flex gap-6 text-sm">
+          <div>
+            <span class="font-medium text-slate-700">Paper:</span>
+            <span class="text-slate-600"> Zhang et al. 2025</span>
+          </div>
+          <div>
+            <span class="font-medium text-slate-700">Charts:</span>
+            <span class="text-slate-600"> Recharts + Framer Motion</span>
+          </div>
+          <div>
+            <span class="font-medium text-slate-700">Framework:</span>
+            <span class="text-slate-600"> Astro + React</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

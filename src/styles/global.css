@@ -68,3 +68,49 @@ html[data-theme="dark"] {
 :target {
   scroll-margin-block: 1rem;
 }
+
+/* Custom slider styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 0.75rem;
+  border-radius: 0.5rem;
+  background: inherit;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 0.75rem;
+  border-radius: 0.5rem;
+  background: inherit;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  border: none;
+  cursor: pointer;
+}
+
+/* Ensure SVG icons don't break layout */
+.icon-container svg {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+}
