@@ -97,10 +97,8 @@ vs-blogpost/
 
 ## 📚 Documentation
 
-- [Original Plan](docs/planning/plan-v06.md)
-- [Implementation Status](docs/planning/plan-v06-implemented.md)
-- [Plan Review](docs/planning/PLAN_REVIEW_RECOMMENDATIONS.md)
-- [Week 2 Progress](docs/implementation/WEEK2_IMPLEMENTATION.md)
+- [Project Plan](docs/PROJECT_PLAN.md) - Comprehensive planning document
+- [Project Status](docs/PROJECT_STATUS.md) - Current implementation status and progress
 
 ## 🎯 Key Evidence from Paper
 
