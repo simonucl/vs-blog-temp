@@ -9,6 +9,11 @@ featured: true
 
 import VSPlayground from '@/components/interactives/VSPlayground.tsx';
 import { Figure, Table, Equation, Sidenote } from '@/components/academic';
+import QuickStart from '@/components/sections/QuickStart.tsx';
+import QualitativeExamples from '@/components/sections/QualitativeExamples.tsx';
+import PromptCard from '@/components/ui/PromptCard.tsx';
+import CopyButton from '@/components/ui/CopyButton.tsx';
+import CodeBlock from '@/components/ui/CodeBlock.tsx';
 
 # Breaking Mode Collapse: How Verbalized Sampling Restores LLM Creativity
 
@@ -33,6 +38,8 @@ with their probabilities"</code></pre>
 - **Problem**: Post-training alignment causes mode collapse<Sidenote number={1}>Mode collapse reduces output diversity, making models favor stereotypical responses.</Sidenote>, reducing LLM creativity by 60-80% [@zhang2025vs]
 - **Cause**: We identify *typicality bias* (ε>0) in preference data as a fundamental driver
 - **Solution**: Verbalized Sampling (VS) - prompt for a distribution with probabilities to recover diversity
+
+<QuickStart client:load />
 
 ## The Problem Every AI User Knows
 
@@ -102,22 +109,36 @@ By asking for a distribution with probabilities, VS changes what constitutes the
   </div>
 </div>
 
-## Copy-Ready Prompts
+## See the Difference: Real Examples
 
-### VS-Standard (JSON Format)
-```text
-Generate k=5 {TASK} with their probabilities.
+<QualitativeExamples client:load />
+
+## Recipe Cards
+
+<div className="grid gap-6 md:grid-cols-2 mb-8">
+  <PromptCard
+    client:load
+    title="VS-Standard"
+    description="Basic verbalized sampling - the simplest way to get started"
+    prompt={`Generate k=5 {TASK} with their probabilities.
 Return JSON: {"candidates":[{"text":"...", "prob":0.28}, ...]}
 Only include candidates with probability ≥ {τ}.
-Ensure probabilities sum to 1.
-```
+Ensure probabilities sum to 1.`}
+    variant="standard"
+    parameters={{ k: 5, threshold: 0.1 }}
+  />
 
-### VS-CoT (Chain-of-Thought)
-```text
-Think step-by-step to enumerate distinct styles/approaches.
+  <PromptCard
+    client:load
+    title="VS-CoT"
+    description="Enhanced with chain-of-thought for better diversity"
+    prompt={`Think step-by-step to enumerate distinct styles/approaches.
 Then generate k=5 {TASK} with probabilities in JSON.
-Only include items with probability ≥ {τ}.
-```
+Only include items with probability ≥ {τ}.`}
+    variant="cot"
+    parameters={{ k: 5, threshold: 0.15 }}
+  />
+</div>
 
 ## Is VS Right for You?
 
