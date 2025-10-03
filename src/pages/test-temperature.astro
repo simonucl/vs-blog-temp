@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import TemperatureAblation from "@/components/interactives/TemperatureAblation";
+
+const pageTitle = "Test Temperature Component";
+---
+
+<Layout title={pageTitle}>
+  <Header />
+  <main id="main-content" class="prose prose-lg max-w-4xl mx-auto px-4 py-8">
+    <h1>Testing Temperature Ablation Component</h1>
+
+    <section class="not-prose mb-12">
+      <TemperatureAblation client:load />
+    </section>
+  </main>
+  <Footer />
+</Layout>

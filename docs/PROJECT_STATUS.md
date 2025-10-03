@@ -42,10 +42,17 @@ An interactive academic blogpost that explains **Verbalized Sampling (VS)** - a 
 - ✅ CodeBlock with integrated copy buttons
 - ✅ Documentation reorganization
 
-#### Days 4-5: Remaining Tasks
-- ⏳ Temperature ablation interactive
-- ⏳ Model comparison table
-- ⏳ Human evaluation display
+#### Day 4: Critical Features (Complete)
+- ✅ Temperature ablation interactive - Shows VS + temperature synergy
+- ✅ Scaling trend visualization - Larger models benefit 1.5-2× more
+- ✅ VS variants comparison table - Clear guidance on when to use each
+- ✅ Training-free emphasis badges - No training/fine-tuning required
+- ✅ "VS beats fine-tuned models" callout - GPT-4+VS matches Llama fine-tuned
+- ✅ Comprehensive FAQ section - Addresses common questions
+
+#### Day 5: Remaining Tasks
+- ⏳ Dialogue simulation visualization
+- ⏳ Open-ended QA metrics display
 - ⏳ Performance optimization
 - ⏳ Cross-browser testing
 - ⏳ Accessibility audit
