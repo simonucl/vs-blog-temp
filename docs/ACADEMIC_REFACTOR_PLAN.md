@@ -1,15 +1,15 @@
 # Academic Refactor Plan - Verbalized Sampling Blog
 
 **Created:** October 3, 2025
-**Status:** Ready to Execute
-**Estimated Time:** 75 minutes
-**Goal:** Transform blog-style MDX into academically rigorous content using proper LaTeX, citations, and scholarly conventions
+**Status:** Ready to Execute (aligned with PROJECT_PLAN v7)
+**Estimated Time:** 75–90 minutes
+**Goal:** Transform the MDX post into academically rigorous content using LaTeX, citations, sidenotes, and cross‑refs — while matching the IA, evidence, and authoring conventions defined in PROJECT_PLAN.md (v7)
 
 ---
 
 ## 🎯 Objective
 
-Convert `src/data/blog/verbalized-sampling.mdx` from a blog post with inline HTML/code snippets to an **academic paper with interactive elements** using:
+Convert `src/data/blog/verbalized-sampling.mdx` from a blog‑style post into an **academic explainer** using:
 - LaTeX math rendering (KaTeX)
 - BibTeX citations (rehype-citation)
 - Tufte-style sidenotes
@@ -50,19 +50,29 @@ Convert `src/data/blog/verbalized-sampling.mdx` from a blog post with inline HTM
 ✅ Figure, Table, Equation components exist
 ✅ Interactive components work well
 
+Note: KaTeX renders Markdown/MDX `$...$/$$...$$` via `remark-math` + `rehype-katex`. Inside React islands, raw `$...$` is not transformed at build time. Prefer Markdown math in MDX prose; if you need math inside an island, render via `katex.renderToString(...)` or keep it as plain text.
+
 ---
 
 ## 📋 Execution Plan
+
+### Phase 0: Align structure with PROJECT_PLAN IA (5 min)
+
+Ensure the MDX follows the top→bottom IA in PROJECT_PLAN §2:
+- Hero/Opening Hook → TL;DR → Three‑panel Why → τ Playground → Evidence → Decision Tree → Recipes → FAQ → References.
+- Use existing sections/components where available: `OpeningHook`, `AhaMoment`, `VSPlayground`, evidence visuals, `VSVariantsComparison`.
+
+Outcome: A consistent section order and headings matching the v7 plan.
 
 ### Phase 1: Setup & Imports (5 min)
 
 **Task:** Import academic components into MDX
 
 ```mdx
-import Sidenote from "@/components/academic/Sidenote";
-import Figure from "@/components/academic/Figure";
-import Equation from "@/components/academic/Equation";
+import { Sidenote, Figure, Table /* Equation (optional) */ } from "@/components/academic";
 ```
+
+Tip: Prefer Markdown math in MDX (`$...$`, `$$...$$`). Only use `<Equation>` if you later enhance it to call KaTeX at runtime. Cross‑refer display equations by wrapping them with an anchor id (see Phase 6).
 
 **Validation:** Components import without errors
 
@@ -79,7 +89,7 @@ import Equation from "@/components/academic/Equation";
 <code className="text-sm">ρ=1+ε/β>1</code>
 ```
 
-**After:**
+**After (Markdown math):**
 ```mdx
 $\rho = 1 + \varepsilon/\beta > 1$
 ```
@@ -93,7 +103,7 @@ $\rho = 1 + \varepsilon/\beta > 1$
 </div>
 ```
 
-**After:**
+**After (Markdown display math):**
 ```mdx
 $$r(x,y) = r_{\text{true}}(x,y) + \varepsilon \cdot \log p_{\text{base}}(y|x)$$
 ```
@@ -111,7 +121,11 @@ $$r(x,y) = r_{\text{true}}(x,y) + \varepsilon \cdot \log p_{\text{base}}(y|x)$$
 | `≥` | `\geq` |
 | `→` | `\rightarrow` |
 
-**Validation:** All math renders with KaTeX styling
+If you must render math inside a React island, either:
+- Render with KaTeX in the component: `katex.renderToString(formula, { displayMode: true })`, or
+- Keep as plain text (not ideal), or relocate the formula to MDX prose.
+
+**Validation:** All MDX math renders with KaTeX styling; no `<code>` tags remain for formulas.
 
 ---
 
@@ -155,7 +169,9 @@ See the appendix (Appx. G.7, G.8)
 See [@zhang2025vs, Appendix G.7-G.8]
 ```
 
-**Validation:** Citations render as clickable links with proper formatting
+Replace the bottom “Citation” code block with a proper References section (Phase 6). Do not inline BibTeX.
+
+**Validation:** Citations render as links; bibliography appears under “References”.
 
 ---
 
@@ -256,7 +272,7 @@ Comprehensive evaluations show no degradation in safety scores (ToxiGen, AdvBenc
 
 ---
 
-### Phase 6: Add Academic Structure (10 min)
+### Phase 6: Add Academic Structure (15 min)
 
 **Task:** Add proper academic formatting
 
@@ -276,41 +292,108 @@ Comprehensive evaluations show no degradation in safety scores (ToxiGen, AdvBenc
 </Figure>
 ```
 
-#### Cross-References
+#### Cross-References (anchor links, per PROJECT_PLAN §6)
+
+The `Figure`/`Equation` components expose ids like `fig:states` and `eq:sharpening`.
+
+Use standard anchor links for cross‑refs:
 
 ```mdx
-As shown in Figure @fig:diversity-gains, VS significantly improves...
+See [Figure @fig:diversity-gains](#fig:diversity-gains) for details.
+Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
+Human preference results: [Table @table:human-pref](#table:human-pref).
+```
+
+For display equations authored in Markdown, create an anchor above the formula to enable cross‑refs without the `<Equation>` component:
+
+```mdx
+<a id="eq:sharpening" />
+$$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^\rho,\quad \rho = 1 + \varepsilon/\beta > 1$$
 ```
 
 #### Bibliography Section
 
-Add at end of document:
+Let `rehype-citation` render the bibliography from `src/references.bib`. At the end of the MDX, add a References heading and an empty section anchor the plugin can target:
 
 ```mdx
 ## References
 
-Citations are automatically generated from BibTeX entries in `src/references.bib`.
-
-<CodeBlock
-  code={`@article{zhang2025vs,
-  title={Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity},
-  author={Zhang, Jiayi and Yu, Simon and Chong, Derek and Sicilia, Anthony and Tomz, Michael R and Manning, Christopher D and Shi, Weiyan},
-  journal={arXiv preprint},
-  year={2025}
-}`}
-  language="bibtex"
-  showLineNumbers={false}
-  client:load
-/>
+<section id="references" />
 ```
 
-**Validation:** Figures numbered automatically, cross-refs work, bibliography renders
+Do not inline BibTeX as code in the article body. Remove any “Citation” code blocks in favor of this section.
+
+**Validation:** Figures/equations numbered; cross‑refs link to anchors; bibliography renders under “References”.
+
+---
+
+### Phase 7: Evidence Locks & Mapping (5 min)
+
+Ensure every claim in “Evidence” maps to the paper, mirroring PROJECT_PLAN §17:
+
+- Creative writing diversity: [@zhang2025vs, Figure 3a–c]
+- Post‑training retention: [@zhang2025vs, Figure 4]
+- Temperature orthogonality: [@zhang2025vs, Figure 5]
+- Scaling trend: [@zhang2025vs, Figure 3e–f]
+- Dialogue simulation: [@zhang2025vs, Figure 6]
+- Open‑ended QA: [@zhang2025vs, Figure 7]
+- Synthetic data → math accuracy: [@zhang2025vs, Table 4]
+
+Add these citations or footnotes at the point of each claim.
+
+---
+
+### Phase 8: Opening Hook and Aha Moment (5–10 min)
+
+Integrate sections called out in PROJECT_PLAN §13 (Day 4 completed items):
+
+- Add `OpeningHook` near the top as the hero/attention grabber.
+- Add `AhaMoment` after the three‑panel “Why it works” to reinforce the core insight.
+
+```mdx
+import OpeningHook from "@/components/sections/OpeningHook";
+import AhaMoment from "@/components/sections/AhaMoment";
+
+<div className="not-prose mb-10">
+  <OpeningHook client:visible />
+</div>
+
+{/* After Why It Works */}
+<div className="not-prose mb-10">
+  <AhaMoment client:visible />
+</div>
+```
+
+Validation: Both render correctly; headings remain prose‑first.
+
+### Phase 9: Prompt Recipes (copy‑ready) (5–10 min)
+
+Replace any ad‑hoc prompt text with the three recipes from PROJECT_PLAN §7 and §17. Use `CodeBlock` with copy buttons if desired.
+
+```mdx
+import CodeBlock from "@/components/ui/CodeBlock";
+
+### VS‑Standard (JSON)
+<CodeBlock code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {"candidates":[{"text":"...","prob":0.28}, ...]}\nOnly include candidates with probability ≥ {τ}. Ensure probabilities sum to 1.`} language="text" client:idle />
+
+### VS‑CoT
+<CodeBlock code={`Think step-by-step to enumerate distinct styles.\nThen generate k={5} {TASK} with probabilities (sum to 1).\nOnly include items with probability ≥ {τ}.`} language="text" client:idle />
+
+### VS‑Multi (confidence)
+<CodeBlock code={`Generate k={5} {TASK} candidates.\nFor each, return text and confidence ∈ [0,1].\nOnly include items with confidence ≥ {τ_conf}.`} language="text" client:idle />
+```
+
+Add a short comparison sentence linking to the variants table.
+
+### Phase 10: Decision Tree (Is VS right for you?) (5 min)
+
+Recast the current UI block as concise prose + list (academic tone), keeping any visuals as optional wrappers. Ensure claims are citation‑backed where applicable.
 
 ---
 
 ## 📝 Specific Conversion Examples
 
-### Example 1: Three-Panel "Why It Works"
+### Example 1: Three‑Panel "Why It Works"
 
 **Before:**
 ```mdx
@@ -348,7 +431,7 @@ $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^\rho$$
 
 where $\rho = 1 + \varepsilon/\beta > 1$<Sidenote number={2}>Derived from the DPO objective. When utility is flat across valid completions, sharpening concentrates probability mass on typical outputs [@zhang2025vs, Equation 3, p. 4].</Sidenote>.
 
-**3. Distribution-Level Recovery**
+**3. Distribution‑Level Recovery**
 
 VS prompts for probability distributions rather than single samples, recovering pretraining diversity ($\text{KL} \approx 0.12$ for US states task).
 
@@ -410,9 +493,40 @@ After refactor, verify:
 - [ ] Figures have proper captions and numbers
 - [ ] Cross-references work (e.g., "Figure @fig:diversity-gains")
 - [ ] Bibliography section at end with BibTeX
+- [ ] Evidence locks map 1:1 to paper figures/tables (PROJECT_PLAN §17)
 - [ ] Interactive components still work
 - [ ] Page loads without console errors
 - [ ] Academic tone maintained while staying accessible
+- [ ] OpeningHook and AhaMoment used per IA
+- [ ] Prompt recipes (VS‑Standard/CoT/Multi) included and copy‑ready
+- [ ] Decision tree section is prose‑first, not UI‑heavy
+
+Edge‑case: If any React island displays math, prefer moving the formula to MDX prose or render with KaTeX in the component.
+
+---
+
+## ♿ Accessibility & ⚡ Performance (PROJECT_PLAN §§9–10)
+
+- A11y
+  - Slider is keyboardable with ARIA `valuetext`; focus rings visible.
+  - `aria-live="polite"` for metric updates in interactives.
+  - Sidenotes collapse to inline on mobile; no color‑only semantics; contrast ≥ 4.5:1.
+- Performance
+  - Keep ≤ ~1 MB JS for the post; islands load `client:visible`, copy buttons on `client:idle`.
+  - Code‑split interactives; responsive images; `prefers-reduced-motion` honored.
+
+Add spot checks during review; do not regress budgets.
+
+---
+
+## 📈 Analytics (Optional, PROJECT_PLAN §11)
+
+If analytics are enabled, emit events from interactives and key CTAs:
+
+- `copy_vs_prompt(kind)` when copying prompt recipes
+- `tau_change(task, tau, included, diversity)` from the playground
+- `cta_click(target)` for primary buttons (e.g., “Copy VS Prompt”)
+- `scroll_depth(q)` to gauge engagement
 
 ---
 
@@ -452,20 +566,40 @@ After refactor, verify:
    - 5-7 strategically placed sidenotes
    - Clean Markdown prose
    - Proper Figure components
+   - Cross‑ref links `[Figure @fig:id](#fig:id)`, `[Eq. @eq:id](#eq:id)`, `[Table @table:id](#table:id)`
+   - OpeningHook + AhaMoment integrated
+   - Prompt recipes section added
+   - Decision tree is prose‑first
 
 2. **Verified bibliography** (`src/references.bib`)
    - All cited works present
    - Proper BibTeX formatting
+   - Optional CSL style file wired (e.g., `apa.csl`) if switching styles is desired
 
-3. **Visual verification**
+3. **Evidence locks**
+   - Each claim in “Evidence” cites its corresponding figure/table per PROJECT_PLAN §17
+
+4. **Visual verification**
    - Screenshot showing KaTeX rendering
    - Screenshot showing sidenotes in margin
    - Screenshot showing citations
 
-4. **Git commit**
+5. **Git commit**
    - Clear commit message
    - All changes staged
    - No breaking changes
+
+---
+
+## 🧭 Authoring & Governance (PROJECT_PLAN §18)
+
+- Authors edit `src/data/blog/verbalized-sampling.mdx` using:
+  - Citations: `[@key]`, pages/sections as needed (`[@key, p. 7]`)
+  - Math: `$inline$` and `$$display$$`
+  - Cross‑refs: `[Figure @fig:id](#fig:id)`, `[Eq. @eq:id](#eq:id)`
+- Interactive devs
+  - Add islands under `src/components/interactives` with precomputed data in `src/data/**`.
+  - Embed via `<YourInteractive client:visible />`; no network calls on page.
 
 ---
 

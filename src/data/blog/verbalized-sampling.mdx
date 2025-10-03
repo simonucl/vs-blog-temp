@@ -23,6 +23,9 @@ import QuickStart from "@/components/sections/QuickStart";
 import QualitativeExamples from "@/components/sections/QualitativeExamples";
 import VSVariantsComparison from "@/components/sections/VSVariantsComparison";
 import CodeBlock from "@/components/ui/CodeBlock";
+import OpeningHook from "@/components/sections/OpeningHook";
+import AhaMoment from "@/components/sections/AhaMoment";
+import { Sidenote, Figure, Table } from "@/components/academic";
 
 <div className="not-prose flex justify-center gap-3 my-6">
   <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 font-semibold">
@@ -36,67 +39,49 @@ import CodeBlock from "@/components/ui/CodeBlock";
   </span>
 </div>
 
+## TL;DR
+
+Human readers encounter mode‑collapsed outputs when asking for multiple ideas. Alignment amplifies typical completions; VS asks for a distribution to recover diversity.
+
+- RLHF introduces **typicality bias** ($\varepsilon>0$) → sharpening and mode collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
+- VS prompts for a **probability distribution** over candidates rather than a single instance [@zhang2025vs].
+- A threshold $\tau$ allows **diversity tuning** without retraining [@zhang2025vs, pp. 7–8].
+
+<div className="not-prose mb-10">
+  <OpeningHook client:visible />
+</div>
+
 ## Quick Start
 
 <div className="not-prose mb-12">
   <QuickStart client:load />
 </div>
 
-## TL;DR
-
-<div className="not-prose bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-12">
-  <h3 className="text-2xl font-bold mb-4">TL;DR</h3>
-  <ul className="space-y-2">
-    <li className="flex items-start gap-2">
-      <span className="text-blue-500 mt-1">•</span>
-      <span>RLHF creates <strong>typicality bias</strong> (ε>0) → mode collapse (ρ=1+ε/β>1)</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-blue-500 mt-1">•</span>
-      <span>VS recovers diversity by prompting for <strong>probability distributions</strong></span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-blue-500 mt-1">•</span>
-      <span>Threshold τ lets you <strong>tune diversity</strong> without retraining</span>
-    </li>
-  </ul>
-</div>
-
 ## Why It Works
 
-<div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-    <h3 className="font-semibold text-lg mb-3">1. Hidden Bias</h3>
-    <p className="text-gray-600 mb-4">
-      Human annotators prefer familiar, typical text (cognitive psychology: mere-exposure effect, processing fluency)
-    </p>
-    <div className="bg-gray-50 rounded p-3">
-      <code className="text-sm">r(x,y) = r_true(x,y) + ε·log(p_base)</code>
-      <p className="text-xs text-gray-500 mt-2">ε>0 confirmed in preference data</p>
-    </div>
-  </div>
+### 1. Hidden bias in preference data
 
-  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-    <h3 className="font-semibold text-lg mb-3">2. Mathematical Collapse</h3>
-    <p className="text-gray-600 mb-4">
-      Typicality bias sharpens distributions, causing mode collapse when many answers have equal utility
-    </p>
-    <div className="bg-gray-50 rounded p-3">
-      <code className="text-sm">π*(y|x) ∝ π_ref(y|x)^ρ</code>
-      <p className="text-xs text-gray-500 mt-2">ρ = 1 + ε/β > 1 (sharpening)</p>
-    </div>
-  </div>
+Human annotators systematically prefer familiar/typical text<Sidenote number={1}>Classic effects include mere exposure and processing fluency [@zajonc1968; @reber2004; @alter2009]. Statistical analyses indicate $\varepsilon>0$ independent of correctness (e.g., paired‑comparison style tests) [@ouyang2022; @christiano2017].</Sidenote>:
 
-  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-    <h3 className="font-semibold text-lg mb-3">3. VS Recovery</h3>
-    <p className="text-gray-600 mb-4">
-      Distribution-level prompts recover pretraining diversity by changing what the "mode" represents
-    </p>
-    <div className="bg-gray-50 rounded p-3">
-      <code className="text-sm">KL(VS || Pretraining) ≈ 0.12</code>
-      <p className="text-xs text-gray-500 mt-2">US states demo (Figure 2)</p>
-    </div>
-  </div>
+$$r(x,y) = r_{\text{true}}(x,y) + \varepsilon\,\log p_{\text{base}}(y|x).$$
+
+### 2. Sharpening → mode collapse
+
+<a id="eq:sharpening" />
+$$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\beta > 1.$$
+
+When utility is flat across many valid completions, sharpening concentrates mass on typical outputs<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>.
+
+### 3. Distribution‑level recovery (VS)
+
+VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
+
+<Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
+  <USStatesDemo client:visible />
+</Figure>
+
+<div className="not-prose mb-10">
+  <AhaMoment client:visible />
 </div>
 
 ## Interactive Explainer: Typicality Bias
@@ -115,60 +100,29 @@ Adjust the probability threshold τ to see how it affects which outputs are incl
 
 ## Evidence
 
-<div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-  <div className="bg-white rounded-lg p-6 border-2 border-green-200">
-    <div className="text-4xl font-bold text-green-600 mb-2">1.6-2.1×</div>
-    <div className="font-semibold mb-1">Diversity Gains</div>
-    <div className="text-sm text-gray-600">Creative writing tasks</div>
-    <div className="text-xs text-gray-500 mt-2">Figure 3a-c, pp. 7-8</div>
-  </div>
+VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
 
-  <div className="bg-white rounded-lg p-6 border-2 border-blue-200">
-    <div className="text-4xl font-bold text-blue-600 mb-2">+25.7%</div>
-    <div className="font-semibold mb-1">Human Preference</div>
-    <div className="text-sm text-gray-600">Rated higher by humans</div>
-    <div className="text-xs text-gray-500 mt-2">Table 3, p. 8</div>
-  </div>
-
-  <div className="bg-white rounded-lg p-6 border-2 border-purple-200">
-    <div className="text-4xl font-bold text-purple-600 mb-2">66.8%</div>
-    <div className="font-semibold mb-1">Diversity Retained</div>
-    <div className="text-sm text-gray-600">After alignment</div>
-    <div className="text-xs text-gray-500 mt-2">Figure 4, p. 9</div>
-  </div>
-</div>
-
-### Diversity Gains Across Tasks
-
-<div className="not-prose mb-8">
+<Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   <DiversityGainsVisual client:visible />
-</div>
+</Figure>
 
-### Post-Training Diversity Retention
-
-<div className="not-prose mb-12">
+<Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
   <PostTrainingVisual client:visible />
-</div>
+</Figure>
 
 ## VS ≠ Temperature: Orthogonal Benefits
 
-<div className="not-prose bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg mb-6">
-  <p className="font-semibold text-amber-900 mb-1">Common Misconception</p>
-  <p className="text-amber-800">
-    "Can't I just increase temperature?" No! VS and temperature are orthogonal improvements.
-    VS changes WHAT is generated (distribution vs instance), while temperature affects HOW it's sampled.
-  </p>
-</div>
+Temperature changes how you sample from a distribution; VS changes what distribution you request. They combine effectively [@zhang2025vs, Figure 5].
 
-<div className="not-prose mb-12">
+<Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
   <TemperatureAblation client:visible />
-</div>
+</Figure>
 
 ## Larger Models Benefit More
 
-<div className="not-prose mb-12">
+<Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <ScalingTrendVisualization client:visible />
-</div>
+</Figure>
 
 ## VS Matches Fine-Tuned Models
 
@@ -180,16 +134,8 @@ Adjust the probability threshold τ to see how it affects which outputs are incl
     and DeepSeek-R1 with VS even surpasses it.
   </p>
   <p className="text-sm text-gray-600">
-    No training required - just better prompting (Figure 6a, p. 11)
+    No training required — just better prompting [@zhang2025vs, Figure 6a, p. 11].
   </p>
-</div>
-
-## US States Distribution Recovery
-
-This interactive demo shows how VS recovers the pretraining distribution. The model is asked to name a US state, and we compare the distribution of responses from direct prompting vs. VS.
-
-<div className="not-prose mb-12">
-  <USStatesDemo client:visible />
 </div>
 
 ## VS Variants: When to Use Which
@@ -197,6 +143,8 @@ This interactive demo shows how VS recovers the pretraining distribution. The mo
 <div className="not-prose mb-12">
   <VSVariantsComparison client:visible />
 </div>
+
+Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
 
 ## Qualitative Examples
 
@@ -208,68 +156,30 @@ See the difference in actual outputs between direct prompting and VS:
 
 ## Is VS Right for You?
 
-<div className="not-prose bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-12">
-  <div className="space-y-4">
-    <div className="flex items-start gap-4">
-      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-        <span className="text-green-600 font-bold">✓</span>
-      </div>
-      <div>
-        <p className="font-semibold">Use VS if you need:</p>
-        <ul className="text-sm text-gray-600 mt-1 space-y-1">
-          <li>• Creative diversity (stories, jokes, ideas)</li>
-          <li>• Realistic distributions (simulation, surveys)</li>
-          <li>• Synthetic data variety</li>
-          <li>• Training-free solution</li>
-        </ul>
-      </div>
-    </div>
-
-    <div className="flex items-start gap-4">
-      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-        <span className="text-red-600 font-bold">×</span>
-      </div>
-      <div>
-        <p className="font-semibold">Skip VS if you need:</p>
-        <ul className="text-sm text-gray-600 mt-1 space-y-1">
-          <li>• Single correct answer (math, facts)</li>
-          <li>• Maximum speed (adds overhead)</li>
-          <li>• Deterministic output</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+Use VS when you need creative diversity (stories, jokes, ideas), realistic distributions (simulations, surveys), or variety in synthetic data — and when a training‑free method is preferred. Skip VS for tasks requiring a single correct answer, strict determinism, or maximal speed.
 
 ## Implementation Tips
 
-<div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-  <div className="bg-blue-50 rounded-lg p-4">
-    <h3 className="font-semibold mb-2">✅ Do</h3>
-    <ul className="text-sm space-y-1">
-      <li>• Use k=5 for optimal quality/diversity</li>
-      <li>• Ask for "probability" (not "likelihood")</li>
-      <li>• Specify JSON format for parsing</li>
-      <li>• Set τ threshold for diversity control</li>
-    </ul>
-  </div>
-  <div className="bg-red-50 rounded-lg p-4">
-    <h3 className="font-semibold mb-2">❌ Don't</h3>
-    <ul className="text-sm space-y-1">
-      <li>• Use k>10 (quality degrades)</li>
-      <li>• Mix probability/confidence terms</li>
-      <li>• Forget to normalize probabilities</li>
-      <li>• Apply to factual/math tasks</li>
-    </ul>
-  </div>
-</div>
+Do:
+
+- Use `k=5` for quality/diversity; larger `k` often degrades quality.
+- Ask for “probability” (not “likelihood”) in VS‑Standard/CoT.
+- Specify JSON and ensure probabilities sum to 1.
+- Use a $\tau$ threshold for diversity control.
+
+Don’t:
+
+- Use `k>10` unless necessary.
+- Mix “probability” and “confidence” terms.
+- Forget normalization.
+- Apply VS to strictly factual/math tasks.
 
 ## Frequently Asked Questions
 
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
   <summary className="font-semibold cursor-pointer">Does VS hurt accuracy or safety?</summary>
   <p className="mt-3 text-gray-600">
-    No. The paper shows VS maintains factual accuracy (Appendix G.7) and safety (Appendix G.8).
+    No. The paper shows VS maintains factual accuracy (Appendix G.7) and safety (Appendix G.8) [@zhang2025vs].
     It only increases diversity for tasks with multiple valid answers.
   </p>
 </details>
@@ -277,7 +187,7 @@ See the difference in actual outputs between direct prompting and VS:
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
   <summary className="font-semibold cursor-pointer">What is semantic diversity?</summary>
   <p className="mt-3 text-gray-600">
-    Semantic diversity = 1 - mean(pairwise cosine similarity). It measures how different
+    Semantic diversity = $1 - \mathrm{mean}(\mathrm{cosine\_similarity})$. It measures how different
     the meanings are across generated responses, not just surface-level word differences.
   </p>
 </details>
@@ -286,7 +196,7 @@ See the difference in actual outputs between direct prompting and VS:
   <summary className="font-semibold cursor-pointer">Why not just use temperature?</summary>
   <p className="mt-3 text-gray-600">
     Temperature and VS are orthogonal. Temperature affects sampling randomness from the same
-    distribution, while VS changes the distribution itself. Combining them gives best results.
+    distribution, while VS changes the distribution itself [@zhang2025vs, Figure 5]. Combining them gives best results.
   </p>
 </details>
 
@@ -298,16 +208,32 @@ See the difference in actual outputs between direct prompting and VS:
   </p>
 </details>
 
-## Citation
+## Prompt Recipes
+
+### VS‑Standard (JSON)
 
 <CodeBlock
-  code={`@article{zhang2025verbalized,
-  title={Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity},
-  author={Zhang, Jiayi and Yu, Simon and Chong, Derek and Sicilia, Anthony and Tomz, Michael R and Manning, Christopher D and Shi, Weiyan},
-  journal={arXiv preprint arXiv:2025.xxxxx},
-  year={2025}
-}`}
-  language="bibtex"
-  showLineNumbers={false}
-  client:load
+  code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {\"candidates\":[{\"text\":\"...\",\"prob\":0.28}, ...]}\nOnly include candidates with probability ≥ {τ}. Ensure probabilities sum to 1.`}
+  language="text"
+  client:idle
 />
+
+### VS‑CoT
+
+<CodeBlock
+  code={`Think step-by-step to enumerate distinct styles/approaches.\nThen generate k={5} {TASK} with probabilities in JSON (probabilities sum to 1).\nOnly include items with probability ≥ {τ}.`}
+  language="text"
+  client:idle
+/>
+
+### VS‑Multi (confidence)
+
+<CodeBlock
+  code={`Generate k={5} {TASK} candidates.\nFor each, return text and confidence ∈ [0,1]. Only include items with confidence ≥ {τ_conf}.`}
+  language="text"
+  client:idle
+/>
+
+## References
+
+<section id="references" />
