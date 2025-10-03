@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   XAxis,
@@ -11,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  Legend,
   ReferenceLine
 } from 'recharts';
 import { TrendingUp, Zap, Sparkles } from 'lucide-react';
@@ -54,10 +51,6 @@ const aggregateScaling = [
     avgQualityGain: 1.5,
     color: '#3b82f6'
   }
-];
-
-const multiplierData = [
-  { model: 'Small → Large', multiplier: 1.83, label: '1.83×', description: 'more diversity gain' }
 ];
 
 export default function ScalingTrendVisualization() {

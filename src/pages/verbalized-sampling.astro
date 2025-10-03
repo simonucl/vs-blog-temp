@@ -21,11 +21,6 @@ import VSVariantsComparison from "@/components/sections/VSVariantsComparison";
 
 // UI components
 import CodeBlock from "@/components/ui/CodeBlock";
-import PromptCard from "@/components/ui/PromptCard";
-
-// Data
-import playgroundData from "@/data/precomputed/playground-data.json";
-import paperEvidence from "@/data/paper-evidence/creative-writing.json";
 
 const pageTitle = "Breaking Mode Collapse: How Verbalized Sampling Restores LLM Creativity";
 const pageDescription = "Ask for a distribution, not a single answer. A training-free method to restore diversity in aligned LLMs.";
@@ -133,7 +128,7 @@ const pageDescription = "Ask for a distribution, not a single answer. A training
     <!-- VS Playground -->
     <section class="not-prose mb-12">
       <h2 class="text-3xl font-bold mb-6">Try It: Diversity Playground</h2>
-      <VSPlayground client:visible data={playgroundData} />
+      <VSPlayground client:visible />
     </section>
 
     <!-- Evidence Section -->
@@ -165,7 +160,7 @@ const pageDescription = "Ask for a distribution, not a single answer. A training
       </div>
 
       <!-- Diversity Gains Visualization -->
-      <DiversityGainsVisual client:visible data={paperEvidence} />
+      <DiversityGainsVisual client:visible />
 
       <!-- Post-Training Retention -->
       <div class="mt-8">

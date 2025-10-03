@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import CopyButton from './CopyButton';
 import clsx from 'clsx';
 

@@ -281,7 +281,7 @@ export default function AhaMoment() {
                   </h4>
                   <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
                     <p>
-                      <strong>Mode collapse equation:</strong> ω*(y|x) ∝ ω_ref(y|x)^ρ where ρ = 1 + ε/β > 1
+                      <strong>Mode collapse equation:</strong> ω*(y|x) ∝ ω_ref(y|x)^ρ where ρ = 1 + ε/β &gt; 1
                     </p>
                     <p>
                       The sharpening factor ρ compresses probability mass toward typical completions.

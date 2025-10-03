@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   BarChart,
@@ -12,7 +12,7 @@ import {
   ReferenceLine,
   Legend
 } from 'recharts';
-import { Database, TrendingUp, Award, ArrowUpRight } from 'lucide-react';
+import { Database, Award, ArrowUpRight } from 'lucide-react';
 
 // Data from Table 4 in the paper
 const performanceData = [
