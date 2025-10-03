@@ -1,8 +1,8 @@
 # Verbalized Sampling Blogpost - Project Status
 
 **Last Updated:** October 3, 2025
-**Current Status:** Week 2, Day 4 Complete
-**Live URL:** http://localhost:4323/
+**Current Status:** Week 2, Day 4 Complete + MDX Migration
+**Live URL:** http://localhost:4322/vs-blog-temp/verbalized-sampling
 
 ## 📊 Project Overview
 
@@ -52,6 +52,8 @@ An interactive academic blogpost that explains **Verbalized Sampling (VS)** - a 
 - ✅ Synthetic data performance - Math accuracy 32.8% → 37.5%
 - ✅ VS variants comparison table - Clear guidance on when to use each
 - ✅ Full integration - All components added to main blog post
+- ✅ **MDX conversion** - Main post migrated to src/data/blog/verbalized-sampling.mdx
+- ✅ **Cleanup** - Removed 4 test/demo pages (test-charts, test-copy-components, test-temperature, evidence-demo)
 
 #### Day 5: Remaining Tasks
 - ⏳ Temperature ablation refinement
@@ -90,6 +92,14 @@ An interactive academic blogpost that explains **Verbalized Sampling (VS)** - a 
 | Temperature Orthogonality | ⏳ | Component exists, needs refinement |
 
 ## 📁 Technical Architecture
+
+### Content Editing
+
+**Main blog post:** `src/data/blog/verbalized-sampling.mdx`
+- Edit content in **Markdown format** with embedded React components
+- Frontmatter includes metadata (title, description, tags, etc.)
+- Page automatically rendered via `src/pages/verbalized-sampling.astro`
+- Changes hot-reload instantly during development
 
 ### Component Structure
 ```
