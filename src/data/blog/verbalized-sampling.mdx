@@ -51,11 +51,7 @@ Human readers encounter mode‑collapsed outputs when asking for multiple ideas.
   <OpeningHook client:visible />
 </div>
 
-## Quick Start
-
-<div className="not-prose mb-12">
-  <QuickStart client:load />
-</div>
+{/* Quick Start moved to Recipes per IA alignment */}
 
 ## Why It Works
 
@@ -76,9 +72,13 @@ When utility is flat across many valid completions, sharpening concentrates mass
 
 VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
 
+Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
+
 <Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
   <USStatesDemo client:visible />
 </Figure>
+
+VS recovers the pretraining distribution closely<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>.
 
 <div className="not-prose mb-10">
   <AhaMoment client:visible />
@@ -94,6 +94,8 @@ VS asks for a distribution of candidates with probabilities, recovering pretrain
 
 Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
 
+This threshold‑tuning effect corresponds to the paper’s ablations [@zhang2025vs, Figure 3g–i]<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>.
+
 <div className="not-prose mb-12">
   <VSPlayground client:visible />
 </div>
@@ -101,6 +103,8 @@ Adjust the probability threshold τ to see how it affects which outputs are incl
 ## Evidence
 
 VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
+
+See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   <DiversityGainsVisual client:visible />
@@ -114,29 +118,23 @@ VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang20
 
 Temperature changes how you sample from a distribution; VS changes what distribution you request. They combine effectively [@zhang2025vs, Figure 5].
 
+See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>.
+
 <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
   <TemperatureAblation client:visible />
 </Figure>
 
 ## Larger Models Benefit More
 
+Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>.
+
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <ScalingTrendVisualization client:visible />
 </Figure>
 
-## VS Matches Fine-Tuned Models
+## Dialogue Simulation
 
-<div className="not-prose bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8 text-center mb-12">
-  <h3 className="text-2xl font-bold mb-4">🎯 VS Matches Fine-Tuned Models</h3>
-  <p className="text-lg text-gray-700 mb-4">
-    In dialogue simulation, GPT-4 with VS matches the performance of a
-    <span className="font-semibold"> fine-tuned Llama-3.1-8B model</span>,
-    and DeepSeek-R1 with VS even surpasses it.
-  </p>
-  <p className="text-sm text-gray-600">
-    No training required — just better prompting [@zhang2025vs, Figure 6a, p. 11].
-  </p>
-</div>
+In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS’s applicability beyond creative generation into behaviorally grounded distributions.
 
 ## VS Variants: When to Use Which
 
@@ -158,11 +156,42 @@ See the difference in actual outputs between direct prompting and VS:
 
 Use VS when you need creative diversity (stories, jokes, ideas), realistic distributions (simulations, surveys), or variety in synthetic data — and when a training‑free method is preferred. Skip VS for tasks requiring a single correct answer, strict determinism, or maximal speed.
 
+## Prompt Recipes
+
+<div className="not-prose mb-6">
+  <QuickStart client:load />
+  {/* Quick Start embedded here for copy‑ready flow */}
+  </div>
+
+### VS‑Standard (JSON)
+
+<CodeBlock
+  code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {\"candidates\":[{\"text\":\"...\",\"prob\":0.28}, ...]}\nOnly include candidates with probability ≥ {τ}. Ensure probabilities sum to 1.`}
+  language="text"
+  client:idle
+/>
+
+### VS‑CoT
+
+<CodeBlock
+  code={`Think step-by-step to enumerate distinct styles/approaches.\nThen generate k={5} {TASK} with probabilities in JSON (probabilities sum to 1).\nOnly include items with probability ≥ {τ}.`}
+  language="text"
+  client:idle
+/>
+
+### VS‑Multi (confidence)
+
+<CodeBlock
+  code={`Generate k={5} {TASK} candidates.\nFor each, return text and confidence ∈ [0,1]. Only include items with confidence ≥ {τ_conf}.`}
+  language="text"
+  client:idle
+/>
+
 ## Implementation Tips
 
 Do:
 
-- Use `k=5` for quality/diversity; larger `k` often degrades quality.
+- Use `k=5` for quality/diversity; larger `k` often degrades quality<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>.
 - Ask for “probability” (not “likelihood”) in VS‑Standard/CoT.
 - Specify JSON and ensure probabilities sum to 1.
 - Use a $\tau$ threshold for diversity control.
@@ -207,32 +236,6 @@ Don’t:
     models like o1 and DeepSeek R1. No special access or modifications needed.
   </p>
 </details>
-
-## Prompt Recipes
-
-### VS‑Standard (JSON)
-
-<CodeBlock
-  code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {\"candidates\":[{\"text\":\"...\",\"prob\":0.28}, ...]}\nOnly include candidates with probability ≥ {τ}. Ensure probabilities sum to 1.`}
-  language="text"
-  client:idle
-/>
-
-### VS‑CoT
-
-<CodeBlock
-  code={`Think step-by-step to enumerate distinct styles/approaches.\nThen generate k={5} {TASK} with probabilities in JSON (probabilities sum to 1).\nOnly include items with probability ≥ {τ}.`}
-  language="text"
-  client:idle
-/>
-
-### VS‑Multi (confidence)
-
-<CodeBlock
-  code={`Generate k={5} {TASK} candidates.\nFor each, return text and confidence ∈ [0,1]. Only include items with confidence ≥ {τ_conf}.`}
-  language="text"
-  client:idle
-/>
 
 ## References
 

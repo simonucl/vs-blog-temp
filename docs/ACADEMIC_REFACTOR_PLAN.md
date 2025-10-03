@@ -60,6 +60,7 @@ Note: KaTeX renders Markdown/MDX `$...$/$$...$$` via `remark-math` + `rehype-kat
 
 Ensure the MDX follows the top→bottom IA in PROJECT_PLAN §2:
 - Hero/Opening Hook → TL;DR → Three‑panel Why → τ Playground → Evidence → Decision Tree → Recipes → FAQ → References.
+- Move any Quick Start/copy‑ready prompts down into the Recipes section (don’t place above Why/Playground).
 - Use existing sections/components where available: `OpeningHook`, `AhaMoment`, `VSPlayground`, evidence visuals, `VSVariantsComparison`.
 
 Outcome: A consistent section order and headings matching the v7 plan.
@@ -223,6 +224,20 @@ This KL divergence is measured against the actual population distribution of US 
 VS maintains factual accuracy and safety<Sidenote number={5}>
 Comprehensive evaluations show no degradation in safety scores (ToxiGen, AdvBench) or factual accuracy (TriviaQA, NaturalQuestions). See [@zhang2025vs, Appendix G.7-G.8].
 </Sidenote>.
+
+**Location 6: Temperature Synergy**
+```mdx
+VS combines with temperature without redundancy<Sidenote number={6}>
+VS changes the requested distribution; temperature changes sampling from it. Effects are complementary [@zhang2025vs, Figure 5].
+</Sidenote>.
+```
+
+**Location 7: Scaling Trend**
+```mdx
+Larger models show stronger gains<Sidenote number={7}>
+~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].
+</Sidenote>.
+```
 ```
 
 **Validation:** Sidenotes appear in margin on desktop, inline on mobile
@@ -261,6 +276,7 @@ Comprehensive evaluations show no degradation in safety scores (ToxiGen, AdvBenc
 - Interactive component wrappers (`<div className="not-prose">`)
 - Special callout boxes that need styling
 - Training-free badges (visual emphasis)
+- Replace marketing‑style gradient callouts (e.g., “VS Matches Fine‑Tuned Models”) with normal Markdown sections using academic tone + citations.
 
 #### Convert to Markdown:
 - Headings: Use `##` instead of `<h2>`
@@ -304,11 +320,19 @@ Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
 Human preference results: [Table @table:human-pref](#table:human-pref).
 ```
 
-For display equations authored in Markdown, create an anchor above the formula to enable cross‑refs without the `<Equation>` component:
+For display equations authored in Markdown, create an anchor above the formula to enable cross‑refs without the `<Equation>` component, and add a short cross‑ref sentence near first mention:
 
 ```mdx
 <a id="eq:sharpening" />
 $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^\rho,\quad \rho = 1 + \varepsilon/\beta > 1$$
+```
+
+Also add one‑liners near sections to reinforce cross‑refs:
+
+```mdx
+See [Figure @fig:diversity-gains](#fig:diversity-gains) for creative writing results.
+See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the Pareto frontier.
+See [Figure @fig:scaling-trend](#fig:scaling-trend) for scaling effects.
 ```
 
 #### Bibliography Section
