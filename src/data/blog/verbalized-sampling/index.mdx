@@ -22,13 +22,15 @@ import FAQ from '@/components/sections/FAQ.tsx';
 import ScalingTrendVisualization from '@/components/evidence/ScalingTrendVisualization.tsx';
 import SyntheticDataPerformance from '@/components/evidence/SyntheticDataPerformance.tsx';
 import VSVariantsComparison from '@/components/sections/VSVariantsComparison.tsx';
-import { TrainingFreeBadge, TrainingFreeCallout, VSBeatsFineTuningCallout } from '@/components/ui/TrainingFreeBadge.tsx';
+import TrainingFreeBadge from '../../../components/ui/TrainingFreeBadgeInline.tsx';
+import TrainingFreeCallout from '../../../components/ui/TrainingFreeCalloutComponent.tsx';
+import VSBeatsFineTuningCallout from '../../../components/ui/VSBeatsFineTuningCalloutComponent.tsx';
 
 # Breaking Mode Collapse: How Verbalized Sampling Restores LLM Creativity
 
 **Ask for a distribution, not a single answer.** <TrainingFreeBadge client:load variant="inline" />
 
-<!-- Opening hook with relatable examples -->
+{/* Opening hook with relatable examples */}
 <OpeningHook client:load />
 
 ## TL;DR
@@ -40,10 +42,10 @@ import { TrainingFreeBadge, TrainingFreeCallout, VSBeatsFineTuningCallout } from
 
 <QuickStart client:load />
 
-<!-- Training-free emphasis -->
+{/* Training-free emphasis */}
 <TrainingFreeCallout client:load />
 
-<!-- The core insight explained clearly -->
+{/* The core insight explained clearly */}
 <AhaMoment client:load />
 
 ## Interactive Demo: Try It Yourself
@@ -102,13 +104,13 @@ By asking for a distribution with probabilities, VS changes what constitutes the
   </div>
 </div>
 
-<!-- Scaling trend - one of the most compelling findings -->
+{/* Scaling trend - one of the most compelling findings */}
 <ScalingTrendVisualization client:visible />
 
-<!-- VS beats fine-tuning callout -->
+{/* VS beats fine-tuning callout */}
 <VSBeatsFineTuningCallout client:load />
 
-<!-- Synthetic data performance -->
+{/* Synthetic data performance */}
 <SyntheticDataPerformance client:visible />
 
 ## See the Difference: Real Examples
@@ -117,7 +119,7 @@ By asking for a distribution with probabilities, VS changes what constitutes the
 
 ## How to Use VS: Variants & Recipes
 
-<!-- Comprehensive comparison of VS variants -->
+{/* Comprehensive comparison of VS variants */}
 <VSVariantsComparison client:load className="mb-8" />
 
 ## Recipe Cards
@@ -160,7 +162,7 @@ Only include items with probability ≥ {τ}.`}
 - Task has one objectively correct response
 - Speed is critical (VS uses more tokens)
 
-<!-- Comprehensive FAQ section -->
+{/* Comprehensive FAQ section */}
 <FAQ client:load />
 
 ## Conclusion
