@@ -28,7 +28,11 @@ const {
   scrollSmooth = false,
 } = Astro.props;
 
-const socialImageURL = new URL(ogImage, Astro.url);
+const base = (import.meta.env.BASE_URL ?? "/");
+const socialImageURL = new URL(
+  ogImage.startsWith("/") ? base + ogImage.slice(1) : ogImage,
+  Astro.url
+);
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -56,7 +60,7 @@ const structuredData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -65,7 +69,7 @@ const structuredData = {
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={`${base}sitemap-index.xml`} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />
@@ -111,7 +115,7 @@ const structuredData = {
       rel="alternate"
       type="application/rss+xml"
       title={SITE.title}
-      href={new URL("rss.xml", Astro.site)}
+      href={new URL(base + 'rss.xml', Astro.site)}
     />
 
     <meta name="theme-color" content="" />
@@ -130,7 +134,7 @@ const structuredData = {
 
     <ClientRouter />
 
-    <script is:inline src="/toggle-theme.js"></script>
+    <script is:inline src={`${base}toggle-theme.js`}></script>
   </head>
   <body>
     <slot />

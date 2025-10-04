@@ -133,7 +133,7 @@ const nextPost =
           {post.data.pdfUrl && <> · <a href={withBase(String(post.data.pdfUrl))}>PDF</a></>}
           {post.data.codeUrl && <> · <a href={String(post.data.codeUrl)}>Code</a></>}
           {post.data.bibUrl && <> · <a href={withBase(String(post.data.bibUrl))} download>BibTeX</a></>}
-          {post.data.bibUrl && <CiteThis bibUrl={withBase(String(post.data.bibUrl))} class="no-print" />}
+          {post.data.bibUrl && <CiteThis bibUrl={String(post.data.bibUrl)} class="no-print" />}
         </p>
         {post.data.abstract && (
           <section aria-labelledby="abstract">

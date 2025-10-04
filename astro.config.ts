@@ -40,7 +40,8 @@ export default defineConfig({
     rehypePlugins: [
       rehypeKatex,
       [rehypeCitation, {
-        bibliography: 'src/references.bib',
+        // Consolidate citations on the public file so download and rendering match
+        bibliography: 'public/references.bib',
         csl: 'src/styles/chicago-author-date.csl',
         linkCitations: true
       }]

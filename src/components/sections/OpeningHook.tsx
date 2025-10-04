@@ -104,7 +104,7 @@ export default function OpeningHook() {
               AI Responses
             </label>
             <div className="space-y-2">
-              <AnimatePresence mode="wait">
+              <AnimatePresence>
                 {example.responses.map((response, index) => (
                   <motion.div
                     key={`${currentExample}-${index}`}

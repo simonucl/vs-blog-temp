@@ -1,7 +1,8 @@
 ---
 const { bibUrl, class: className = '' } = Astro.props as { bibUrl?: string; class?: string };
 const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
-const resolvedUrl = bibUrl && bibUrl.startsWith('/') ? `${base}${bibUrl}` : bibUrl;
+const needsPrefix = bibUrl && bibUrl.startsWith('/') && !bibUrl.startsWith(base + '/');
+const resolvedUrl = needsPrefix ? `${base}${bibUrl}` : bibUrl;
 ---
 <span class={`cite-this ${className}`}>
   <button type="button" class="btn" data-bib-url={String(resolvedUrl)}>Copy BibTeX</button>

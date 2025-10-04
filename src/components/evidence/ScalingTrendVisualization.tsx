@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRechartsResizeFix } from '@/components/charts/useRechartsResizeFix';
 import { motion } from 'framer-motion';
 import {
   BarChart,
@@ -54,6 +55,7 @@ const aggregateScaling = [
 ];
 
 export default function ScalingTrendVisualization() {
+  useRechartsResizeFix();
   const [selectedTask, setSelectedTask] = useState<'poem' | 'story' | 'joke'>('poem');
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
 

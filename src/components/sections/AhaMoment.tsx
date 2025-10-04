@@ -127,7 +127,7 @@ export default function AhaMoment() {
           </motion.div>
 
           {/* Right: Result Display */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             <motion.div
               key={selectedLevel}
               initial={{ opacity: 0, x: 20 }}

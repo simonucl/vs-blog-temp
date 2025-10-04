@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
   Bar,
@@ -26,6 +27,7 @@ export default function DistributionChart({
   klDivergence,
   height = 500,
 }: DistributionChartProps) {
+  useRechartsResizeFix();
   const [viewMode, setViewMode] = useState<ViewMode>('all');
 
   const filteredData = data.map((item) => {

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useRechartsResizeFix } from '@/components/charts/useRechartsResizeFix';
 import { motion } from 'framer-motion';
 import {
   LineChart,
@@ -73,6 +74,7 @@ interface TemperatureAblationProps {
 }
 
 export default function TemperatureAblation({ className = '' }: TemperatureAblationProps) {
+  useRechartsResizeFix();
   const [selectedModel, setSelectedModel] = useState<'GPT-4.1' | 'Gemini-2.5-Flash'>('GPT-4.1');
   const [selectedTemp, setSelectedTemp] = useState(1.0);
   const [showVS, setShowVS] = useState(true);

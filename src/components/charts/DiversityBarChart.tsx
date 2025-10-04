@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
   Bar,
@@ -25,6 +26,7 @@ export default function DiversityBarChart({
   height = 400,
   showLegend = true,
 }: DiversityBarChartProps) {
+  useRechartsResizeFix();
   // Check if data exists
   if (!data || data.length === 0) {
     return (

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   LineChart,
   Line,
@@ -37,6 +38,7 @@ export default function PostTrainingLineChart({
   baselineDiversity,
   height = 400,
 }: PostTrainingLineChartProps) {
+  useRechartsResizeFix();
   const CustomTooltip = ({ active, payload, label }: ChartTooltipProps<PostTrainingStageData>) => {
     if (active && payload && payload.length > 0) {
       return (

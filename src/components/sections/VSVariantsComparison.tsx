@@ -199,7 +199,7 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
       </div>
 
       {/* Detailed View */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
           key={selectedVariant}
           initial={{ opacity: 0, y: 10 }}
