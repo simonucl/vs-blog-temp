@@ -56,7 +56,7 @@ import Figure from "@/components/academic/Figure.astro";
 {/* Badges removed for academic tone */}
 
 <div className="not-prose mb-10">
-  <OpeningHook client:load />
+  <OpeningHook client:visible />
   {/* Per IA: Opening Hook above TL;DR */}
 </div>
 
@@ -90,19 +90,19 @@ VS asks for a distribution of candidates with probabilities, recovering pretrain
 Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
 
 <Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
-  <USStatesDemo client:load />
+  <USStatesDemo client:visible />
 </Figure>
 
 VS recovers the pretraining distribution closely<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>.
 
 <div className="not-prose mb-10">
-  <AhaMoment client:load />
+  <AhaMoment client:visible />
 </div>
 
 ## Interactive Explainer: Typicality Bias
 
 <div className="not-prose mb-12">
-  <TypicalityBiasExplainer client:load />
+  <TypicalityBiasExplainer client:visible />
 </div>
 
 ## Try It: Diversity Playground
@@ -112,7 +112,7 @@ Adjust the probability threshold τ to see how it affects which outputs are incl
 This threshold‑tuning effect corresponds to the paper’s ablations [@zhang2025vs, Figure 3g–i]<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>.
 
 <div className="not-prose mb-12">
-  <VSPlayground client:load />
+  <VSPlayground client:visible />
 </div>
 
 ## Evidence
@@ -134,11 +134,11 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
 [Back to top ↑](#article)
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
-  <DiversityGainsVisual client:load />
+  <DiversityGainsVisual client:visible />
 </Figure>
 
 <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
-  <PostTrainingVisual client:load />
+  <PostTrainingVisual client:visible />
 </Figure>
 
 ### Open‑Ended QA (Fig. 7)
@@ -182,7 +182,7 @@ Temperature changes how you sample from a distribution; VS changes what distribu
 See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>.
 
 <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
-  <TemperatureAblation client:load />
+  <TemperatureAblation client:visible />
 </Figure>
 
 ## Larger Models Benefit More
@@ -190,7 +190,7 @@ See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combi
 Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>.
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
-  <ScalingTrendVisualization client:load />
+  <ScalingTrendVisualization client:visible />
 </Figure>
 
 ## Dialogue Simulation
@@ -205,7 +205,7 @@ See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
 ## VS Variants: When to Use Which
 
 <div className="not-prose mb-12">
-  <VSVariantsComparison client:load />
+  <VSVariantsComparison client:visible />
 </div>
 
 Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
@@ -217,7 +217,7 @@ Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while �
 See the difference in actual outputs between direct prompting and VS:
 
 <div className="not-prose mb-12">
-  <QualitativeExamples client:load />
+  <QualitativeExamples client:visible />
 </div>
 
 ## Is VS Right for You?
@@ -236,7 +236,7 @@ Skip VS when:
 ## Prompt Recipes
 
 <div className="not-prose mb-6">
-  <QuickStart client:load />
+  <QuickStart client:idle />
   {/* Quick Start embedded here for copy‑ready flow */}
   </div>
 

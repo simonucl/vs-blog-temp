@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
@@ -28,6 +28,7 @@ export default function DistributionChart({
   height = 500,
 }: DistributionChartProps) {
   useRechartsResizeFix();
+  const prefersReducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<ViewMode>('all');
 
   const filteredData = data.map((item) => {
@@ -68,12 +69,16 @@ export default function DistributionChart({
     return null;
   };
 
+  const descId = `${title?.replace(/\s+/g, '-').toLowerCase() || 'distribution'}-desc`;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
+      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+      animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.3 }}
       className="w-full"
+      role="img"
+      aria-label={`${title} bar chart`}
+      aria-describedby={descId}
     >
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
@@ -94,6 +99,7 @@ export default function DistributionChart({
                 ? 'bg-red-600 text-white shadow-md'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             )}
+            aria-pressed={viewMode === mode}
           >
             {mode === 'all' && 'Compare All'}
             {mode === 'pretraining' && 'Pretraining Only'}
@@ -176,6 +182,9 @@ export default function DistributionChart({
       <div className="mt-4 text-xs text-slate-500 italic">
         Lower KL divergence indicates better alignment with the reference distribution (RedPajama corpus)
       </div>
+      <p id={descId} className="sr-only">
+        This chart compares the distribution over US states for pretraining, direct prompting, and VS. Use the tabs to filter series. Lower KL divergence indicates closer match to pretraining.
+      </p>
     </motion.div>
   );
 }

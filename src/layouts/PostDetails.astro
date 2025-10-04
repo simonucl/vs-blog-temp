@@ -188,7 +188,7 @@ if (post.data.academic) {
     )}
     {post.data.academic && (headings?.length ?? 0) > 0 && (
       <nav class="toc no-print" aria-labelledby="toc-heading">
-        <h2 id="toc-heading" class="toc-heading">Contents</h2>
+        <h2 id="toc-heading" class="toc-heading">Table of Contents</h2>
         <TableOfContents headings={(headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)} />
       </nav>
     )}

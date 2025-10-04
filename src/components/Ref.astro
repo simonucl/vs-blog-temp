@@ -1,0 +1,8 @@
+---
+// Lightweight cross-reference link helper
+// Usage: <Ref target="fig-overview" label="Figure 1" />
+interface Props { target: string; label?: string }
+const { target, label } = Astro.props as Props;
+---
+<a href={`#${target}`} class="xref">{label ?? target}</a>
+

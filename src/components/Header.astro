@@ -11,16 +11,25 @@ import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
 const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
+const baseClean = (import.meta.env.BASE_URL ?? "/").replace(/^\/+|\/+$/g, "");
+const normalize = (p: string) => {
+  const out = p.endsWith("/") && p !== "/" ? p.slice(0, -1) : p;
+  if (!baseClean) return out;
+  const prefix = `/${baseClean}`;
+  return out.startsWith(prefix) ? out.slice(prefix.length) || "/" : out;
+};
 
 // Remove trailing slash from current pathname if exists
 const currentPath =
   pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
-
-  return currentPath === path || currentPathArray[0] === pathArray[0];
+  const currentNorm = normalize(currentPath);
+  const targetNorm = normalize(path);
+  if (currentNorm === targetNorm) return true;
+  const currentSeg = currentNorm.split("/").filter(Boolean)[0] ?? "";
+  const targetSeg = targetNorm.split("/").filter(Boolean)[0] ?? "";
+  return currentSeg === targetSeg;
 };
 ---
 

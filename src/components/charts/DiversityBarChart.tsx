@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
@@ -27,6 +27,7 @@ export default function DiversityBarChart({
   showLegend = true,
 }: DiversityBarChartProps) {
   useRechartsResizeFix();
+  const prefersReducedMotion = useReducedMotion();
   // Check if data exists
   if (!data || data.length === 0) {
     return (
@@ -55,12 +56,17 @@ export default function DiversityBarChart({
     return null;
   };
 
+  const descId = `${title?.replace(/\s+/g, '-').toLowerCase() || 'chart'}-desc`;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+      animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={prefersReducedMotion ? undefined : { duration: 0.5 }}
       className="w-full"
+      role="img"
+      aria-label={`${title} bar chart`}
+      aria-describedby={descId}
     >
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
@@ -122,6 +128,9 @@ export default function DiversityBarChart({
       <div className="mt-4 text-xs text-slate-500 italic">
         Higher values indicate greater diversity
       </div>
+      <p id={descId} className="sr-only">
+        This chart compares diversity scores across methods. Higher values mean greater diversity. Use the figure caption for context.
+      </p>
     </motion.div>
   );
 }

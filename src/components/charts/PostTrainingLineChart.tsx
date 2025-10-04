@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   LineChart,
@@ -39,6 +39,7 @@ export default function PostTrainingLineChart({
   height = 400,
 }: PostTrainingLineChartProps) {
   useRechartsResizeFix();
+  const prefersReducedMotion = useReducedMotion();
   const CustomTooltip = ({ active, payload, label }: ChartTooltipProps<PostTrainingStageData>) => {
     if (active && payload && payload.length > 0) {
       return (
@@ -64,12 +65,16 @@ export default function PostTrainingLineChart({
     return null;
   };
 
+  const descId = `${title?.replace(/\s+/g, '-').toLowerCase() || 'line'}-desc`;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+      animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={prefersReducedMotion ? undefined : { duration: 0.5, delay: 0.2 }}
       className="w-full"
+      role="img"
+      aria-label={`${title} line chart`}
+      aria-describedby={descId}
     >
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
@@ -168,6 +173,9 @@ export default function PostTrainingLineChart({
           VS retains 2.81× more diversity than Direct prompting across post-training stages
         </p>
       </div>
+      <p id={descId} className="sr-only">
+        This chart shows diversity across training stages for multiple methods. A dashed reference line indicates base model diversity. Higher percentages indicate greater diversity.
+      </p>
     </motion.div>
   );
 }
