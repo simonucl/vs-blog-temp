@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { memo } from 'react';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
@@ -18,7 +19,7 @@ import type {
 } from '@/types/charts';
 import { METHOD_COLORS, METHOD_LABELS } from '@/types/charts';
 
-export default function DiversityBarChart({
+function DiversityBarChart({
   data,
   title,
   subtitle,
@@ -134,3 +135,5 @@ export default function DiversityBarChart({
     </motion.div>
   );
 }
+
+export default memo(DiversityBarChart);

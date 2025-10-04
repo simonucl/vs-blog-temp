@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { memo } from 'react';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   BarChart,
@@ -20,7 +21,7 @@ import type {
 
 type ViewMode = 'all' | 'pretraining' | 'direct' | 'vs';
 
-export default function DistributionChart({
+function DistributionChart({
   data,
   title,
   subtitle,
@@ -188,3 +189,5 @@ export default function DistributionChart({
     </motion.div>
   );
 }
+
+export default memo(DistributionChart);

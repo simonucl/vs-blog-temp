@@ -125,7 +125,7 @@ export default function VSPlayground() {
     <section className="vs-playground" aria-label="Verbalized Sampling Interactive Playground">
       <header className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <h3 className="text-2xl font-semibold">Try Diversity Tuning</h3>
-        <div className="flex gap-2">
+        <div className="flex gap-2" role="group" aria-label="Task selection">
           {Object.entries(taskLabels).map(([key, label]) => (
             <button
               key={key}
@@ -136,6 +136,7 @@ export default function VSPlayground() {
                   : 'bg-muted hover:bg-border'
               }`}
               aria-pressed={task === key}
+              aria-label={`Select ${label.replace(/^[^\s]+\s/, '')}`} 
             >
               {label}
             </button>

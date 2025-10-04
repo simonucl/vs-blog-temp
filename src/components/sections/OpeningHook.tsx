@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { RefreshCw, AlertCircle, Lightbulb } from 'lucide-react';
 
 interface Example {
@@ -45,6 +45,7 @@ const modeCollapseExamples: Example[] = [
 ];
 
 export default function OpeningHook() {
+  const prefersReducedMotion = useReducedMotion();
   const [currentExample, setCurrentExample] = useState(0);
   const [showProblem, setShowProblem] = useState(false);
 
@@ -60,8 +61,8 @@ export default function OpeningHook() {
       <div className="max-w-5xl mx-auto">
         {/* Title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+          animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
@@ -74,9 +75,9 @@ export default function OpeningHook() {
 
         {/* Interactive Demo */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+          initial={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.95 }}
+          animate={prefersReducedMotion ? undefined : { opacity: 1, scale: 1 }}
+          transition={prefersReducedMotion ? undefined : { delay: 0.2 }}
           className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6"
         >
           {/* Prompt Display */}
@@ -108,9 +109,9 @@ export default function OpeningHook() {
                 {example.responses.map((response, index) => (
                   <motion.div
                     key={`${currentExample}-${index}`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    initial={prefersReducedMotion ? undefined : { opacity: 0, x: -20 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
+                    transition={prefersReducedMotion ? undefined : { delay: index * 0.1 }}
                     className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-750 rounded-lg p-3 border border-slate-200 dark:border-slate-700"
                   >
                     <div className="flex items-start gap-3">
@@ -131,19 +132,19 @@ export default function OpeningHook() {
           <div className="text-center">
             {!showProblem ? (
               <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={prefersReducedMotion ? undefined : { opacity: 0 }}
+                animate={prefersReducedMotion ? undefined : { opacity: 1 }}
                 onClick={() => setShowProblem(true)}
                 className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors shadow-lg"
-              >
+                >
                 See The Problem?
               </motion.button>
             ) : (
               <AnimatePresence>
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -20 }}
                   className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-6"
                 >
                   <div className="flex items-center justify-center gap-3 mb-3">
@@ -166,9 +167,9 @@ export default function OpeningHook() {
 
         {/* The Problem Explanation */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+          animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={prefersReducedMotion ? undefined : { delay: 0.5 }}
           className="mt-12 text-center"
         >
           <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full">

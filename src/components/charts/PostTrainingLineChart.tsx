@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { memo } from 'react';
 import { useRechartsResizeFix } from './useRechartsResizeFix';
 import {
   LineChart,
@@ -31,7 +32,7 @@ const METHOD_LABELS = {
   vs: 'VS',
 };
 
-export default function PostTrainingLineChart({
+function PostTrainingLineChart({
   data,
   title,
   subtitle,
@@ -179,3 +180,5 @@ export default function PostTrainingLineChart({
     </motion.div>
   );
 }
+
+export default memo(PostTrainingLineChart);
