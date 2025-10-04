@@ -130,10 +130,10 @@ export default function VSPlayground() {
             <button
               key={key}
               onClick={() => setTask(key as TaskType)}
-              className={`px-4 py-2 rounded-lg transition-all ${
+              className={`px-4 py-2 rounded-lg transition-all border focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2 ${
                 task === key
-                  ? 'bg-accent text-background'
-                  : 'bg-muted hover:bg-border'
+                  ? 'bg-accent text-background border-accent'
+                  : 'bg-muted hover:bg-border border-border'
               }`}
               aria-pressed={task === key}
               aria-label={`Select ${label.replace(/^[^\s]+\s/, '')}`} 
@@ -146,7 +146,7 @@ export default function VSPlayground() {
 
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <div className="col-span-2">
-          <label className="block">
+          <label className="block" htmlFor="vs-tau-slider" id="vs-tau-label">
             <span className="text-sm font-medium mb-2 block">
               Probability threshold (τ): <output className="font-mono ml-2">{tau.toFixed(2)}</output>
             </span>
@@ -158,6 +158,8 @@ export default function VSPlayground() {
               value={tau}
               onChange={(e) => handleTauChange(parseFloat(e.target.value))}
               className="w-full h-2 bg-muted rounded-lg cursor-pointer"
+              id="vs-tau-slider"
+              aria-labelledby="vs-tau-label"
               aria-valuetext={`Threshold ${tau.toFixed(2)}`}
             />
             <div className="flex justify-between text-xs text-muted mt-1">
@@ -233,12 +235,12 @@ export default function VSPlayground() {
                 </small>
                 <div className="flex gap-2">
                   {c.isNovel && (
-                    <span className="text-xs px-2 py-1 bg-accent/20 text-accent rounded">
+                    <span className="text-xs px-2 py-1 bg-accent/15 text-accent border border-accent/60 rounded">
                       novel
                     </span>
                   )}
                   {c.theme && (
-                    <span className="text-xs px-2 py-1 bg-muted rounded">
+                    <span className="text-xs px-2 py-1 bg-muted border border-border text-foreground rounded">
                       {c.theme}
                     </span>
                   )}

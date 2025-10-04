@@ -89,16 +89,16 @@ function DistributionChart({
       </div>
 
       {/* View Mode Tabs */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="View mode">
         {(['all', 'pretraining', 'direct', 'vs'] as ViewMode[]).map((mode) => (
           <button
             key={mode}
             onClick={() => setViewMode(mode)}
             className={clsx(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-all',
+              'px-4 py-2 rounded-lg text-sm font-medium transition-all border focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2',
               viewMode === mode
-                ? 'bg-red-600 text-white shadow-md'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                ? 'bg-red-600 text-white shadow-md border-red-600'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300'
             )}
             aria-pressed={viewMode === mode}
           >
