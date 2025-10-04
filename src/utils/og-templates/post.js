@@ -94,10 +94,22 @@ import loadGoogleFonts from "../loadGoogleFont";
 //     </div>`;
 
 export default async post => {
+  // Derive authors from frontmatter: prefer array `authors`, fall back to `author`
+  let authors = "";
+  try {
+    if (Array.isArray(post.data.authors)) {
+      authors = post.data.authors
+        .map(a => (typeof a === 'string' ? a : a?.name))
+        .filter(Boolean)
+        .join(', ');
+    }
+    if (!authors && post.data.author) authors = post.data.author;
+  } catch {}
+
   let fonts = [];
   try {
     fonts = await loadGoogleFonts(
-      post.data.title + (post.data.author ?? "") + SITE.title + "by"
+      post.data.title + authors + SITE.title + "by"
     );
   } catch (e) {
     // Fallback: no embedded fonts; rely on system defaults
@@ -202,7 +214,7 @@ export default async post => {
                                       overflow: "hidden",
                                       fontWeight: "bold",
                                     },
-                                    children: post.data.author,
+                                    children: authors,
                                   },
                                 },
                               ],

@@ -50,7 +50,8 @@ if (typeof initOgImage === "string") {
 
 // Use dynamic OG image if enabled and no remote|local ogImage
 if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `${getPath(post.id, post.filePath)}/index.png`;
+  const p = getPath(post.id, post.filePath);
+  ogImageUrl = `${withBase(p)}/index.png`;
 }
 
 // Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
@@ -223,7 +224,7 @@ if (post.data.academic) {
       {
         prevPost && (
           <a
-            href={getPath(prevPost.id, prevPost.filePath)}
+            href={withBase(getPath(prevPost.id, prevPost.filePath))}
             class="flex w-full gap-1 hover:opacity-75"
           >
             <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
@@ -237,7 +238,7 @@ if (post.data.academic) {
       {
         nextPost && (
           <a
-            href={getPath(nextPost.id, nextPost.filePath)}
+            href={withBase(getPath(nextPost.id, nextPost.filePath))}
             class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
           >
             <div>
