@@ -91,6 +91,23 @@
       @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
     }
 
+    /* Hide default markers and add chevron indicator */
+    summary::-webkit-details-marker { display: none; }
+    summary::marker { content: ''; }
+    summary::after {
+      content: '▸';
+      margin-left: .4rem;
+      font-size: 1.2em;
+      line-height: 1;
+      display: inline-block;
+      opacity: .9;
+      transition: transform 150ms ease-out;
+    }
+    details[open] > summary::after {
+      content: '▾';
+      opacity: 1;
+    }
+
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
