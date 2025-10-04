@@ -2,24 +2,10 @@
 interface Heading { depth: number; slug: string; text: string }
 const { headings = [] as Heading[] } = Astro.props;
 ---
-<Fragment>
-  {(() => {
-    const slugify = (text: string) =>
-      text
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-');
-    return (
-      <ul class="toc-list">
-        {headings.map((h: Heading) => (
-          <li class={`toc-h${h.depth}`}>
-            <a href={`#${slugify(h.text)}`}>{h.text}</a>
-          </li>
-        ))}
-        {headings.length === 0 && <li>No sections</li>}
-      </ul>
-    );
-  })()}
-</Fragment>
+<ul class="toc-list">
+  {headings.map((h: Heading) => (
+    <li class={`toc-h${h.depth}`}>
+      <a href={`#${h.slug}`}>{h.text}</a>
+    </li>
+  ))}
+</ul>

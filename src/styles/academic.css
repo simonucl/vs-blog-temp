@@ -61,6 +61,10 @@ html[data-theme="dark"] {
 }
 
 /* Article Layout */
+.app-prose {
+  font-family: var(--font-prose);
+  line-height: var(--leading-relaxed);
+}
 .article {
   max-width: 680px; /* ~6.5in at 96dpi */
   margin: 4rem auto;

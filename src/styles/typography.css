@@ -13,9 +13,7 @@
       @apply mb-3 text-foreground;
     }
 
-    h3 {
-      @apply italic;
-    }
+    /* h3 italics removed for academic tone */
 
     p,
     strong,

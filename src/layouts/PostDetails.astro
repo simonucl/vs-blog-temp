@@ -90,6 +90,29 @@ const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
   currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null;
+
+// Prepare JSON-LD for ScholarlyArticle when academic
+let jsonLd: string | undefined;
+if (post.data.academic) {
+  const authorsArr = Array.isArray(post.data.authors)
+    ? post.data.authors
+        .map((a: any) => (typeof a === 'string' ? a : a?.name))
+        .filter(Boolean)
+    : (author ? [author] : []);
+  const obj = {
+    '@context': 'https://schema.org',
+    '@type': 'ScholarlyArticle',
+    headline: title,
+    datePublished: pubDatetime?.toISOString?.() ?? String(pubDatetime ?? ''),
+    author: authorsArr.map((n: string) => ({ '@type': 'Person', name: n })),
+    sameAs: [post.data.codeUrl].filter(Boolean),
+  } as any;
+  try {
+    jsonLd = JSON.stringify(obj);
+  } catch {
+    jsonLd = undefined;
+  }
+}
 ---
 
 <Layout {...layoutProps}>
@@ -168,6 +191,9 @@ const nextPost =
         <h2 id="toc-heading" class="toc-heading">Contents</h2>
         <TableOfContents headings={(headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)} />
       </nav>
+    )}
+    {post.data.academic && jsonLd && (
+      <script type="application/ld+json">{jsonLd}</script>
     )}
     <article
       id="article"
@@ -271,39 +297,7 @@ const nextPost =
   updateScrollProgress();
 
   /** Attaches links to headings in the document,
-   *  allowing sharing of sections easily */
-  function slugify(text) {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
-  }
-
-  function addHeadingLinks() {
-    const headings = Array.from(
-      document.querySelectorAll("h2, h3, h4, h5, h6")
-    );
-    for (const heading of headings) {
-      if (!heading.id) {
-        const text = heading.textContent || '';
-        heading.id = slugify(text);
-      }
-      heading.classList.add("group");
-      const link = document.createElement("a");
-      link.className =
-        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
-      link.href = "#" + heading.id;
-
-      const span = document.createElement("span");
-      span.ariaHidden = "true";
-      span.innerText = "#";
-      link.appendChild(span);
-      heading.appendChild(link);
-    }
-  }
-  addHeadingLinks();
+   *  allowing sharing of sections easily. Replaced by SSR via rehype-slug/autolink. */
 
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */

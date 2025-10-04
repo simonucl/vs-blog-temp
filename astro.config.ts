@@ -8,6 +8,8 @@ import remarkCollapse from "remark-collapse";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeCitation from "rehype-citation";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -39,6 +41,8 @@ export default defineConfig({
     ],
     rehypePlugins: [
       rehypeKatex,
+      rehypeSlug,
+      [rehypeAutolinkHeadings, { behavior: "append" }],
       [rehypeCitation, {
         // Consolidate citations on the public file so download and rendering match
         bibliography: 'public/references.bib',
