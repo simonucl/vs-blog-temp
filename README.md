@@ -29,7 +29,8 @@ vs-blogpost/
 │   │   └── precomputed/       # Playground examples (30 per task)
 │   ├── pages/                 # Additional pages and demos
 │   ├── styles/                # Global and academic CSS
-│   └── references.bib         # Bibliography
+├── public/
+│   └── references.bib         # Bibliography (for rehype-citation and download)
 ├── docs/
 │   ├── planning/              # Project planning documents
 │   └── implementation/        # Implementation status and notes

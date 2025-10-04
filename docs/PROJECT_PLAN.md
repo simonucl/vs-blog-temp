@@ -131,7 +131,7 @@ This document is a standalone, end‑to‑end plan to launch an "academic paper 
 * **MDX** with:
 
   * `remark-math` + `rehype-katex` (display/inline math).
-  * `rehype-citation` with `references.bib` and user‑selectable CSL (e.g., `apa.csl`).
+  * `rehype-citation` with `public/references.bib` and user‑selectable CSL (e.g., `apa.csl`).
   * Custom **Figure**, **Table**, **Equation** components with counters + cross‑refs (`See @fig:states`).
 * **Code**: Shiki for highlighting; small plugin to add **Copy** buttons post‑hydrate (`client:idle`).
 
@@ -149,7 +149,7 @@ export default defineConfig({
     remarkPlugins: [['remark-math']],
     rehypePlugins: [
       ['rehype-katex'],
-      ['rehype-citation', { bibliography: 'src/references.bib', linkCitations: true }]
+      ['rehype-citation', { bibliography: 'public/references.bib', linkCitations: true }]
     ]
   },
   vite: { build: { sourcemap: true } }
@@ -165,7 +165,7 @@ src/
     ui/{Metric.tsx, Slider.tsx, Sidenote.tsx}
   content/blog/verbalized-sampling/index.mdx
   styles/{globals.css, tufte.css}
-  references.bib
+public/references.bib
 ```
 
 ---

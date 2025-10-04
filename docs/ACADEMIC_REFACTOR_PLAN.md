@@ -45,7 +45,7 @@ Convert `src/data/blog/verbalized-sampling.mdx` from a blog‑style post into an
 ### What's Already Working
 
 ✅ KaTeX configured in `astro.config.ts` (remarkMath + rehypeKatex)
-✅ rehype-citation configured with `src/references.bib`
+✅ rehype-citation configured with `public/references.bib`
 ✅ Sidenote component exists
 ✅ Figure, Table, Equation components exist
 ✅ Interactive components work well
@@ -337,7 +337,7 @@ See [Figure @fig:scaling-trend](#fig:scaling-trend) for scaling effects.
 
 #### Bibliography Section
 
-Let `rehype-citation` render the bibliography from `src/references.bib`. At the end of the MDX, add a References heading and an empty section anchor the plugin can target:
+Let `rehype-citation` render the bibliography from `public/references.bib`. At the end of the MDX, add a References heading and an empty section anchor the plugin can target:
 
 ```mdx
 ## References
@@ -355,7 +355,7 @@ Optional polish:
 
 ```ts
 ['rehype-citation', {
-  bibliography: 'src/references.bib',
+  bibliography: 'public/references.bib',
   csl: 'src/styles/chicago-author-date.csl',
   linkCitations: true
 }]
@@ -616,7 +616,7 @@ If analytics are enabled, emit events from interactives and key CTAs:
    - Prompt recipes section added
    - Decision tree is prose‑first
 
-2. **Verified bibliography** (`src/references.bib`)
+2. **Verified bibliography** (`public/references.bib`)
    - All cited works present
    - Proper BibTeX formatting
    - Optional CSL style file wired (e.g., `apa.csl`) if switching styles is desired
