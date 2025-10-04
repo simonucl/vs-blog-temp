@@ -73,9 +73,45 @@ export default function VSPlayground() {
   const vsMetrics = useMemo(() => calculateMetrics(includedVS), [includedVS]);
   const directMetrics = useMemo(() => calculateMetrics(includedDirect), [includedDirect]);
 
+  const track = (name: string, payload: Record<string, unknown>) => {
+    if (typeof window === 'undefined') return;
+    try {
+      // @ts-ignore
+      if (window.analytics?.track) {
+        // @ts-ignore
+        window.analytics.track(name, payload);
+        return;
+      }
+      // @ts-ignore
+      if (window.gtag) {
+        // @ts-ignore
+        window.gtag('event', name, payload);
+        return;
+      }
+      // @ts-ignore
+      if (window.plausible) {
+        // @ts-ignore
+        window.plausible(name, { props: payload });
+        return;
+      }
+      window.dispatchEvent(new CustomEvent('analytics', { detail: { name, payload } }));
+    } catch {}
+  };
+
   const handleTauChange = (value: number) => {
     setAnimating(true);
     setTau(value);
+    try {
+      // Compute metrics at the new threshold for analytics
+      const includedNow = dataset.vs.filter(c => c.prob >= value);
+      const metricsNow = calculateMetrics(includedNow);
+      track('tau_change', {
+        task,
+        tau: Number(value.toFixed(2)),
+        included: metricsNow.included,
+        diversity: Number(metricsNow.diversity.toFixed(2)),
+      });
+    } catch {}
     setTimeout(() => setAnimating(false), 300);
   };
 

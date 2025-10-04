@@ -39,6 +39,11 @@ import { Sidenote, Figure } from "@/components/academic";
   </span>
 </div>
 
+<div className="not-prose mb-10">
+  <OpeningHook client:visible />
+  {/* Per IA: Opening Hook above TL;DR */}
+</div>
+
 ## TL;DR
 
 Human readers encounter mode‑collapsed outputs when asking for multiple ideas. Alignment amplifies typical completions; VS asks for a distribution to recover diversity.
@@ -47,9 +52,7 @@ Human readers encounter mode‑collapsed outputs when asking for multiple ideas.
 - VS prompts for a **probability distribution** over candidates rather than a single instance [@zhang2025vs].
 - A threshold $\tau$ allows **diversity tuning** without retraining [@zhang2025vs, pp. 7–8].
 
-<div className="not-prose mb-10">
-  <OpeningHook client:visible />
-</div>
+Prefer a ready-to-use template? [Copy VS Prompt](#recipes).
 
 {/* Quick Start moved to Recipes per IA alignment */}
 
@@ -106,6 +109,16 @@ VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang20
 
 See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
 
+### Evidence at a Glance
+
+- Creative writing diversity: +1.6–2.1× [@zhang2025vs, Figure 3a–c] → [Figure @fig:diversity-gains](#fig:diversity-gains)
+- Post‑training retention: 66.8% [@zhang2025vs, Figure 4] → [Figure @fig:post-training](#fig:post-training)
+- Temperature orthogonality: combines with VS [@zhang2025vs, Figure 5] → [Figure @fig:temperature-ablation](#fig:temperature-ablation)
+- Scaling trend: larger models gain ~1.5–2× [@zhang2025vs, Figure 3e–f] → [Figure @fig:scaling-trend](#fig:scaling-trend)
+- Dialogue simulation: VS matches/surpasses FT [@zhang2025vs, Figure 6a]
+- Open‑ended QA: lower KL, higher coverage‑N, precision ≈ 1.0 [@zhang2025vs, Figure 7]
+- Synthetic data → math accuracy: 37.5% vs 32.8% avg [@zhang2025vs, Table 4]
+
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   <DiversityGainsVisual client:visible />
 </Figure>
@@ -113,6 +126,14 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
 <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
   <PostTrainingVisual client:visible />
 </Figure>
+
+### Open‑Ended QA (Fig. 7)
+
+VS achieves lower KL divergence and higher coverage‑N while maintaining precision ≈ 1.0 on open‑ended QA benchmarks [@zhang2025vs, Figure 7]. This indicates distribution‑level prompting improves breadth without sacrificing answer quality.
+
+### Synthetic Data → Math Accuracy (Table 4)
+
+Training with VS‑generated synthetic data improves downstream math accuracy (**37.5% vs 32.8%** average), demonstrating transfer beyond creative tasks [@zhang2025vs, Table 4].
 
 ## VS ≠ Temperature: Orthogonal Benefits
 
@@ -136,6 +157,7 @@ Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis i
 
 In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS’s applicability beyond creative generation into behaviorally grounded distributions.
 
+<a id="variants" />
 ## VS Variants: When to Use Which
 
 <div className="not-prose mb-12">
@@ -154,8 +176,17 @@ See the difference in actual outputs between direct prompting and VS:
 
 ## Is VS Right for You?
 
-Use VS when you need creative diversity (stories, jokes, ideas), realistic distributions (simulations, surveys), or variety in synthetic data — and when a training‑free method is preferred. Skip VS for tasks requiring a single correct answer, strict determinism, or maximal speed.
+Use VS when:
+- You need creative diversity (stories, jokes, ideas)
+- You want realistic distributions (simulations, surveys)
+- You are generating synthetic data and want variety with quality
+- You prefer training‑free techniques compatible with closed models
 
+Skip VS when:
+- There is a single correct answer or strict determinism is required
+- Maximal speed or minimum token usage is the only priority
+
+<a id="recipes" />
 ## Prompt Recipes
 
 <div className="not-prose mb-6">
@@ -168,6 +199,8 @@ Use VS when you need creative diversity (stories, jokes, ideas), realistic distr
 <CodeBlock
   code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {\"candidates\":[{\"text\":\"...\",\"prob\":0.28}, ...]}\nOnly include candidates with probability ≥ {τ}. Ensure probabilities sum to 1.`}
   language="text"
+  analyticsEvent="copy_vs_prompt"
+  analyticsPayload={{ kind: 'VS-Standard' }}
   client:idle
 />
 
@@ -176,6 +209,8 @@ Use VS when you need creative diversity (stories, jokes, ideas), realistic distr
 <CodeBlock
   code={`Think step-by-step to enumerate distinct styles/approaches.\nThen generate k={5} {TASK} with probabilities in JSON (probabilities sum to 1).\nOnly include items with probability ≥ {τ}.`}
   language="text"
+  analyticsEvent="copy_vs_prompt"
+  analyticsPayload={{ kind: 'VS-CoT' }}
   client:idle
 />
 
@@ -184,8 +219,12 @@ Use VS when you need creative diversity (stories, jokes, ideas), realistic distr
 <CodeBlock
   code={`Generate k={5} {TASK} candidates.\nFor each, return text and confidence ∈ [0,1]. Only include items with confidence ≥ {τ_conf}.`}
   language="text"
+  analyticsEvent="copy_vs_prompt"
+  analyticsPayload={{ kind: 'VS-Multi' }}
   client:idle
 />
+
+See the [variants comparison](#variants) for when to use each variant.
 
 ## Implementation Tips
 

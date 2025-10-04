@@ -8,6 +8,8 @@ interface CodeBlockProps {
   showLineNumbers?: boolean;
   className?: string;
   copyable?: boolean;
+  analyticsEvent?: string;
+  analyticsPayload?: Record<string, unknown>;
 }
 
 export default function CodeBlock({
@@ -16,9 +18,40 @@ export default function CodeBlock({
   title,
   showLineNumbers = false,
   className = '',
-  copyable = true
+  copyable = true,
+  analyticsEvent,
+  analyticsPayload
 }: CodeBlockProps) {
   const lines = code.trim().split('\n');
+
+  const emitAnalytics = (name?: string, payload?: Record<string, unknown>) => {
+    if (!name || typeof window === 'undefined') return;
+    try {
+      // Segment-style
+      // @ts-ignore
+      if (window.analytics?.track) {
+        // @ts-ignore
+        window.analytics.track(name, payload || {});
+        return;
+      }
+      // gtag
+      // @ts-ignore
+      if (window.gtag) {
+        // @ts-ignore
+        window.gtag('event', name, payload || {});
+        return;
+      }
+      // Plausible
+      // @ts-ignore
+      if (window.plausible) {
+        // @ts-ignore
+        window.plausible(name, { props: payload || {} });
+        return;
+      }
+      // Fallback: CustomEvent for app listeners
+      window.dispatchEvent(new CustomEvent('analytics', { detail: { name, payload } }));
+    } catch {}
+  };
 
   return (
     <div className={clsx('relative group rounded-lg overflow-hidden', className)}>
@@ -35,6 +68,7 @@ export default function CodeBlock({
             variant="floating"
             size="sm"
             className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            onCopy={() => emitAnalytics(analyticsEvent, analyticsPayload)}
           />
         )}
 

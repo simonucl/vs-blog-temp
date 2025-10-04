@@ -9,6 +9,7 @@ interface CopyButtonProps {
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'inline' | 'floating';
   label?: string;
+  onCopy?: () => void;
 }
 
 export default function CopyButton({
@@ -16,7 +17,8 @@ export default function CopyButton({
   className = '',
   size = 'md',
   variant = 'default',
-  label = 'Copy'
+  label = 'Copy',
+  onCopy
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -24,6 +26,9 @@ export default function CopyButton({
     const success = copy(text);
     if (success) {
       setCopied(true);
+      try {
+        onCopy?.();
+      } catch {}
       setTimeout(() => setCopied(false), 2000);
     }
   };
