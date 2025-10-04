@@ -347,6 +347,20 @@ Let `rehype-citation` render the bibliography from `src/references.bib`. At the 
 
 Do not inline BibTeX as code in the article body. Remove any “Citation” code blocks in favor of this section.
 
+Optional polish:
+
+- Add a direct download link for BibTeX near the References heading. Place a copy of `references.bib` in `public/` and link with the site base URL or explicit base path (e.g., `/vs-blog-temp/references.bib`).
+
+- Use Chicago Author‑Date CSL for this explainer. Add the CSL at `src/styles/chicago-author-date.csl` and pass it to `rehype-citation` in `astro.config.ts`:
+
+```ts
+['rehype-citation', {
+  bibliography: 'src/references.bib',
+  csl: 'src/styles/chicago-author-date.csl',
+  linkCitations: true
+}]
+```
+
 **Validation:** Figures/equations numbered; cross‑refs link to anchors; bibliography renders under “References”.
 
 ---
@@ -364,6 +378,13 @@ Ensure every claim in “Evidence” maps to the paper, mirroring PROJECT_PLAN �
 - Synthetic data → math accuracy: [@zhang2025vs, Table 4]
 
 Add these citations or footnotes at the point of each claim.
+
+Minimal visuals for stubs (optional but recommended):
+
+```mdx
+<Table id="openqa" caption="Open‑ended QA metrics summary [@zhang2025vs, Figure 7].">{/* rows */}</Table>
+<Table id="synthetic-math" caption="Synthetic data → downstream math accuracy [@zhang2025vs, Table 4].">{/* rows */}</Table>
+```
 
 ---
 

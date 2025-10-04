@@ -248,7 +248,11 @@ export default function VSPlayground() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/30 rounded-lg">
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/30 rounded-lg"
+        role="status"
+        aria-live="polite"
+      >
         {mode === 'VS vs Direct' ? (
           <>
             <MetricCard label="Direct Included" value={directMetrics.included} />

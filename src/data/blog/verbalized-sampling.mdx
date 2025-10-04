@@ -25,7 +25,7 @@ import VSVariantsComparison from "@/components/sections/VSVariantsComparison";
 import CodeBlock from "@/components/ui/CodeBlock";
 import OpeningHook from "@/components/sections/OpeningHook";
 import AhaMoment from "@/components/sections/AhaMoment";
-import { Sidenote, Figure } from "@/components/academic";
+import { Sidenote, Figure, Table } from "@/components/academic";
 
 <div className="not-prose flex justify-center gap-3 my-6">
   <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 font-semibold">
@@ -133,9 +133,35 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
 
 VS achieves lower KL divergence and higher coverage‑N while maintaining precision ≈ 1.0 on open‑ended QA benchmarks [@zhang2025vs, Figure 7]. This indicates distribution‑level prompting improves breadth without sacrificing answer quality.
 
+<Table id="openqa" caption="Open‑ended QA metrics summary [@zhang2025vs, Figure 7].">
+  <thead>
+    <tr><th>Metric</th><th>VS impact</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>KL divergence</td><td>Lower (closer to target distribution)</td></tr>
+    <tr><td>Coverage‑N</td><td>Higher (broader answer set)</td></tr>
+    <tr><td>Precision</td><td>≈ 1.0 (maintained)</td></tr>
+  </tbody>
+  
+</Table>
+
+See [Table @table:openqa](#table:openqa) for a compact summary.
+
 ### Synthetic Data → Math Accuracy (Table 4)
 
 Training with VS‑generated synthetic data improves downstream math accuracy (**37.5% vs 32.8%** average), demonstrating transfer beyond creative tasks [@zhang2025vs, Table 4].
+
+<Table id="synthetic-math" caption="Synthetic data → downstream math accuracy [@zhang2025vs, Table 4].">
+  <thead>
+    <tr><th>Training data</th><th>Average accuracy</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>VS‑generated synthetic</td><td>37.5%</td></tr>
+    <tr><td>Baseline</td><td>32.8%</td></tr>
+  </tbody>
+</Table>
+
+See [Table @table:synthetic-math](#table:synthetic-math) for key figures.
 
 ## VS ≠ Temperature: Orthogonal Benefits
 
@@ -159,6 +185,10 @@ Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis i
 
 In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS’s applicability beyond creative generation into behaviorally grounded distributions.
 
+See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
+
+[Back to top ↑](#article)
+
 <a id="variants" />
 ## VS Variants: When to Use Which
 
@@ -167,6 +197,8 @@ In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1
 </div>
 
 Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
+
+[Back to top ↑](#article)
 
 ## Qualitative Examples
 
@@ -279,5 +311,10 @@ Don’t:
 </details>
 
 ## References
+
+<p>
+  <a href="/vs-blog-temp/references.bib" download>Download BibTeX</a>
+  {/* If base changes, update the path above to match astro.config.ts base */}
+</p>
 
 <section id="references" />

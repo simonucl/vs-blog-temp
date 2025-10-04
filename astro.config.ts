@@ -41,6 +41,7 @@ export default defineConfig({
       rehypeKatex,
       [rehypeCitation, {
         bibliography: 'src/references.bib',
+        csl: 'src/styles/chicago-author-date.csl',
         linkCitations: true
       }]
     ],
