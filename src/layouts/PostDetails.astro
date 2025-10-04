@@ -14,6 +14,8 @@ import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
+import TableOfContents from "@/components/TableOfContents.astro";
+import CiteThis from "@/components/CiteThis.astro";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -35,7 +37,7 @@ const {
   hideEditPost,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings = [] } = await render(post);
 
 let ogImageUrl: string | undefined;
 
@@ -67,6 +69,14 @@ const layoutProps = {
   scrollSmooth: true,
 };
 
+// Prefix site base for public assets when a leading slash is used
+function withBase(url?: string) {
+  if (!url) return url;
+  const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
+  if (url.startsWith("/")) return `${base}${url}`;
+  return url;
+}
+
 /* ========== Prev/Next Posts ========== */
 
 const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
@@ -93,23 +103,72 @@ const nextPost =
     ]}
     data-pagefind-body
   >
-    <h1
-      transition:name={slugifyStr(title)}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-    >
-      {title}
-    </h1>
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "max-sm:hidden",
-          { hidden: !SITE.editPost.enabled || hideEditPost },
-        ]}>|</span
-      >
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
-    </div>
+    {post.data.academic ? (
+      <section class="paper-header">
+        <h1 transition:name={slugifyStr(title)} class="paper-title">{title}</h1>
+        {(() => { const authors = Array.isArray(post.data.authors) ? post.data.authors : []; return authors.length > 0 ? (
+          <p class="paper-authors">
+            <strong>
+              {authors.map((a: any, i: number) => {
+                const obj = typeof a === 'string' ? { name: a, aff: [] } : a;
+                return (
+                  <>
+                    {obj.name}{Array.isArray(obj.aff) && obj.aff.length ? <sup>{obj.aff.join(',')}</sup> : null}
+                    {i < authors.length - 1 ? ', ' : ''}
+                  </>
+                );
+              })}
+            </strong>
+          </p>
+        ) : null })()}
+        {(() => { const affs = Array.isArray(post.data.affiliations) ? post.data.affiliations : []; return affs.length > 0 ? (
+          <p class="paper-affils">
+            {affs.map((a: string, i: number) => (
+              <span><sup>{i + 1}</sup> {a}{i < affs.length - 1 ? ' · ' : ''}</span>
+            ))}
+          </p>
+        ) : null })()}
+        <p class="paper-meta">
+          <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+          {post.data.pdfUrl && <> · <a href={withBase(String(post.data.pdfUrl))}>PDF</a></>}
+          {post.data.codeUrl && <> · <a href={String(post.data.codeUrl)}>Code</a></>}
+          {post.data.bibUrl && <> · <a href={withBase(String(post.data.bibUrl))} download>BibTeX</a></>}
+          {post.data.bibUrl && <CiteThis bibUrl={withBase(String(post.data.bibUrl))} class="no-print" />}
+        </p>
+        {post.data.abstract && (
+          <section aria-labelledby="abstract">
+            <h2 id="abstract" class="abstract-heading">Abstract</h2>
+            <div class="abstract abstract-box">{post.data.abstract}</div>
+          </section>
+        )}
+      </section>
+    ) : (
+      <>
+        <h1
+          transition:name={slugifyStr(title)}
+          class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+        >
+          {title}
+        </h1>
+        <div class="my-2 flex items-center gap-2">
+          <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+          <span
+            aria-hidden="true"
+            class:list={[
+              "max-sm:hidden",
+              { hidden: !SITE.editPost.enabled || hideEditPost },
+            ]}>|</span
+          >
+          <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+        </div>
+      </>
+    )}
+    {post.data.academic && (headings?.length ?? 0) > 0 && (
+      <nav class="toc no-print" aria-labelledby="toc-heading">
+        <h2 id="toc-heading" class="toc-heading">Contents</h2>
+        <TableOfContents headings={(headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)} />
+      </nav>
+    )}
     <article
       id="article"
       class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
@@ -119,20 +178,22 @@ const nextPost =
 
     <hr class="my-8 border-dashed" />
 
-    <EditPost class="sm:hidden" {hideEditPost} {post} />
+    {!post.data.academic && <EditPost class="sm:hidden" {hideEditPost} {post} />}
 
-    <ul class="mt-4 mb-8 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
-    </ul>
+    {!post.data.academic && (
+      <ul class="mt-4 mb-8 sm:my-8">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
+      </ul>
+    )}
 
     <BackToTopButton />
 
-    <ShareLinks />
+    {!post.data.academic && <ShareLinks />}
 
     <hr class="my-6 border-dashed" />
 
-    <!-- Previous/Next Post Buttons -->
-    <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    {!post.data.academic && (
+      <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {
         prevPost && (
           <a
@@ -162,6 +223,7 @@ const nextPost =
         )
       }
     </div>
+    )}
   </main>
   <Footer />
 </Layout>
@@ -210,11 +272,24 @@ const nextPost =
 
   /** Attaches links to headings in the document,
    *  allowing sharing of sections easily */
+  function slugify(text) {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
   function addHeadingLinks() {
     const headings = Array.from(
       document.querySelectorAll("h2, h3, h4, h5, h6")
     );
     for (const heading of headings) {
+      if (!heading.id) {
+        const text = heading.textContent || '';
+        heading.id = slugify(text);
+      }
       heading.classList.add("group");
       const link = document.createElement("a");
       link.className =

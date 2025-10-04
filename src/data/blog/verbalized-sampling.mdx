@@ -10,6 +10,31 @@ tags:
   - diversity
   - prompting
   - verbalized-sampling
+academic: true
+authors:
+  - name: "Jiayi Zhang"
+    aff: [1]
+  - name: "Simon Yu"
+    aff: [1]
+  - name: "Derek Chong"
+    aff: [2]
+  - name: "Anthony Sicilia"
+    aff: [3]
+  - name: "Michael R. Tomz"
+    aff: [2]
+  - name: "Christopher D. Manning"
+    aff: [2]
+  - name: "Weiyan Shi"
+    aff: [1]
+affiliations:
+  - "Northeastern University"
+  - "Stanford University"
+  - "West Virginia University"
+pdfUrl: "/paper-preprint.pdf"
+codeUrl: "https://github.com/CHATS-lab/verbalize-sampling"
+bibUrl: "/verbalized-sampling.bib"
+abstract: "We prompt the model for a small distribution—k candidates plus weights—recovering base-model diversity while maintaining quality and safety across tasks."
+showTOC: true
 ---
 
 import VSPlayground from "@/components/interactives/VSPlayground";
@@ -25,36 +50,23 @@ import VSVariantsComparison from "@/components/sections/VSVariantsComparison";
 import CodeBlock from "@/components/ui/CodeBlock";
 import OpeningHook from "@/components/sections/OpeningHook";
 import AhaMoment from "@/components/sections/AhaMoment";
-import { Sidenote, Figure, Table } from "@/components/academic";
+import { Sidenote, Table } from "@/components/academic";
+import Figure from "@/components/academic/Figure.astro";
 
-<div className="not-prose flex justify-center gap-3 my-6">
-  <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 font-semibold">
-    ✨ Training-Free
-  </span>
-  <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold">
-    🚀 Works with GPT, Claude, Gemini
-  </span>
-  <span className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 font-semibold">
-    📈 1.6-2.1× Diversity Gain
-  </span>
-</div>
+{/* Badges removed for academic tone */}
 
 <div className="not-prose mb-10">
   <OpeningHook client:visible />
   {/* Per IA: Opening Hook above TL;DR */}
 </div>
 
-## TL;DR
+## Intuition
 
-Human readers encounter mode‑collapsed outputs when asking for multiple ideas. Alignment amplifies typical completions; VS asks for a distribution to recover diversity.
+Aligned LLMs can collapse to stereotypical outputs. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
 
-- RLHF introduces **typicality bias** ($\varepsilon>0$) → sharpening and mode collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
-- VS prompts for a **probability distribution** over candidates rather than a single instance [@zhang2025vs].
-- A threshold $\tau$ allows **diversity tuning** without retraining [@zhang2025vs, pp. 7–8].
-
-Prefer a ready-to-use template? [Copy VS Prompt](#recipes).
-
-{/* Quick Start moved to Recipes per IA alignment */}
+- Typicality bias ($\varepsilon>0$) sharpens the policy and induces collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
+- VS elicits a probability distribution over candidates [@zhang2025vs].
+- A threshold $\tau$ tunes diversity [@zhang2025vs, pp. 7–8].
 
 ## Why It Works
 

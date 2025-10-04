@@ -21,6 +21,22 @@ const blog = defineCollection({
       canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),
       timezone: z.string().optional(),
+      // Academic page options (optional)
+      academic: z.boolean().optional(),
+      authors: z
+        .array(
+          z.union([
+            z.string(),
+            z.object({ name: z.string(), aff: z.array(z.number()).optional() }),
+          ])
+        )
+        .optional(),
+      affiliations: z.array(z.string()).optional(),
+      pdfUrl: z.string().optional(),
+      codeUrl: z.string().optional(),
+      bibUrl: z.string().optional(),
+      abstract: z.string().optional(),
+      showTOC: z.boolean().optional(),
     }),
 });
 

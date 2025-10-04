@@ -1,0 +1,23 @@
+---
+import { nextFigureNumber } from '@/lib/counters';
+
+interface Props {
+  id?: string;
+  caption: string;
+  class?: string;
+  n?: number;
+}
+
+const { id, caption, class: className = '', n: nProp } = Astro.props as Props;
+
+const key = Astro.url?.pathname ?? 'page';
+const n = nProp ?? nextFigureNumber(key);
+const captionId = id ? `${id}-caption` : `fig-${n}-caption`;
+---
+<figure id={id ?? `fig-${n}`} class={`figure ${className}`} role="group" aria-labelledby={captionId}>
+  <slot />
+  <figcaption id={captionId} class="figure-caption">
+    <span class="figlabel">Figure {n}.</span> {caption}
+  </figcaption>
+</figure>
+
