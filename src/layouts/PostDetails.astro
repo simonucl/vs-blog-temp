@@ -38,6 +38,7 @@ const {
 } = post.data;
 
 const { Content, headings = [] } = await render(post);
+const showTOC = (post.data.academic || post.data.showTOC) && (headings?.length ?? 0) > 0;
 
 let ogImageUrl: string | undefined;
 
@@ -122,7 +123,8 @@ if (post.data.academic) {
   <main
     id="main-content"
     class:list={[
-      "mx-auto w-full max-w-app px-4 pb-12",
+      // Expand container on large screens to accommodate sidebar + article comfortably
+      "mx-auto w-full max-w-app lg:max-w-[80rem] px-4 pb-12",
       { "mt-8": !SITE.showBackButton },
     ]}
     data-pagefind-body
@@ -187,21 +189,39 @@ if (post.data.academic) {
         </div>
       </>
     )}
-    {post.data.academic && (headings?.length ?? 0) > 0 && (
-      <nav class="toc no-print" aria-labelledby="toc-heading">
-        <h2 id="toc-heading" class="toc-heading">Table of Contents</h2>
+    {showTOC && (
+      // Mobile / small screens: show ToC above the content
+      <nav class="toc lg:hidden no-print" aria-labelledby="toc-heading-mobile">
+        <h2 id="toc-heading-mobile" class="toc-heading">Table of Contents</h2>
         <TableOfContents headings={(headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)} />
       </nav>
     )}
     {post.data.academic && jsonLd && (
-      <script type="application/ld+json">{jsonLd}</script>
+      <script is:inline type="application/ld+json">{jsonLd}</script>
     )}
-    <article
-      id="article"
-      class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
-      <Content />
-    </article>
+    <div class="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
+      {showTOC && (
+        // Desktop / large screens: sticky left sidebar ToC
+        <aside class="hidden lg:block">
+          <nav
+            class="toc lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-auto no-print"
+            aria-labelledby="toc-heading-aside"
+          >
+            <h2 id="toc-heading-aside" class="toc-heading">Table of Contents</h2>
+            <TableOfContents
+              headings={(headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)}
+            />
+          </nav>
+        </aside>
+      )}
+
+      <article
+        id="article"
+        class="app-prose mx-auto mt-8 lg:mt-0 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      >
+        <Content />
+      </article>
+    </div>
 
     <hr class="my-8 border-dashed" />
 

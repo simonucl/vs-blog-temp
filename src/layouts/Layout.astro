@@ -28,7 +28,11 @@ const {
   scrollSmooth = false,
 } = Astro.props;
 
-const base = (import.meta.env.BASE_URL ?? "/");
+// Ensure base always ends with a trailing slash for safe concatenation
+const base = (() => {
+  const b = import.meta.env.BASE_URL ?? "/";
+  return b.endsWith("/") ? b : `${b}/`;
+})();
 const socialImageURL = new URL(
   ogImage.startsWith("/") ? base + ogImage.slice(1) : ogImage,
   Astro.url

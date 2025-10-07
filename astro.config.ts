@@ -74,8 +74,10 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src')
-      }
+        '@': path.resolve(__dirname, './src'),
+      },
+      // Deduplicate React to avoid multiple copies during dev (prevents invalid hook calls)
+      dedupe: ['react', 'react-dom'],
     }
   },
   image: {

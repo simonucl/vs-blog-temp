@@ -81,6 +81,10 @@ html[data-theme="dark"] {
   .article {
     padding-right: clamp(0px, 5vw, 300px); /* sidenotes lane */
   }
+  /* Ensure prose layout used in PostDetails reserves a right lane for sidenotes on wide screens */
+  .app-prose {
+    padding-right: clamp(0px, 5vw, 300px);
+  }
 }
 
 /* Prose Typography */
@@ -237,6 +241,7 @@ html[data-theme="dark"] {
 .sidenote {
   float: right;
   clear: right;
+  /* Desktop values are overridden below to align with a reserved lane. */
   margin-right: -60%;
   width: 50%;
   margin-top: 0.3rem;
@@ -264,6 +269,22 @@ html[data-theme="dark"] {
     padding: var(--space-sm) var(--space-md);
     background: var(--playground-bg);
     border-left: 3px solid var(--color-accent);
+  }
+}
+
+/* On large screens, reserve an explicit right lane for sidenotes and place them
+   exactly into that lane to avoid horizontal overflow and awkward scroll. */
+@media (min-width: 1024px) {
+  .app-prose {
+    --sidenote-lane: clamp(240px, 22vw, 300px);
+    /* Keep readable text measure while reserving extra width for the sidenote lane */
+    max-width: calc(var(--measure) + var(--sidenote-lane));
+    padding-right: var(--sidenote-lane);
+  }
+
+  .sidenote {
+    margin-right: calc(-1 * var(--sidenote-lane));
+    width: var(--sidenote-lane);
   }
 }
 
