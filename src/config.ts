@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://dcx.github.io/vs-blog-temp/", // replace this with your deployed domain
+  website: "https://simonucl.github.io/vs-blog-temp/", // replace this with your deployed domain
   author: "Jiayi Zhang, Simon Yu, Derek Chong, et al.",
   profile: "https://github.com/CHATS-lab/verbalized-sampling",
   desc: "Verbalized Sampling: A training-free method to restore diversity in aligned LLMs by prompting for probability distributions.",
