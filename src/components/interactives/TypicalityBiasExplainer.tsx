@@ -57,6 +57,7 @@ export default function TypicalityBiasExplainer() {
       {/* Interactive Controls */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="p-6 bg-white rounded-lg shadow-md border border-slate-200">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Try It Yourself: Adjust the Sliders</h3>
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -76,10 +77,10 @@ export default function TypicalityBiasExplainer() {
                 onChange={(e) => setEpsilon(parseFloat(e.target.value))}
                 className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider-thumb border border-blue-300"
               />
-              <p className="text-sm text-slate-600 mt-2">
+              <p className="text-base text-slate-600 mt-2">
                 How much the model prefers "typical" outputs. Higher ε = stronger preference
                 for common patterns.
-              </p>
+              </p>  
             </div>
 
             <div>
@@ -100,7 +101,7 @@ export default function TypicalityBiasExplainer() {
                 onChange={(e) => setBeta(parseFloat(e.target.value))}
                 className="w-full h-3 bg-green-200 rounded-lg appearance-none cursor-pointer slider-thumb border border-green-300"
               />
-              <p className="text-sm text-slate-600 mt-2">
+              <p className="text-base text-slate-600 mt-2">
                 Regularization strength during alignment. Lower β = less constraint on
                 staying close to base model.
               </p>
@@ -110,7 +111,7 @@ export default function TypicalityBiasExplainer() {
 
         <div className="p-6 bg-white rounded-lg shadow-md border border-slate-200">
           <div className="text-center mb-4">
-            <div className="text-sm font-semibold text-slate-600 mb-2">
+            <div className="text-xl font-semibold text-slate-600 mb-2">
               Distribution Sharpening Factor
             </div>
             <motion.div
@@ -141,7 +142,7 @@ export default function TypicalityBiasExplainer() {
               </div>
             </div>
             <summary className="font-semibold text-slate-900 text-lg cursor-pointer p-4 flex items-center gap-2">
-              <span>The Equation</span>
+              <span>Check the Math</span>
             </summary>
           </details>
         </div>
@@ -149,7 +150,7 @@ export default function TypicalityBiasExplainer() {
 
       {/* Before/After Comparison */}
       <div className="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">
+        <h3 className="text-2xl font-semibold text-slate-900 mb-4">
           Distribution Impact: Before vs After Alignment
         </h3>
 
@@ -249,7 +250,7 @@ export default function TypicalityBiasExplainer() {
               <h4 className="font-semibold text-blue-900 mb-1">
                 Why This Matters
               </h4>
-              <p className="text-sm text-blue-800">
+              <p className="text-lg text-blue-800">
                 Higher ρ means more mode collapse. Alignment (RLHF/DPO) introduces typicality
                 bias ε while using small KL penalties β, leading to ρ &gt; 1. This explains
                 why aligned models produce less diverse outputs.
@@ -258,10 +259,10 @@ export default function TypicalityBiasExplainer() {
           </div>
         </div>
 
-        <div className="p-5 bg-red-50 rounded-lg border border-red-200">
+        <div className="p-5 bg-green-50 rounded-lg border-2 border-green-500">
           <div className="flex items-start gap-3">
             <svg
-              className="flex-shrink-0 text-red-600 mt-0.5"
+              className="flex-shrink-0 text-green-600 mt-0.5"
               width="24"
               height="24"
               fill="none"
@@ -276,10 +277,10 @@ export default function TypicalityBiasExplainer() {
               />
             </svg>
             <div>
-              <h4 className="font-semibold text-red-900 mb-1">
+              <h4 className="font-semibold text-green-900 mb-1">
                 VS Solution
               </h4>
-              <p className="text-sm text-red-800">
+              <p className="text-lg text-green-800">
                 VS bypasses this sharpening by prompting the model to verbalize reasoning
                 <em> before</em> committing to an answer. This accesses the base model's
                 broader distribution (ρ ≈ 1) instead of the sharpened aligned distribution.

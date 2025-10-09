@@ -299,7 +299,7 @@ if (post.data.academic) {
           <section aria-labelledby="abstract">
             <div class="abstract abstract-box">
               <h2 id="abstract" class="abstract-heading">TL;DR</h2>
-              {post.data.abstract}
+              <div set:html={post.data.abstract} />
             </div>
           </section>
         )}

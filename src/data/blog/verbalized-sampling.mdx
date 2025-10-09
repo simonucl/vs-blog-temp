@@ -36,7 +36,7 @@ homepageUrl: "https://www.verbalized-sampling.com/"
 xThreadUrl: "https://x.com/YOUR_X_THREAD_URL"
 notebookUrl: "https://github.com/CHATS-lab/verbalized-sampling?tab=readme-ov-file#-interactive-notebooks"
 bibUrl: "/references.bib"
-abstract: "We prompt the model for a small distribution—k candidates plus weights—recovering base-model diversity while maintaining quality and safety across tasks."
+abstract: "Post-training alignment reduces LLM diversity through mode collapse, driven by typicality bias in human preference data. We introduce <strong>Verbalized Sampling (VS)</strong>, a training-free prompting method that asks models to output probability distributions over responses (e.g., \"Generate 5 jokes with probabilities\"). VS increases diversity by <strong>1.6-2.1×</strong> in creative writing by simply changing the way we prompt, while preserving quality and safety, providing an inference-time remedy for mode collapse."
 showTOC: true
 ---
 
@@ -67,15 +67,11 @@ import Figure from "@/components/academic/Figure.astro";
 
 You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a short story, and it begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
 
-This frustrating phenomenon is called **mode collapse**. Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
+This frustrating phenomenon is called [**mode collapse**](https://www.lesswrong.com/posts/t9svvNPNmFf5Qa3TA/mysteries-of-mode-collapse). Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer [@kirk2024; @murthy2025]. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
-## 2. Intuition
+## 2. How It Works: From Intuition to Theory
 
-Aligned LLMs collapse to stereotypical outputs due to [**typicality bias**](https://arxiv.org/abs/2501.14860) in human preferences. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
-
-- Typicality bias ($\varepsilon>0$) sharpens the policy and induces collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
-- VS elicits a probability distribution over candidates [@zhang2025vs].
-- A threshold $\tau$ tunes diversity [@zhang2025vs, pp. 7–8].
+Why do aligned LLMs keep giving you the same answers? And how does simply asking for probabilities fix it? This section walks you through the idea: from an intuitive metaphor, to the typicality bias at the root of mode collapse, to the mathematical formalization, and finally to how Verbalized Sampling solves the problem.
 
 ### 2.1 The Library Metaphor
 
@@ -83,34 +79,40 @@ Think of a massive library and the LLM as the librarian:
 
 - **Standard Prompt** ("tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
 - **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
-- **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection—mystery, SciFi, history, all of it—and then pick five random books that represent that whole collection.
+- **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
 
 By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice.<Sidenote number={0}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>
 
-## 3. Why It Works
+### 2.2 The Root Cause: Typicality Bias
 
-### 3.1 A Fundamental Cause: You're Biased Towards Typical Text
+Humans have a deep-seated psychological quirk we call [**typicality bias**](https://arxiv.org/abs/2501.14860). We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options.<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>
 
-Humans have a deep-seated psychological quirk we call **typicality bias**. We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options.<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>
+When human annotators provide preference data for RLHF, they're not rating "helpfulness" in a vacuum. Given two equally correct responses, they systematically prefer the more familiar, conventional one: the more **typical** one.
 
-When human annotators provide preference data for RLHF, they're not rating "helpfulness" in a vacuum. Given two equally correct responses, they systematically prefer the more familiar, conventional one—the more **typical** one.
+<div className="not-prose mb-12">
+  <TypicalityBiasExplainer client:visible />
+</div>
 
-We formalize this as:
+### 2.3 The Mathematics
+
+We formalize typicality bias as a reward function that explicitly favors typical outputs:
 
 $$r(x,y) = r_{\text{true}}(x,y) + \varepsilon\,\log p_{\text{base}}(y|x).$$
 
 where $\varepsilon > 0$ represents the weight of typicality bias.<Sidenote number={1.5}>We validated this empirically on the HELPSTEER preference dataset. By examining response pairs with identical correctness ratings, we isolated typicality's effect on "helpfulness" scores, finding $\hat{\varepsilon} = 0.57 \pm 0.07$. Furthermore, >50% of human-preferred responses across multiple datasets receive higher likelihood from base models [@zhang2025vs, Section 4].</Sidenote>
 
-### 3.2 Sharpening → mode collapse
+This bias causes **sharpening** in the aligned policy, concentrating probability mass on typical outputs:
 
 <a id="eq:sharpening" />
 $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\beta > 1.$$
 
-When utility is flat across many valid completions, sharpening concentrates mass on typical outputs.<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>
+When utility is flat across many valid completions, this sharpening leads directly to mode collapse.<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>
 
-### 3.3 Distribution‑level recovery (VS)
+### 2.4 The Solution: Distribution-Level Recovery
 
-VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
+**Verbalized Sampling (VS)** breaks this cycle by asking for a distribution of candidates with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
+
+On the US states task, VS aligns closely with the corpus distribution ($\mathrm{KL}\approx 0.12$), while direct prompting shows severe collapse [@zhang2025vs, p. 3].
 
 <Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
   <USStatesDemo client:visible />
@@ -118,14 +120,10 @@ VS asks for a distribution of candidates with probabilities, recovering pretrain
 
 VS recovers the pretraining distribution closely.<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>
 
+**Key insight**: VS asks for $k$ candidates with probabilities, then uses a threshold $\tau$ to tune diversity—lower thresholds include more diverse, lower-probability outputs [@zhang2025vs, pp. 7–8].
+
 <div className="not-prose mb-10">
   <AhaMoment client:visible />
-</div>
-
-## 4. Interactive Explainer: Typicality Bias
-
-<div className="not-prose mb-12">
-  <TypicalityBiasExplainer client:visible />
 </div>
 
 {/* ## 5. Try It: Diversity Playground
@@ -146,15 +144,12 @@ VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang20
 
 See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
 
-### 6.1 Evidence at a Glance
+### Results: Evidence at a Glance
 
 - Creative writing diversity: +1.6–2.1× [@zhang2025vs, Figure 3a–c] → [Figure @fig:diversity-gains](#fig:diversity-gains)
 - Post‑training retention: 66.8% [@zhang2025vs, Figure 4] → [Figure @fig:post-training](#fig:post-training)
 - Temperature orthogonality: combines with VS [@zhang2025vs, Figure 5] → [Figure @fig:temperature-ablation](#fig:temperature-ablation)
 - Scaling trend: larger models gain ~1.5–2× [@zhang2025vs, Figure 3e–f] → [Figure @fig:scaling-trend](#fig:scaling-trend)
-- Dialogue simulation: VS matches/surpasses FT [@zhang2025vs, Figure 6a]
-- Open‑ended QA: lower KL, higher coverage‑N, precision ≈ 1.0 [@zhang2025vs, Figure 7]
-- Synthetic data → math accuracy: 37.5% vs 32.8% avg [@zhang2025vs, Table 4]
 
 #### Creative Writing Diversity
 

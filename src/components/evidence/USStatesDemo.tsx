@@ -30,7 +30,7 @@ export default function USStatesDemo() {
         </Equation>
       </div>
 
-      {/* <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <DistributionChart
           data={chartData}
           title="US State Name Distribution"
@@ -38,7 +38,7 @@ export default function USStatesDemo() {
           klDivergence={usStatesData.kl_divergence}
           height={500}
         />
-      </div> */}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 bg-green-50 rounded-lg border border-green-200">
@@ -126,14 +126,15 @@ export default function USStatesDemo() {
         </div>
       </div>
 
-      <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+      {/* <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
         <p className="text-base text-slate-700">
           <strong>Source:</strong> Figure 2, p. 3 and §G.9 of the preprint.
           Model: {usStatesData.metadata.model}.
           Reference corpus: {usStatesData.metadata.reference_corpus}.
           Results averaged over {usStatesData.metadata.trials} trials.
         </p>
-      </div>
+      </div> */}
+      
     </div>
   );
 }

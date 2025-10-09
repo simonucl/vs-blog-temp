@@ -483,6 +483,53 @@ button.copy-button:active {
   }
 }
 
+/* Citation tooltips */
+.csl-entry {
+  margin-bottom: var(--space-md);
+}
+
+a[data-citation] {
+  position: relative;
+  cursor: help;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-accent);
+}
+
+a[data-citation]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  white-space: normal;
+  max-width: 600px;
+  min-width: 300px;
+  width: max-content;
+  font-size: var(--text-sm);
+  font-family: var(--font-ui);
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.5rem;
+  pointer-events: none;
+  line-height: 1.5;
+}
+
+a[data-citation]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-foreground);
+  margin-bottom: -6px;
+  z-index: 1001;
+}
+
 /* Evidence Cards */
 .evidence-card {
   background: var(--card-included);
