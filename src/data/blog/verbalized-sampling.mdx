@@ -142,7 +142,9 @@ This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025v
   <VSPlayground client:visible />
 </div>
 
-## 6. Evidence
+## 6. Experiments
+
+We conducted comprehensive experiments in various tasks to demonstrate the effectiveness of VS.
 
 VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
 
@@ -157,8 +159,6 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
 - Dialogue simulation: VS matches/surpasses FT [@zhang2025vs, Figure 6a]
 - Open‑ended QA: lower KL, higher coverage‑N, precision ≈ 1.0 [@zhang2025vs, Figure 7]
 - Synthetic data → math accuracy: 37.5% vs 32.8% avg [@zhang2025vs, Table 4]
-
-[Back to top ↑](#article)
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   <DiversityGainsVisual client:visible />
@@ -237,8 +237,6 @@ This opens huge possibilities for using LLMs in social science research, agent-b
 
 See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
 
-[Back to top ↑](#article)
-
 <a id="variants" />
 ## 10. VS Variants: When to Use Which
 
@@ -247,8 +245,6 @@ See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
 </div>
 
 Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
-
-[Back to top ↑](#article)
 
 ## 11. Qualitative Examples
 
@@ -260,9 +256,7 @@ See the difference in actual outputs between direct prompting and VS:
 
 ### 11.1 From "Once Upon a Time" to Bernard the Tax Accountant Bear
 
-With a standard prompt for "write a short story about a bear," we get a generic tale about a bear in a forest. It's fine, but forgettable.
-
-With Verbalized Sampling, we get this:
+With direct prompting for "write a short story about a bear," we get a generic tale about a bear in a forest. It's fine, but forgettable. With Verbalized Sampling, we get this:
 
 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-lg border-l-4 border-indigo-500 my-8">
 
@@ -276,17 +270,6 @@ This isn't just creative—it's **profound**. Bernard can be read as:
 
 This is the AI showing us the metaphorical depth it's capable of when freed from mode collapse.
 
-{/* ## Is VS Right for You?
-
-Use VS when:
-- You need creative diversity (stories, jokes, ideas)
-- You want realistic distributions (simulations, surveys)
-- You are generating synthetic data and want variety with quality
-- You prefer training‑free techniques compatible with closed models
-
-Skip VS when:
-- There is a single correct answer or strict determinism is required
-- Maximal speed or minimum token usage is the only priority */}
 
 {/* <a id="recipes" />
 ## Prompt Recipes
@@ -400,7 +383,7 @@ Don't:
   </p>
 </details>
 
-<details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
+<details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
   <summary className="font-semibold cursor-pointer">Which models support VS?</summary>
   <p className="mt-3 text-gray-600">
     VS works with any instruction-following LLM, both closed-source and open-source models:
@@ -408,6 +391,24 @@ Don't:
     <strong>Open-source:</strong> Llama, Mistral, Qwen, Phi, Gemma, and reasoning models like o3 and DeepSeek R1.
     No special access, API keys, or model modifications needed—just use the prompts as-is.
   </p>
+</details>
+
+<details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
+  <summary className="font-semibold cursor-pointer">Is VS right for you?</summary>
+  <div className="mt-3 text-gray-600">
+    <p className="mb-3"><strong>Use VS when:</strong></p>
+    <ul className="list-disc list-inside mb-4 space-y-1">
+      <li>You need creative diversity (stories, jokes, ideas)</li>
+      <li>You want realistic distributions (simulations, surveys)</li>
+      <li>You are generating synthetic data and want variety with quality</li>
+      <li>You prefer training‑free techniques compatible with closed models</li>
+    </ul>
+    <p className="mb-3"><strong>Skip VS when:</strong></p>
+    <ul className="list-disc list-inside space-y-1">
+      <li>There is a single correct answer or strict determinism is required</li>
+      <li>Maximal speed or minimum token usage is the only priority</li>
+    </ul>
+  </div>
 </details>
 
 ## Go Try It Yourself
