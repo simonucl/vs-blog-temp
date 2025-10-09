@@ -17,7 +17,7 @@ export default function USStatesDemo() {
           VS Recovers Pretraining Distribution
         </h2>
         <p className="text-2xl text-slate-600">
-          When asked to generate US state names, VS produces a distribution that closely
+          We asked the VS to generate all possible US state with corresponding probabilities, and VS produces a distribution that closely
           aligns with the pretraining corpus (RedPajama), achieving{' '}
           <strong className="text-red-600">KL divergence = 0.12</strong>.
           Direct prompting collapses to a few popular states (KL = 16.16).
