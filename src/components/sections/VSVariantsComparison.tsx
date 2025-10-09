@@ -122,22 +122,22 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
         <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-sm">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
                 Variant
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
                 Keyword
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-center text-base font-medium text-gray-500 uppercase tracking-wider">
                 Diversity Gain
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-center text-base font-medium text-gray-500 uppercase tracking-wider">
                 Quality
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-center text-base font-medium text-gray-500 uppercase tracking-wider">
                 Complexity
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider w-2/3">
                 Best For
               </th>
             </tr>
@@ -153,7 +153,7 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
               >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <span className="text-sm font-medium text-gray-900">{variant.name}</span>
+                    <span className="text-lg font-medium text-gray-900">{variant.name}</span>
                     {index === 0 && (
                       <span className="ml-2 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
                         Recommended
@@ -162,23 +162,23 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                  <code className="text-lg bg-gray-100 px-2 py-1 rounded">
                     {variant.keyword}
                   </code>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                  <span className="text-sm font-semibold text-green-600">
+                  <span className="text-lg font-semibold text-green-600">
                     {variant.performance.diversity}×
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                  <span className="text-sm">
+                  <span className="text-lg">
                     {(variant.performance.quality * 100).toFixed(0)}%
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   <span
-                    className={`px-2 py-1 text-xs rounded-full ${
+                    className={`px-2 py-1 text-base rounded-full ${
                       variant.performance.complexity === 'Low'
                         ? 'bg-green-100 text-green-800'
                         : variant.performance.complexity === 'Medium'
@@ -189,7 +189,7 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
                     {variant.performance.complexity}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-6 py-4 text-lg text-gray-500 w-1/3">
                   {variant.whenToUse[0]}
                 </td>
               </tr>
@@ -218,7 +218,7 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
             </div>
             <button
               onClick={() => setShowCode(!showCode)}
-              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-3 py-1 text-base bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             >
               {showCode ? 'Hide' : 'Show'} Code
             </button>
@@ -226,12 +226,12 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
 
           {/* When to Use */}
           <div className="mb-6">
-            <h5 className="text-sm font-semibold text-gray-700 mb-2">When to Use</h5>
-            <ul className="space-y-1">
+            <h5 className="text-xl font-semibold text-gray-700 mb-2">Best for</h5>
+            <ul className="space-y-2">
               {variants[selectedVariant].whenToUse.map((use, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <span className="text-sm text-gray-600">{use}</span>
+                <li key={index} className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5 text-xl">✓</span>
+                  <span className="text-xl text-gray-600 leading-relaxed">{use}</span>
                 </li>
               ))}
             </ul>
@@ -240,23 +240,23 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
           {/* Pros and Cons */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-              <h5 className="text-sm font-semibold text-gray-700 mb-2">Advantages</h5>
+              <h5 className="text-xl font-semibold text-gray-700 mb-2">Advantages</h5>
               <ul className="space-y-1">
                 {variants[selectedVariant].pros.map((pro, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-green-500 mt-0.5">+</span>
-                    <span className="text-sm text-gray-600">{pro}</span>
+                    <span className="text-lg text-gray-600">{pro}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-gray-700 mb-2">Considerations</h5>
+              <h5 className="text-xl font-semibold text-gray-700 mb-2">Considerations</h5>
               <ul className="space-y-1">
                 {variants[selectedVariant].cons.map((con, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-orange-500 mt-0.5">−</span>
-                    <span className="text-sm text-gray-600">{con}</span>
+                    <span className="text-lg text-gray-600">{con}</span>
                   </li>
                 ))}
               </ul>
@@ -271,7 +271,7 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <h5 className="text-sm font-semibold text-gray-700 mb-2">Example Prompt</h5>
+              <h5 className="text-base font-semibold text-gray-700 mb-2">Example Prompt</h5>
               <CodeBlock
                 code={variants[selectedVariant].example}
                 language="text"
@@ -291,10 +291,10 @@ export default function VSVariantsComparison({ className = '' }: { className?: s
             </svg>
           </div>
           <div className="ml-3">
-            <p className="text-sm font-semibold text-yellow-800 mb-1">
+            <p className="text-base font-semibold text-yellow-800 mb-1">
               Keyword Choice Matters (Appendix H.3)
             </p>
-            <p className="text-sm text-yellow-700">
+            <p className="text-base text-yellow-700">
               The paper found that using "probability" works best for VS-Standard and VS-CoT,
               while "confidence" performs better for VS-Multi. This subtle difference can impact
               performance by up to 15%.

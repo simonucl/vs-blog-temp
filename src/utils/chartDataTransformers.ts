@@ -61,6 +61,7 @@ export function transformDistributionData(
   ]);
 
   return Array.from(allStates)
+    .filter((name) => name !== 'other') // Exclude "other" from chart
     .map((name) => ({
       name,
       pretraining: pretraining[name] || 0,

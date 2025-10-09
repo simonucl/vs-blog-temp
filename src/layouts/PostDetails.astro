@@ -356,6 +356,13 @@ if (post.data.academic) {
         class="app-prose mt-8 lg:mt-0 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
       >
         <Content />
+        {post.data.academic && (
+          <div class="mt-12 pt-8 border-t border-border">
+            <p class="text-base text-foreground">
+              We're excited to share our results and welcome feedback from the community as we continue to scale VS to different areas. If you have any questions or feedback, please feel free to contact us at <code>yu.chi@northeastern.edu</code> or <code>simon011130@gmail.com</code>.
+            </p>
+          </div>
+        )}
       </article>
     </div>
 
