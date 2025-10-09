@@ -39,9 +39,9 @@ Return candidates with prob ≥ 0.1 in JSON format. Include different poetic for
 
 export default function QuickStart() {
   return (
-    <section className="py-12 space-y-8">
+    <section className="py-12 space-y-8 w-screen -mx-4 px-4">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto">
+      <div className="text-center w-full">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Zap className="w-6 h-6 text-yellow-500" />
           <h2 className="text-3xl font-bold">Quick Start</h2>
@@ -53,7 +53,7 @@ export default function QuickStart() {
       </div>
 
       {/* Prompt Cards */}
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3 max-w-7xl mx-auto">
+      <div className="grid gap-6 grid-cols-1 w-full">
         {quickStartPrompts.map((prompt) => {
           const Icon = prompt.icon;
           return (
@@ -76,7 +76,7 @@ export default function QuickStart() {
       </div>
 
       {/* Try It Now CTA */}
-      <div className="text-center pt-6">
+      <div className="text-center pt-6 w-full">
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
           Works with: GPT-4, Claude, Gemini, and other instruction-following models
         </p>

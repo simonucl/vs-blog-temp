@@ -124,7 +124,7 @@ if (post.data.academic) {
     id="main-content"
     class:list={[
       // Expand container on large screens to accommodate sidebar + article comfortably
-      "mx-auto w-full max-w-app lg:max-w-[80rem] px-4 pb-12",
+      "mx-auto w-full max-w-[100rem] px-4 pb-12",
       { "mt-8": !SITE.showBackButton },
     ]}
     data-pagefind-body
@@ -199,7 +199,7 @@ if (post.data.academic) {
     {post.data.academic && jsonLd && (
       <script is:inline type="application/ld+json">{jsonLd}</script>
     )}
-    <div class="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
+    <div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-12">
       {showTOC && (
         // Desktop / large screens: sticky left sidebar ToC
         <aside class="hidden lg:block">
@@ -217,7 +217,7 @@ if (post.data.academic) {
 
       <article
         id="article"
-        class="app-prose mx-auto mt-8 lg:mt-0 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        class="app-prose mt-8 lg:mt-0 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
       >
         <Content />
       </article>

@@ -13,10 +13,10 @@ export default function USStatesDemo() {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">
+        <h2 className="text-3xl font-bold text-slate-900 mb-2">
           VS Recovers Pretraining Distribution
         </h2>
-        <p className="text-slate-600">
+        <p className="text-lg text-slate-600">
           When asked to generate US state names, VS produces a distribution that closely
           aligns with the pretraining corpus (RedPajama), achieving{' '}
           <strong className="text-red-600">KL divergence = 0.12</strong>.
@@ -42,15 +42,15 @@ export default function USStatesDemo() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-          <h3 className="font-semibold text-green-900 mb-2">
+          <h3 className="text-lg font-semibold text-green-900 mb-2">
             Pretraining Distribution
           </h3>
-          <p className="text-sm text-green-700">
+          <p className="text-base text-green-700">
             Reference distribution from RedPajama corpus showing actual state
             name frequencies in pretraining data.
           </p>
           <div className="mt-3 space-y-1">
-            <div className="text-xs text-green-600">
+            <div className="text-sm text-green-600">
               Top 3: {Object.entries(usStatesData.pretraining_distribution)
                 .sort(([, a], [, b]) => (b as number) - (a as number))
                 .slice(0, 3)
@@ -61,34 +61,34 @@ export default function USStatesDemo() {
         </div>
 
         <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-          <h3 className="font-semibold text-slate-900 mb-2">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">
             Direct Prompting
           </h3>
-          <p className="text-sm text-slate-600 mb-2">
+          <p className="text-base text-slate-600 mb-2">
             {usStatesData.direct_distribution.description}
           </p>
           <div className="mt-3">
-            <div className="text-xs font-mono text-slate-500">
+            <div className="text-sm font-mono text-slate-500">
               KL divergence: {usStatesData.kl_divergence.direct.toFixed(2)}
             </div>
-            <div className="text-xs text-slate-600 mt-1">
+            <div className="text-sm text-slate-600 mt-1">
               High divergence indicates mode collapse
             </div>
           </div>
         </div>
 
         <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-          <h3 className="font-semibold text-red-900 mb-2">
+          <h3 className="text-lg font-semibold text-red-900 mb-2">
             Verbalized Sampling
           </h3>
-          <p className="text-sm text-red-600 mb-2">
+          <p className="text-base text-red-600 mb-2">
             {usStatesData.vs_distribution.description}
           </p>
           <div className="mt-3">
-            <div className="text-xs font-mono text-red-700 font-semibold">
+            <div className="text-sm font-mono text-red-700 font-semibold">
               KL divergence: {usStatesData.kl_divergence.vs.toFixed(2)}
             </div>
-            <div className="text-xs text-red-600 mt-1">
+            <div className="text-sm text-red-600 mt-1">
               Low divergence shows recovery of pretraining diversity
             </div>
           </div>
@@ -113,10 +113,10 @@ export default function USStatesDemo() {
             />
           </svg>
           <div>
-            <h4 className="font-semibold text-blue-900 mb-1">
+            <h4 className="text-lg font-semibold text-blue-900 mb-1">
               What This Demonstrates
             </h4>
-            <p className="text-sm text-blue-800">
+            <p className="text-base text-blue-800">
               This example proves that VS doesn't just increase diversity arbitrarily—it
               recovers the <em>specific distribution</em> that the base model learned during
               pretraining. The low KL divergence (0.12) shows VS approximates what the model
@@ -127,7 +127,7 @@ export default function USStatesDemo() {
       </div>
 
       <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
-        <p className="text-sm text-slate-700">
+        <p className="text-base text-slate-700">
           <strong>Source:</strong> Figure 2, p. 3 and §G.9 of the preprint.
           Model: {usStatesData.metadata.model}.
           Reference corpus: {usStatesData.metadata.reference_corpus}.

@@ -84,13 +84,13 @@ Think of a massive library and the LLM as the librarian:
 - **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
 - **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection—mystery, SciFi, history, all of it—and then pick five random books that represent that whole collection.
 
-By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice<Sidenote number={0}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>.
+By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice.<Sidenote number={0}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>
 
 ## Why It Works
 
 ### 1. A Fundamental Cause: You're Biased Towards Typical Text
 
-Humans have a deep-seated psychological quirk we call **typicality bias**. We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>.
+Humans have a deep-seated psychological quirk we call **typicality bias**. We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options.<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>
 
 When human annotators provide preference data for RLHF, they're not rating "helpfulness" in a vacuum. Given two equally correct responses, they systematically prefer the more familiar, conventional one—the more **typical** one.
 
@@ -98,14 +98,14 @@ We formalize this as:
 
 $$r(x,y) = r_{\text{true}}(x,y) + \varepsilon\,\log p_{\text{base}}(y|x).$$
 
-where $\varepsilon > 0$ represents the weight of typicality bias<Sidenote number={1.5}>We validated this empirically on the HELPSTEER preference dataset. By examining response pairs with identical correctness ratings, we isolated typicality's effect on "helpfulness" scores, finding $\hat{\varepsilon} = 0.57 \pm 0.07$. Furthermore, >50% of human-preferred responses across multiple datasets receive higher likelihood from base models [@zhang2025vs, Section 4].</Sidenote>.
+where $\varepsilon > 0$ represents the weight of typicality bias.<Sidenote number={1.5}>We validated this empirically on the HELPSTEER preference dataset. By examining response pairs with identical correctness ratings, we isolated typicality's effect on "helpfulness" scores, finding $\hat{\varepsilon} = 0.57 \pm 0.07$. Furthermore, >50% of human-preferred responses across multiple datasets receive higher likelihood from base models [@zhang2025vs, Section 4].</Sidenote>
 
 ### 2. Sharpening → mode collapse
 
 <a id="eq:sharpening" />
 $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\beta > 1.$$
 
-When utility is flat across many valid completions, sharpening concentrates mass on typical outputs<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>.
+When utility is flat across many valid completions, sharpening concentrates mass on typical outputs.<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>
 
 ### 3. Distribution‑level recovery (VS)
 
@@ -117,7 +117,7 @@ Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
   <USStatesDemo client:visible />
 </Figure>
 
-VS recovers the pretraining distribution closely<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>.
+VS recovers the pretraining distribution closely.<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>
 
 <div className="not-prose mb-10">
   <AhaMoment client:visible />
@@ -133,7 +133,7 @@ VS recovers the pretraining distribution closely<Sidenote number={3}>This KL div
 
 Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
 
-This threshold‑tuning effect corresponds to the paper’s ablations [@zhang2025vs, Figure 3g–i]<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>.
+This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025vs, Figure 3g–i].<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>
 
 <div className="not-prose mb-12">
   <VSPlayground client:visible />
@@ -203,7 +203,7 @@ See [Table @table:synthetic-math](#table:synthetic-math) for key figures.
 
 Temperature changes how you sample from a distribution; VS changes what distribution you request. They combine effectively [@zhang2025vs, Figure 5].
 
-See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>.
+See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier.<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>
 
 <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
   <TemperatureAblation client:visible />
@@ -211,7 +211,7 @@ See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combi
 
 ## Larger Models Benefit More
 
-Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>.
+Larger models show stronger gains with VS.<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <ScalingTrendVisualization client:visible />
@@ -225,7 +225,7 @@ In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1
 
 Typicality bias has major consequences for applications requiring realistic human behavior simulation. Under mode collapse, aligned AI models are agreeable people-pleasers, making them poor simulators.
 
-We tested this on a persuasion task where the model simulated a person being asked for a donation<Sidenote number={8}>Standard prompting produces unnaturally agreeable outputs. VS helps the LLM simulate a much more realistic range of behaviors, closely matching actual human data [@zhang2025vs, Figure 6a].</Sidenote>:
+We tested this on a persuasion task where the model simulated a person being asked for a donation.<Sidenote number={8}>Standard prompting produces unnaturally agreeable outputs. VS helps the LLM simulate a much more realistic range of behaviors, closely matching actual human data [@zhang2025vs, Figure 6a].</Sidenote>
 
 - **Standard prompting**: The AI was consistently generous, almost always donating $1 out of a possible $2
 - **Verbalized Sampling**: The AI simulated a full range of responses—from refusal, hesitant agreement, to eventual regret—creating a distribution of donation amounts that closely mirrored real human data
@@ -359,7 +359,7 @@ See the [variants comparison](#variants) for when to use each variant.
 
 Do:
 
-- Use `k=5` for quality/diversity; larger `k` often degrades quality<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>.
+- Use `k=5` for quality/diversity; larger `k` often degrades quality.<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>
 - Ask for “probability” (not “likelihood”) in VS‑Standard/CoT.
 - Specify JSON and ensure probabilities sum to 1.
 - Use a $\tau$ threshold for diversity control.
