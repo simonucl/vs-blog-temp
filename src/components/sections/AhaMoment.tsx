@@ -294,7 +294,7 @@ export default function AhaMoment() {
                     <p className="font-semibold">Mode collapse equations:</p>
                     <div className="flex flex-col items-center gap-2 my-2">
                       <Equation id="aha-collapse-rel" displayMode>
-                        {"\\omega^*(y|x) \\propto \\omega_{\\mathrm{ref}}(y|x)^{\\rho}"}
+                        {"\\pi^*(y|x) \\propto \\pi_{\\mathrm{ref}}(y|x)^{\\rho}"}
                       </Equation>
                       <Equation id="aha-rho-def" displayMode>
                         {"\\rho = 1 + \\varepsilon/\\beta > 1"}
@@ -305,7 +305,7 @@ export default function AhaMoment() {
                     </p>
                     <p>
                       <strong>VS solution:</strong> By asking for a distribution, we change the task from
-                      generating y ~ ω(y|x) to approximating the full distribution ω(·|x), which bypasses
+                      generating y ~ π(y|x) to approximating the full distribution π(·|x), which bypasses
                       the mode collapse entirely.
                     </p>
                     <p className="text-blue-600 dark:text-blue-400 font-medium">
