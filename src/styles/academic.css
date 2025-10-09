@@ -197,6 +197,27 @@ html[data-theme="dark"] {
   flex-wrap: wrap;
   font-size: 0.95rem;
 }
+.paper-meta-container {
+  margin-top: .75rem;
+}
+.paper-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+.read-time {
+  color: #666;
+  font-size: 0.95rem;
+}
+.paper-meta-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
 .paper-meta-link {
   display: inline-flex;
   align-items: center;
@@ -258,6 +279,7 @@ html[data-theme="dark"] {
   margin: var(--space-xl) 0;
   overflow-x: auto;
   overflow-y: hidden;
+  text-align: center;
 }
 
 .katex {
@@ -279,6 +301,13 @@ html[data-theme="dark"] {
   flex: 1;
   text-align: center;
   min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.equation-content .katex-display {
+  margin: 0;
+  text-align: center;
 }
 
 .equation-number {
@@ -298,7 +327,6 @@ html[data-theme="dark"] {
 .sidenote-number {
   font-family: var(--font-ui);
   font-size: var(--text-xs);
-  vertical-align: super;
   font-weight: 600;
   color: var(--color-accent);
 }
@@ -343,7 +371,6 @@ html[data-theme="dark"] {
   .sidenote-number {
     font-family: var(--font-ui);
     font-size: var(--text-base);
-    vertical-align: super;
     font-weight: 600;
     color: var(--color-accent);
     margin-right: 0.25rem;

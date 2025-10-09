@@ -58,12 +58,12 @@ export default function AhaMoment() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-full">
+          {/* <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-full">
             <Brain className="w-5 h-5 text-purple-600" />
             <span className="font-semibold text-purple-900 dark:text-purple-100">
               The Breakthrough Insight
             </span>
-          </div>
+          </div> */}
 
           <h2 className="text-4xl font-bold mb-4 text-slate-900 dark:text-slate-100">
             Different Prompts → Different Modes

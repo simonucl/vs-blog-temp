@@ -23,18 +23,22 @@ interface PlaygroundStore {
   mode: Mode;
   tau: number;
   task: TaskType;
+  isExpanded: boolean;
   setMode: (mode: Mode) => void;
   setTau: (tau: number) => void;
   setTask: (task: TaskType) => void;
+  setIsExpanded: (isExpanded: boolean) => void;
 }
 
 const usePlaygroundStore = create<PlaygroundStore>((set) => ({
   mode: 'VS vs Direct',
   tau: 0.15,
   task: 'joke',
+  isExpanded: false,
   setMode: (mode) => set({ mode }),
   setTau: (tau) => set({ tau }),
   setTask: (task) => set({ task }),
+  setIsExpanded: (isExpanded) => set({ isExpanded }),
 }));
 
 function diversityProxy(candidates: Candidate[]): number {
@@ -55,7 +59,7 @@ function calculateMetrics(candidates: Candidate[]) {
 }
 
 export default function VSPlayground() {
-  const { mode, tau, task, setMode, setTau, setTask } = usePlaygroundStore();
+  const { mode, tau, task, isExpanded, setMode, setTau, setTask, setIsExpanded } = usePlaygroundStore();
   const [animating, setAnimating] = useState(false);
 
   const dataset = playgroundData[task] as Dataset;
@@ -124,7 +128,14 @@ export default function VSPlayground() {
   return (
     <section className="vs-playground" aria-label="Verbalized Sampling Interactive Playground">
       <header className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <h3 className="text-2xl font-semibold">Try Diversity Tuning</h3>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-2xl font-semibold flex items-center gap-2 hover:text-accent transition-colors"
+          aria-expanded={isExpanded}
+        >
+          <span className="transform transition-transform" style={{ display: 'inline-block', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+          Try Diversity Tuning
+        </button>
         <div className="flex gap-2" role="group" aria-label="Task selection">
           {Object.entries(taskLabels).map(([key, label]) => (
             <button
@@ -144,6 +155,8 @@ export default function VSPlayground() {
         </div>
       </header>
 
+      {isExpanded && (
+      <>
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <div className="col-span-2">
           <label className="block" htmlFor="vs-tau-slider" id="vs-tau-label">
@@ -303,6 +316,8 @@ export default function VSPlayground() {
           Reset to Default
         </button>
       </div>
+      </>
+      )}
     </section>
   );
 }

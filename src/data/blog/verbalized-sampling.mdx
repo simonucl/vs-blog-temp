@@ -63,7 +63,7 @@ import Figure from "@/components/academic/Figure.astro";
   {/* Per IA: Opening Hook above TL;DR */}
 </div>
 
-## The Problem You've Felt
+## 1. The Problem You've Felt
 
 You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a short story, and it begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
 
@@ -71,7 +71,7 @@ This frustrating phenomenon is **mode collapse**. Past research blamed the AI's 
 
 **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
-## Intuition
+## 2. Intuition
 
 Aligned LLMs collapse to stereotypical outputs due to **typicality bias** in human preferences. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
 
@@ -79,7 +79,7 @@ Aligned LLMs collapse to stereotypical outputs due to **typicality bias** in hum
 - VS elicits a probability distribution over candidates [@zhang2025vs].
 - A threshold $\tau$ tunes diversity [@zhang2025vs, pp. 7–8].
 
-### The Library Metaphor
+### 2.1 The Library Metaphor
 
 Think of a massive library and the LLM as the librarian:
 
@@ -89,9 +89,9 @@ Think of a massive library and the LLM as the librarian:
 
 By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice.<Sidenote number={0}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>
 
-## Why It Works
+## 3. Why It Works
 
-### 1. A Fundamental Cause: You're Biased Towards Typical Text
+### 3.1 A Fundamental Cause: You're Biased Towards Typical Text
 
 Humans have a deep-seated psychological quirk we call **typicality bias**. We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options.<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>
 
@@ -103,14 +103,14 @@ $$r(x,y) = r_{\text{true}}(x,y) + \varepsilon\,\log p_{\text{base}}(y|x).$$
 
 where $\varepsilon > 0$ represents the weight of typicality bias.<Sidenote number={1.5}>We validated this empirically on the HELPSTEER preference dataset. By examining response pairs with identical correctness ratings, we isolated typicality's effect on "helpfulness" scores, finding $\hat{\varepsilon} = 0.57 \pm 0.07$. Furthermore, >50% of human-preferred responses across multiple datasets receive higher likelihood from base models [@zhang2025vs, Section 4].</Sidenote>
 
-### 2. Sharpening → mode collapse
+### 3.2 Sharpening → mode collapse
 
 <a id="eq:sharpening" />
 $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\beta > 1.$$
 
 When utility is flat across many valid completions, sharpening concentrates mass on typical outputs.<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>
 
-### 3. Distribution‑level recovery (VS)
+### 3.3 Distribution‑level recovery (VS)
 
 VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
 
@@ -126,13 +126,13 @@ VS recovers the pretraining distribution closely.<Sidenote number={3}>This KL di
   <AhaMoment client:visible />
 </div>
 
-## Interactive Explainer: Typicality Bias
+## 4. Interactive Explainer: Typicality Bias
 
 <div className="not-prose mb-12">
   <TypicalityBiasExplainer client:visible />
 </div>
 
-## Try It: Diversity Playground
+## 5. Try It: Diversity Playground
 
 Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
 
@@ -142,13 +142,13 @@ This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025v
   <VSPlayground client:visible />
 </div>
 
-## Evidence
+## 6. Evidence
 
 VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
 
 See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
 
-### Evidence at a Glance
+### 6.1 Evidence at a Glance
 
 - Creative writing diversity: +1.6–2.1× [@zhang2025vs, Figure 3a–c] → [Figure @fig:diversity-gains](#fig:diversity-gains)
 - Post‑training retention: 66.8% [@zhang2025vs, Figure 4] → [Figure @fig:post-training](#fig:post-training)
@@ -168,7 +168,7 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
   <PostTrainingVisual client:visible />
 </Figure>
 
-### Open‑Ended QA (Fig. 7)
+### 6.2 Open‑Ended QA (Fig. 7)
 
 VS achieves lower KL divergence and higher coverage‑N while maintaining precision ≈ 1.0 on open‑ended QA benchmarks [@zhang2025vs, Figure 7]. This indicates distribution‑level prompting improves breadth without sacrificing answer quality.
 
@@ -186,7 +186,7 @@ VS achieves lower KL divergence and higher coverage‑N while maintaining precis
 
 See [Table @table:openqa](#table:openqa) for a compact summary.
 
-### Synthetic Data → Math Accuracy (Table 4)
+{/* ### 6.3 Synthetic Data → Math Accuracy (Table 4)
 
 Training with VS‑generated synthetic data improves downstream math accuracy (**37.5% vs 32.8%** average), demonstrating transfer beyond creative tasks [@zhang2025vs, Table 4].
 
@@ -200,9 +200,9 @@ Training with VS‑generated synthetic data improves downstream math accuracy (*
   </tbody>
 </Table>
 
-See [Table @table:synthetic-math](#table:synthetic-math) for key figures.
+See [Table @table:synthetic-math](#table:synthetic-math) for key figures. */}
 
-## VS ≠ Temperature: Orthogonal Benefits
+## 7. VS ≠ Temperature: Orthogonal Benefits
 
 Temperature changes how you sample from a distribution; VS changes what distribution you request. They combine effectively [@zhang2025vs, Figure 5].
 
@@ -212,7 +212,7 @@ See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combi
   <TemperatureAblation client:visible />
 </Figure>
 
-## Larger Models Benefit More
+## 8. Larger Models Benefit More
 
 Larger models show stronger gains with VS.<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>
 
@@ -220,11 +220,11 @@ Larger models show stronger gains with VS.<Sidenote number={6}>Scaling analysis 
   <ScalingTrendVisualization client:visible />
 </Figure>
 
-## Dialogue Simulation
+## 9. Dialogue Simulation
 
 In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS's applicability beyond creative generation into behaviorally grounded distributions.
 
-### Breaking the People-Pleaser: Realistic Behavior Simulation
+### 9.1 Breaking the People-Pleaser: Realistic Behavior Simulation
 
 Typicality bias has major consequences for applications requiring realistic human behavior simulation. Under mode collapse, aligned AI models are agreeable people-pleasers, making them poor simulators.
 
@@ -240,7 +240,7 @@ See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
 [Back to top ↑](#article)
 
 <a id="variants" />
-## VS Variants: When to Use Which
+## 10. VS Variants: When to Use Which
 
 <div className="not-prose mb-12">
   <VSVariantsComparison client:visible />
@@ -250,7 +250,7 @@ Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while �
 
 [Back to top ↑](#article)
 
-## Qualitative Examples
+## 11. Qualitative Examples
 
 See the difference in actual outputs between direct prompting and VS:
 
@@ -258,7 +258,7 @@ See the difference in actual outputs between direct prompting and VS:
   <QualitativeExamples client:visible />
 </div>
 
-### From "Once Upon a Time" to Bernard the Tax Accountant Bear
+### 11.1 From "Once Upon a Time" to Bernard the Tax Accountant Bear
 
 With a standard prompt for "write a short story about a bear," we get a generic tale about a bear in a forest. It's fine, but forgettable.
 
@@ -266,7 +266,7 @@ With Verbalized Sampling, we get this:
 
 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-lg border-l-4 border-indigo-500 my-8">
 
-> **Bernard the bear** worked as a tax accountant in downtown Seattle, commuting daily in his modified SUV with extra-large seats. His colleagues had long stopped staring at his massive paws clicking away at the custom keyboard, though clients sometimes did double-takes during video calls. He specialized in salmon industry tax codes—a niche that proved surprisingly lucrative. His cave apartment in Capitol Hill was decorated with MIT diplomas and spreadsheets he'd framed ironically. Weekends, he played saxophone at underground jazz clubs, his claws delicately working the keys. The hibernation months were tricky; he'd trained himself to wake every three days to check urgent emails, subsisting on protein shakes he'd pre-mixed in October. His mother, still living traditionally in Alaska, couldn't understand his lifestyle. "You were meant to catch fish, not audit fishing companies," she'd growl over FaceTime. But Bernard found meaning in the numbers, in the precise calculations that governed modern society. He donated generously to wildlife preserves, understanding the irony. At the office Christmas party, he wore an ugly sweater featuring humans in a zoo, which his coworkers found hilarious. Bernard smiled, revealing teeth that reminded everyone he was still, fundamentally, a bear.
+**Bernard the bear** worked as a tax accountant in downtown Seattle, commuting daily in his modified SUV with extra-large seats. His colleagues had long stopped staring at his massive paws clicking away at the custom keyboard, though clients sometimes did double-takes during video calls. He specialized in salmon industry tax codes—a niche that proved surprisingly lucrative. His cave apartment in Capitol Hill was decorated with MIT diplomas and spreadsheets he'd framed ironically. Weekends, he played saxophone at underground jazz clubs, his claws delicately working the keys. The hibernation months were tricky; he'd trained himself to wake every three days to check urgent emails, subsisting on protein shakes he'd pre-mixed in October. His mother, still living traditionally in Alaska, couldn't understand his lifestyle. "You were meant to catch fish, not audit fishing companies," she'd growl over FaceTime. But Bernard found meaning in the numbers, in the precise calculations that governed modern society. He donated generously to wildlife preserves, understanding the irony. At the office Christmas party, he wore an ugly sweater featuring humans in a zoo, which his coworkers found hilarious. Bernard smiled, revealing teeth that reminded everyone he was still, fundamentally, a bear.
 
 </div>
 
@@ -276,7 +276,7 @@ This isn't just creative—it's **profound**. Bernard can be read as:
 
 This is the AI showing us the metaphorical depth it's capable of when freed from mode collapse.
 
-## Is VS Right for You?
+{/* ## Is VS Right for You?
 
 Use VS when:
 - You need creative diversity (stories, jokes, ideas)
@@ -286,14 +286,14 @@ Use VS when:
 
 Skip VS when:
 - There is a single correct answer or strict determinism is required
-- Maximal speed or minimum token usage is the only priority
+- Maximal speed or minimum token usage is the only priority */}
 
-<a id="recipes" />
+{/* <a id="recipes" />
 ## Prompt Recipes
 
 <div className="not-prose mb-6">
   <QuickStart client:idle />
-  {/* Quick Start embedded here for copy‑ready flow */}
+  Quick Start embedded here for copy‑ready flow
   </div>
 
 ### System Prompt Integration
@@ -356,28 +356,28 @@ This long-tail variant produces highly imaginative outputs. For example, applyin
 Ursa was not a bear of flesh, but a minor constellation given temporary form, her fur a swirling map of nebulae and dying stars. She didn't eat fish; she consumed silence, finding nourishment in the quiet moments between cosmic events. Her purpose on Earth was to catalog the planet's forgotten sounds: the sigh of a closing book, the rustle of a love letter, the final beat of an extinct bird's heart...
 </div>
 
-See the [variants comparison](#variants) for when to use each variant.
+See the [variants comparison](#variants) for when to use each variant. */}
 
-## Implementation Tips
+{/* ## Implementation Tips
 
 Do:
 
 - Use `k=5` for quality/diversity; larger `k` often degrades quality.<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>
-- Ask for “probability” (not “likelihood”) in VS‑Standard/CoT.
+- Ask for "probability" (not "likelihood") in VS‑Standard/CoT.
 - Specify JSON and ensure probabilities sum to 1.
 - Use a $\tau$ threshold for diversity control.
 
-Don’t:
+Don't:
 
 - Use `k>10` unless necessary.
-- Mix “probability” and “confidence” terms.
+- Mix "probability" and "confidence" terms.
 - Forget normalization.
-- Apply VS to strictly factual/math tasks.
+- Apply VS to strictly factual/math tasks. */}
 
 ## Frequently Asked Questions
 
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
-  <summary className="font-semibold cursor-pointer">Does VS hurt accuracy or safety?</summary>
+  <summary className="font-semibold cursor-pointer">Does VS hurt factualness or safety?</summary>
   <p className="mt-3 text-gray-600">
     No. The paper shows VS maintains factual accuracy (Appendix G.7) and safety (Appendix G.8) [@zhang2025vs].
     It only increases diversity for tasks with multiple valid answers.
@@ -403,8 +403,10 @@ Don’t:
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
   <summary className="font-semibold cursor-pointer">Which models support VS?</summary>
   <p className="mt-3 text-gray-600">
-    Any instruction-following LLM: GPT-4, Claude, Gemini, Llama, Qwen, and even reasoning
-    models like o1 and DeepSeek R1. No special access or modifications needed.
+    VS works with any instruction-following LLM, both closed-source and open-source models:
+    <strong>Closed-source:</strong> GPT, Claude, Gemini
+    <strong>Open-source:</strong> Llama, Mistral, Qwen, Phi, Gemma, and reasoning models like o3 and DeepSeek R1.
+    No special access, API keys, or model modifications needed—just use the prompts as-is.
   </p>
 </details>
 
