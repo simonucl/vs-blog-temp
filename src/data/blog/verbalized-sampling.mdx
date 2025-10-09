@@ -172,25 +172,31 @@ VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jok
   <img src="/vs-blog-temp/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
 
-<div className="figure-grid">
+#### VS is Orthogonal to Temperature
+
+<div className="content-grid">
+  <div className="figure-content">
+    <Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
+      <img src="/vs-blog-temp/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+    </Figure>
+  </div>
+  <div className="text-content">
+    VS and temperature are **orthogonal techniques**—combining both pushes the diversity-quality Pareto frontier beyond what either achieves alone [@zhang2025vs, Figure 5].
+  </div>
+</div>
 
 #### Diversity Across Post-Training Stages
 
-Alignment processes progressively reduce diversity from base models. VS **recovers 66.8% of base model diversity**, far exceeding the 21.6% retained by standard aligned models [@zhang2025vs, Figure 4].
-
-<Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
-  {/* <PostTrainingVisual client:visible /> */}
-  <img src="/vs-blog-temp/images/training_progression.png" alt="Diversity retention across training stages" style="border: none; box-shadow: none;" />
-</Figure>
-
-#### VS is Orthogonal to Temperature
-
-VS and temperature are **orthogonal techniques**—combining both pushes the diversity-quality Pareto frontier beyond what either achieves alone [@zhang2025vs, Figure 5].
-
-<Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
-  <img src="/vs-blog-temp/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none;" />
-</Figure>
-
+<div className="content-grid">
+  <div className="text-content">
+    Alignment processes progressively reduce diversity from base models. VS **recovers 66.8% of base model diversity**, far exceeding the 21.6% retained by standard aligned models [@zhang2025vs, Figure 4].
+  </div>
+  <div className="figure-content">
+    <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
+      {/* <PostTrainingVisual client:visible /> */}
+      <img src="/vs-blog-temp/images/training_progression.png" alt="Diversity retention across training stages" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+    </Figure>
+  </div>
 </div>
 
 #### Emergent Behavior
