@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles, TrendingDown } from 'lucide-react';
-import clsx from 'clsx';
 
 interface Example {
   id: number;

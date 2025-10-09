@@ -132,8 +132,8 @@ if (post.data.academic) {
       <section class="paper-header">
         <h1 transition:name={slugifyStr(title)} class="paper-title">{title}</h1>
           {(() => {
-            const authors = Array.isArray(post.data.authors) ? post.data.authors : [];
-            const authorLinks: Record<string, string> = {
+            const authorsList = Array.isArray(post.data.authors) ? post.data.authors : [];
+            const linkMap: any = {
               "Jiayi Zhang": "https://jiayizx.github.io/",
               "Simon Yu": "https://simonucl.github.io/",
               "Derek Chong": "https://www.linkedin.com/in/derekch",
@@ -143,15 +143,15 @@ if (post.data.academic) {
               "Weiyan Shi": "https://wyshi.github.io/"
             };
 
-            return authors.length > 0 ? (
+            return authorsList.length > 0 ? (
              <>
                <p class="paper-authors">
                  <strong>
-                   {authors.map((a: any, i: number) => {
+                   {authorsList.map((a: any, i: number) => {
                      const obj = typeof a === 'string' ? { name: a, aff: [] } : a;
-                     const isLastInFirstLine = i === 3 && authors.length > 4;
+                     const isLastInFirstLine = i === 3 && authorsList.length > 4;
                      const isEqualContribution = i < 3;
-                     const authorLink = authorLinks[obj.name as string];
+                     const authorLink = linkMap[obj.name];
                      
                      return (
                        <>
@@ -162,7 +162,7 @@ if (post.data.academic) {
                          )}
                          {Array.isArray(obj.aff) && obj.aff.length ? <sup class="text-orange-500">{obj.aff.join(',')}</sup> : null}
                          {isEqualContribution && <sup class="text-orange-500">†</sup>}
-                         {i < authors.length - 1 ? ', ' : ''}
+                         {i < authorsList.length - 1 ? ', ' : ''}
                          {isLastInFirstLine && <br />}
                        </>
                      );
