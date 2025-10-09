@@ -69,6 +69,16 @@ You ask your favorite LLM for a joke about coffee. You ask again. You get the sa
 
 This frustrating phenomenon is called [**mode collapse**](https://www.lesswrong.com/posts/t9svvNPNmFf5Qa3TA/mysteries-of-mode-collapse). Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer [@kirk2024; @murthy2025]. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
+### 1.1 Why This Matters
+
+Mode collapse isn't just an academic curiosity—it's actively limiting AI's potential in critical applications:
+
+**Brainstorming & Ideation**: When teams rely on LLMs to generate creative solutions or explore problem spaces, mode collapse means they're getting the same handful of "safe" ideas over and over. The model might know 100 viable approaches, but it only suggests the 3 most conventional ones. This defeats the entire purpose of computational brainstorming.
+
+**Creative Writing**: Authors, marketers, and content creators seeking fresh angles or unique narrative voices find themselves battling against the model's tendency to regurgitate tropes. The model has learned diverse writing styles during pretraining, but alignment has pushed it toward generic, crowd-pleasing outputs. Every story starts in a forest, every protagonist is "determined yet kind."
+
+**Research & AI-Driven Discovery**: Perhaps most critically, mode collapse hampers AI's role in scientific discovery and research ideation. When researchers use LLMs to generate hypotheses, explore experimental designs, or brainstorm research directions, they need the full spectrum of possibilities—including unconventional approaches that might lead to breakthroughs. Mode collapse means the AI suggests only well-trodden paths, missing potentially transformative ideas that lie in the less-typical regions of its knowledge.
+
 ## 2. How to Fix It?
 
 Why do aligned LLMs keep giving you the same answers? And how does simply asking for probabilities fix it? This section walks you through the idea: from an intuitive metaphor, to the typicality bias at the root of mode collapse, to the mathematical formalization, and finally to how Verbalized Sampling solves the problem.
@@ -303,6 +313,40 @@ This isn't just creative, it's **profound**. Bernard can be read as:
 
 This is the AI showing us the metaphorical depth it's capable of when freed from mode collapse.
 
+## 6. Limitations and Future Directions
+
+While Verbalized Sampling offers significant improvements in diversity, it's important to understand its constraints and where research can go next.
+
+### 6.1 Computational Costs
+
+VS requires the model to generate multiple candidates with probability estimates, which means:
+
+- **Increased token usage**: VS prompts produce longer outputs (5+ candidates vs. 1), increasing API costs by roughly 3-5×
+- **Slower response times**: Generation takes longer due to both increased output length and the cognitive overhead of probability estimation
+- **Multiple API calls for VS-Multi**: The multi-turn variant requires sequential calls, further increasing latency
+
+For applications where speed and cost are paramount over diversity (e.g., simple factual Q&A), standard prompting remains more efficient.
+
+### 6.2 When VS Might Not Help
+
+VS is designed to restore diversity in creative and open-ended tasks, but it's not a universal solution:
+
+- **Single correct answer tasks**: For factual questions with one right answer (e.g., "What is the capital of France?"), diversity isn't beneficial
+- **Deterministic requirements**: Applications requiring perfectly reproducible outputs may conflict with VS's goal of exploring the full distribution
+- **Already-diverse models**: If a model hasn't undergone strong alignment or doesn't exhibit mode collapse, VS provides marginal benefits
+- **Highly constrained tasks**: When task requirements are extremely specific, the model may have limited room for diverse valid responses
+
+### 6.3 Future Directions
+
+Several promising research directions could extend VS's impact:
+
+**Enhancing Rollout Diversity**: Current VS operates at the prompt level, but the same principle could be applied to multi-step reasoning or agent rollouts. For example, when an LLM agent explores a decision tree or plans a sequence of actions, typicality bias might cause it to always choose the "safest" path at each step. Applying distribution-level prompting to encourage diverse rollout strategies could unlock more creative problem-solving in agent systems and multi-turn reasoning tasks.
+
+**Adaptive Probability Thresholds**: Automatically tuning the threshold τ based on task requirements or user preferences could optimize the diversity-quality tradeoff without manual intervention.
+
+**Hybrid Training Approaches**: While VS is training-free, combining it with lightweight fine-tuning or RLHF that explicitly rewards distributional coverage could yield even better results.
+
+**Domain-Specific Calibration**: Probability estimates could be calibrated for specific domains (e.g., scientific writing vs. creative fiction) to improve the meaningfulness of the verbalized probabilities.
 
 {/* <a id="recipes" />
 ## Prompt Recipes
@@ -390,7 +434,7 @@ Don't:
 - Forget normalization.
 - Apply VS to strictly factual/math tasks. */}
 
-## Frequently Asked Questions
+## 7. Frequently Asked Questions
 
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
   <summary className="font-semibold cursor-pointer">Does VS hurt factualness or safety?</summary>
