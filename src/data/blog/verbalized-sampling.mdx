@@ -63,17 +63,15 @@ import Figure from "@/components/academic/Figure.astro";
   {/* Per IA: Opening Hook above TL;DR */}
 </div>
 
-## 1. The Problem You've Felt
+## 1. Problem Statement
 
 You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a short story, and it begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
 
-This frustrating phenomenon is **mode collapse**. Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer.
-
-**We discovered something more fundamental**: The problem isn't just the AI. It's us.
+This frustrating phenomenon is called **mode collapse**. Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
 ## 2. Intuition
 
-Aligned LLMs collapse to stereotypical outputs due to **typicality bias** in human preferences. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
+Aligned LLMs collapse to stereotypical outputs due to [**typicality bias**](https://arxiv.org/abs/2501.14860) in human preferences. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
 
 - Typicality bias ($\varepsilon>0$) sharpens the policy and induces collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
 - VS elicits a probability distribution over candidates [@zhang2025vs].
@@ -114,8 +112,6 @@ When utility is flat across many valid completions, sharpening concentrates mass
 
 VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
 
-Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
-
 <Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
   <USStatesDemo client:visible />
 </Figure>
@@ -132,7 +128,7 @@ VS recovers the pretraining distribution closely.<Sidenote number={3}>This KL di
   <TypicalityBiasExplainer client:visible />
 </div>
 
-## 5. Try It: Diversity Playground
+{/* ## 5. Try It: Diversity Playground
 
 Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
 
@@ -140,7 +136,7 @@ This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025v
 
 <div className="not-prose mb-12">
   <VSPlayground client:visible />
-</div>
+</div> */}
 
 ## 6. Experiments
 
@@ -160,15 +156,62 @@ See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-
 - Open‑ended QA: lower KL, higher coverage‑N, precision ≈ 1.0 [@zhang2025vs, Figure 7]
 - Synthetic data → math accuracy: 37.5% vs 32.8% avg [@zhang2025vs, Table 4]
 
+#### Creative Writing Diversity
+
+VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jokes compared to direct prompting, demonstrating substantial improvements in creative tasks [@zhang2025vs, Figure 3a–c].
+
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
-  <DiversityGainsVisual client:visible />
+  {/* <DiversityGainsVisual client:visible /> */}
+  <img src="public/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
+
+<div className="figure-grid">
+
+#### Post-Training Diversity Loss
+
+Alignment processes progressively reduce diversity from base models. VS **recovers 66.8% of base model diversity**, far exceeding the 21.6% retained by standard aligned models [@zhang2025vs, Figure 4].
 
 <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
-  <PostTrainingVisual client:visible />
+  {/* <PostTrainingVisual client:visible /> */}
+  <img src="public/images/training_progression.png" alt="Diversity retention across training stages" style="border: none; box-shadow: none;" />
 </Figure>
 
-### 6.2 Open‑Ended QA (Fig. 7)
+#### Temperature Orthogonality
+
+VS and temperature are **orthogonal techniques**—combining both pushes the diversity-quality Pareto frontier beyond what either achieves alone [@zhang2025vs, Figure 5].
+
+<Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
+  <img src="public/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none;" />
+</Figure>
+
+</div>
+
+#### Emergent Scaling Benefits
+
+Larger models show **~1.5–2× greater diversity gains** from VS, suggesting the technique becomes more effective as models scale up [@zhang2025vs, Figure 3e–f].
+
+<Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
+  <img src="public/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
+</Figure>
+
+#### Temperature Ablation Study
+
+Systematic temperature variations confirm VS maintains effectiveness across the full temperature range, with optimal results when both techniques are combined [@zhang2025vs, Figure 5].
+
+<Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
+  <img src="public/images/temperature_scaling.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none;" />
+</Figure>
+
+#### Qualitative Breakthrough
+
+Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
+
+<Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
+  <img src="public/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
+</Figure>
+
+
+{/*  ### 6.4 Open‑Ended QA (Fig. 7)
 
 VS achieves lower KL divergence and higher coverage‑N while maintaining precision ≈ 1.0 on open‑ended QA benchmarks [@zhang2025vs, Figure 7]. This indicates distribution‑level prompting improves breadth without sacrificing answer quality.
 
@@ -185,6 +228,7 @@ VS achieves lower KL divergence and higher coverage‑N while maintaining precis
 </Table>
 
 See [Table @table:openqa](#table:openqa) for a compact summary.
+*/}
 
 {/* ### 6.3 Synthetic Data → Math Accuracy (Table 4)
 
@@ -264,7 +308,7 @@ With direct prompting for "write a short story about a bear," we get a generic t
 
 </div>
 
-This isn't just creative—it's **profound**. Bernard can be read as:
+This isn't just creative, it's **profound**. Bernard can be read as:
 - A metaphor for humans in the modern world: a wild creature meant for hunting and fishing, now trying to make sense of tax audits and urgent emails.
 - A metaphor for the LLM itself: a vast, creative mind (the bear) forced into a suit and tie (the alignment), but still, fundamentally, a bear.
 
@@ -396,17 +440,17 @@ Don't:
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
   <summary className="font-semibold cursor-pointer">Is VS right for you?</summary>
   <div className="mt-3 text-gray-600">
-    <p className="mb-3"><strong>Use VS when:</strong></p>
-    <ul className="list-disc list-inside mb-4 space-y-1">
-      <li>You need creative diversity (stories, jokes, ideas)</li>
-      <li>You want realistic distributions (simulations, surveys)</li>
-      <li>You are generating synthetic data and want variety with quality</li>
-      <li>You prefer training‑free techniques compatible with closed models</li>
+    <p className="mb-3"><strong>✅ Use VS when:</strong></p>
+    <ul className="list-none mb-4 space-y-2">
+      <li>✅ You need creative diversity (stories, jokes, ideas)</li>
+      <li>✅ You want realistic distributions (simulations, surveys)</li>
+      <li>✅ You are generating synthetic data and want variety with quality</li>
+      <li>✅ You prefer training‑free techniques compatible with closed models</li>
     </ul>
-    <p className="mb-3"><strong>Skip VS when:</strong></p>
-    <ul className="list-disc list-inside space-y-1">
-      <li>There is a single correct answer or strict determinism is required</li>
-      <li>Maximal speed or minimum token usage is the only priority</li>
+    <p className="mb-3"><strong>❌ Skip VS when:</strong></p>
+    <ul className="list-none space-y-2">
+      <li>❌ There is a single correct answer or strict determinism is required</li>
+      <li>❌ Maximal speed or minimum token usage is the only priority</li>
     </ul>
   </div>
 </details>

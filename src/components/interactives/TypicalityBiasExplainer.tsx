@@ -74,7 +74,7 @@ export default function TypicalityBiasExplainer() {
                 step="0.01"
                 value={epsilon}
                 onChange={(e) => setEpsilon(parseFloat(e.target.value))}
-                className="w-full h-3 bg-blue-100 rounded-lg appearance-none cursor-pointer slider-thumb"
+                className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider-thumb border border-blue-300"
               />
               <p className="text-sm text-slate-600 mt-2">
                 How much the model prefers "typical" outputs. Higher ε = stronger preference
@@ -98,7 +98,7 @@ export default function TypicalityBiasExplainer() {
                 step="0.01"
                 value={beta}
                 onChange={(e) => setBeta(parseFloat(e.target.value))}
-                className="w-full h-3 bg-green-100 rounded-lg appearance-none cursor-pointer slider-thumb"
+                className="w-full h-3 bg-green-200 rounded-lg appearance-none cursor-pointer slider-thumb border border-green-300"
               />
               <p className="text-sm text-slate-600 mt-2">
                 Regularization strength during alignment. Lower β = less constraint on
@@ -126,22 +126,24 @@ export default function TypicalityBiasExplainer() {
             <div className={`mt-3 text-lg font-semibold ${sharpness.color}`}>
               {sharpness.label} Sharpening
             </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-2 text-sm">
-              The Equation
-            </h4>
-            <div className="text-center py-3">
-              <Equation id="typicality-dynamic" displayMode>
-                {dynamicLatex}
-              </Equation>
-            </div>
-            <p className="text-xs text-slate-600 mt-3">
-              When ρ &gt; 1, the model's distribution is sharpened (mode collapse).
-              VS exploits this by verbalizing to access the less-sharpened base model.
+            <p className="text-base text-slate-600 mt-3">
+                When ρ &gt; 1, the model's distribution is sharpened (mode collapse).
+                VS exploits this by verbalizing to access the less-sharpened base model.
             </p>
           </div>
+
+          <details className="mt-6 bg-slate-50 rounded-lg border border-slate-200 w-full">
+          <div className="px-4 pb-4">
+              <div className="text-center py-3">
+                <Equation id="typicality-dynamic" displayMode>
+                  {dynamicLatex}
+                </Equation>
+              </div>
+            </div>
+            <summary className="font-semibold text-slate-900 text-lg cursor-pointer p-4 flex items-center gap-2">
+              <span>The Equation</span>
+            </summary>
+          </details>
         </div>
       </div>
 
@@ -287,13 +289,13 @@ export default function TypicalityBiasExplainer() {
         </div>
       </div>
 
-      <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+      {/* <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
         <p className="text-sm text-slate-700">
           <strong>Source:</strong> §3.1 and Theorem 1 of the preprint (pp. 4-5).
           Try adjusting the sliders to see how different ε and β values affect the sharpening
           factor ρ and the resulting distribution.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -511,4 +511,46 @@ if (post.data.academic) {
   document.addEventListener("astro:after-swap", () =>
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
+
+  /* Add citation tooltips */
+  function addCitationTooltips() {
+    const citations = document.querySelectorAll('.app-prose a[href^="#ref-"]');
+    const references = document.querySelector('#references');
+    
+    if (!references) return;
+    
+    citations.forEach(citation => {
+      const refId = citation.getAttribute('href')?.substring(1);
+      if (!refId) return;
+      
+      const refElement = document.getElementById(refId);
+      if (!refElement) return;
+      
+      // Extract citation text
+      const refText = refElement.textContent?.trim() || '';
+      
+      // Try to extract title (typically after year in Chicago style)
+      let title = refText;
+      
+      // For Chicago Author-Date style: "Author. Year. Title. Journal..."
+      // Extract just author, year, and title
+      const match = refText.match(/^(.+?\d{4}[a-z]?)\.\s*(.+?)\./);
+      if (match) {
+        const authorYear = match[1];
+        const paperTitle = match[2];
+        title = `${authorYear}. ${paperTitle}`;
+      }
+      
+      // Limit length
+      if (title.length > 200) {
+        title = title.substring(0, 197) + '...';
+      }
+      
+      citation.setAttribute('data-citation-title', title);
+    });
+  }
+  
+  // Run on load and after page swaps
+  addCitationTooltips();
+  document.addEventListener('astro:after-swap', addCitationTooltips);
 </script>

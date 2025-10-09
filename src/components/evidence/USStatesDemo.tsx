@@ -16,7 +16,7 @@ export default function USStatesDemo() {
         <h2 className="text-3xl font-bold text-slate-900 mb-2">
           VS Recovers Pretraining Distribution
         </h2>
-        <p className="text-lg text-slate-600">
+        <p className="text-2xl text-slate-600">
           When asked to generate US state names, VS produces a distribution that closely
           aligns with the pretraining corpus (RedPajama), achieving{' '}
           <strong className="text-red-600">KL divergence = 0.12</strong>.
@@ -30,7 +30,7 @@ export default function USStatesDemo() {
         </Equation>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      {/* <div className="bg-white p-6 rounded-lg shadow-md">
         <DistributionChart
           data={chartData}
           title="US State Name Distribution"
@@ -38,7 +38,7 @@ export default function USStatesDemo() {
           klDivergence={usStatesData.kl_divergence}
           height={500}
         />
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 bg-green-50 rounded-lg border border-green-200">

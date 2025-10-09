@@ -83,12 +83,12 @@ export default function OpeningHook() {
           {/* Prompt Display */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              <label className="text-xl font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                 Your Prompt
               </label>
               <button
                 onClick={nextExample}
-                className="flex items-center gap-2 px-3 py-1 text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-1 text-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Another
@@ -101,7 +101,7 @@ export default function OpeningHook() {
 
           {/* Responses */}
           <div className="mb-6">
-            <label className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
+            <label className="text-xl font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
               AI Responses
             </label>
             <div className="space-y-2">
@@ -115,10 +115,10 @@ export default function OpeningHook() {
                     className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-750 rounded-lg p-3 border border-slate-200 dark:border-slate-700"
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-sm font-bold text-slate-400">
+                      <span className="text-xl font-bold text-slate-400">
                         {index + 1}.
                       </span>
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
+                      <p className="text-lg text-slate-700 dark:text-slate-300">
                         {response}
                       </p>
                     </div>
@@ -156,7 +156,7 @@ export default function OpeningHook() {
                   <p className="text-red-800 dark:text-red-200 font-medium mb-2">
                     {example.problem}
                   </p>
-                  <p className="text-sm text-red-700 dark:text-red-300">
+                  <p className="text-base text-red-700 dark:text-red-300">
                     The model collapsed to a single mode, generating minor variations instead of truly diverse outputs.
                   </p>
                 </motion.div>
@@ -183,7 +183,7 @@ export default function OpeningHook() {
             This Isn't a Bug — It's Mode Collapse
           </h2>
 
-          <div className="max-w-3xl mx-auto space-y-4 text-lg text-slate-600 dark:text-slate-400">
+          <div className="max-w-3xl mx-auto space-y-4 text-xl text-slate-600 dark:text-slate-400">
             <p>
               During alignment training, models learn to favor "safe" and typical responses.
               This is caused by <span className="font-semibold text-slate-900 dark:text-slate-100">typicality bias</span> in
@@ -195,7 +195,7 @@ export default function OpeningHook() {
             </p>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-              <h3 className="text-xl font-bold mb-2 text-blue-900 dark:text-blue-100">
+              <h3 className="text-2xl font-bold mb-2 text-blue-900 dark:text-blue-100">
                 But There's a Solution
               </h3>
               <p className="text-blue-800 dark:text-blue-200">
