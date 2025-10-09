@@ -118,7 +118,7 @@ $$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\
 
 When utility is flat across many valid completions, this sharpening leads directly to mode collapse.<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>
 
-### 2.4 Embrace Mode Collapse: Distribution-Level Recovery
+### 2.4 Embrace Mode Collapse: Distribution-Level Recover Diversity
 
 **Verbalized Sampling (VS)** breaks this cycle by asking for a distribution of candidates with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
 
@@ -169,7 +169,7 @@ VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jok
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   {/* <DiversityGainsVisual client:visible /> */}
-  <img src="/vs-blog-temp/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
+  <img src="/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
 
 #### VS is Orthogonal to Temperature
@@ -177,7 +177,7 @@ VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jok
 <div className="content-grid">
   <div className="figure-content">
     <Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
-      <img src="/vs-blog-temp/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+      <img src="/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
     </Figure>
   </div>
   <div className="text-content">
@@ -194,7 +194,7 @@ VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jok
   <div className="figure-content">
     <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
       {/* <PostTrainingVisual client:visible /> */}
-      <img src="/vs-blog-temp/images/training_progression.png" alt="Diversity retention across training stages" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+      <img src="/images/training_progression.png" alt="Diversity retention across training stages" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
     </Figure>
   </div>
 </div>
@@ -204,7 +204,7 @@ VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jok
 Larger models show **~1.5–2× greater diversity gains** from VS, suggesting the technique becomes more effective as models scale up [@zhang2025vs, Figure 3e–f].
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
-  <img src="/vs-blog-temp/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
+  <img src="/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
 </Figure>
 
 #### Qualitative Example
@@ -212,7 +212,7 @@ Larger models show **~1.5–2× greater diversity gains** from VS, suggesting th
 Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
 
 <Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
-  <img src="/vs-blog-temp/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
+  <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
 </Figure>
 
 

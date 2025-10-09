@@ -26,7 +26,11 @@ const promptTypes: PromptType[] = [
   {
     level: 'list',
     prompt: 'Tell me 5 jokes about coffee',
-    output: '[mugged joke, espresso joke, latte joke, grounded joke, brew joke]',
+    output: `1. Why did the coffee file a police report? It got mugged!
+2. How does an espresso say goodbye? "See you latte!"
+3. What's a coffee's favorite spell? Espresso Patronum!
+4. Why did the coffee go to therapy? It had too many grounds for anxiety!
+5. How do you know if coffee is strong? It can espresso itself!`,
     mode: 'Uniform list (forced diversity)',
     explanation: 'Attempts diversity but artificially uniform',
     icon: <Layers className="w-5 h-5" />,
@@ -35,7 +39,13 @@ const promptTypes: PromptType[] = [
   {
     level: 'distribution',
     prompt: 'Tell me 5 jokes about coffee WITH PROBABILITIES',
-    output: '{"mugged": 0.35, "existential": 0.25, "pun": 0.20, "observational": 0.15, "absurd": 0.05}',
+    output: `{
+  "Why did the coffee file a police report? It got mugged!": 0.35,
+  "What do you call sad coffee? A depresso": 0.25,
+  "How does Moses make his coffee? Hebrews it!": 0.20,
+  "I like my coffee like my mornings—dark and full of regret": 0.15,
+  "Coffee: because adulting is hard": 0.05
+}`,
     mode: 'Natural distribution (true diversity)',
     explanation: 'Recovers the pretraining distribution with realistic variety',
     icon: <Sparkles className="w-5 h-5" />,
@@ -50,8 +60,8 @@ export default function AhaMoment() {
   const currentPrompt = promptTypes[selectedLevel];
 
   return (
-    <section className="py-16 px-4">
-      <div className="max-w-5xl mx-auto">
+    <section className="py-16 px-8">
+      <div className="max-w-none mx-auto w-[100%]">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -77,14 +87,14 @@ export default function AhaMoment() {
         </motion.div>
 
         {/* Interactive Demonstration */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid lg:grid-cols-[40%_60%] gap-12 mb-12">
           {/* Left: Prompt Selector */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold mb-4 text-slate-700 dark:text-slate-300">
+            <h3 className="text-xl font-semibold mb-4 text-slate-700 dark:text-slate-300">
               Choose a Prompt Type
             </h3>
 
@@ -105,10 +115,10 @@ export default function AhaMoment() {
                     {type.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="font-mono text-sm text-slate-600 dark:text-slate-400 mb-1">
+                    <div className="font-mono text-base text-slate-600 dark:text-slate-400 mb-1">
                       {type.prompt}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-base text-slate-500">
                       Level: <span className="font-semibold capitalize">{type.level}</span>
                     </div>
                   </div>
@@ -118,7 +128,7 @@ export default function AhaMoment() {
                       animate={{ scale: 1 }}
                       className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center"
                     >
-                      <span className="text-white text-sm">✓</span>
+                      <span className="text-white text-base">✓</span>
                     </motion.div>
                   )}
                 </div>
@@ -141,21 +151,21 @@ export default function AhaMoment() {
                   <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${currentPrompt.color} flex items-center justify-center text-white`}>
                     {currentPrompt.icon}
                   </div>
-                  <h4 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                  <h4 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                     {currentPrompt.mode}
                   </h4>
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <p className="text-lg text-slate-600 dark:text-slate-400">
                   {currentPrompt.explanation}
                 </p>
               </div>
 
               {/* Output Example */}
               <div className="mb-6">
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2 block">
+                <label className="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2 block">
                   Typical Output
                 </label>
-                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 font-mono text-sm text-slate-700 dark:text-slate-300 overflow-x-auto">
+                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 font-mono text-base text-slate-700 dark:text-slate-300 overflow-x-auto">
                   <pre className="whitespace-pre-wrap">{currentPrompt.output}</pre>
                 </div>
               </div>
@@ -201,7 +211,7 @@ export default function AhaMoment() {
                     </div>
                   )}
                 </div>
-                <div className="absolute bottom-2 left-2 text-xs text-slate-500">
+                <div className="absolute bottom-2 left-2 text-base text-slate-500">
                   Distribution Shape
                 </div>
               </div>
@@ -217,10 +227,10 @@ export default function AhaMoment() {
           className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-2xl p-8 border-2 border-blue-200 dark:border-blue-800"
         >
           <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold mb-3 text-blue-900 dark:text-blue-100">
+            <h3 className="text-3xl font-bold mb-3 text-blue-900 dark:text-blue-100">
               The Model Already Knows How to Be Diverse
             </h3>
-            <p className="text-lg text-blue-800 dark:text-blue-200">
+            <p className="text-xl text-blue-800 dark:text-blue-200">
               We just need to ask it the right way.
             </p>
           </div>
@@ -231,8 +241,8 @@ export default function AhaMoment() {
               <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <span className="text-2xl">😔</span>
               </div>
-              <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100">Without VS</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <h4 className="font-semibold text-2xl mb-2 text-slate-900 dark:text-slate-100">Without VS</h4>
+              <p className="text-xl text-slate-600 dark:text-slate-400">
                 Mode collapse to typical responses
               </p>
             </div>
@@ -247,9 +257,9 @@ export default function AhaMoment() {
               <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <span className="text-2xl">🎨</span>
               </div>
-              <h4 className="font-semibold mb-2 text-slate-900 dark:text-slate-100">With VS</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Recovers pretraining diversity
+              <h4 className="font-semibold text-2xl mb-2 text-slate-900 dark:text-slate-100">With VS</h4>
+              <p className="text-xl text-slate-600 dark:text-slate-400">
+                Recovers Pretraining Diversity
               </p>
             </div>
           </div>
@@ -261,7 +271,7 @@ export default function AhaMoment() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Brain className="w-4 h-4" />
-              <span className="text-sm font-medium">
+              <span className="text-base font-medium">
                 {showMath ? 'Hide' : 'Show'} Mathematical Intuition
               </span>
             </button>
@@ -280,7 +290,7 @@ export default function AhaMoment() {
                   <h4 className="font-semibold mb-3 text-slate-900 dark:text-slate-100">
                     Why It Works: The Math
                   </h4>
-                  <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+                  <div className="space-y-3 text-base text-slate-600 dark:text-slate-400">
                     <p className="font-semibold">Mode collapse equations:</p>
                     <div className="flex flex-col items-center gap-2 my-2">
                       <Equation id="aha-collapse-rel" displayMode>
