@@ -15,7 +15,6 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import TableOfContents from "@/components/TableOfContents.astro";
-import CiteThis from "@/components/CiteThis.astro";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -132,9 +131,9 @@ if (post.data.academic) {
     {post.data.academic ? (
       <section class="paper-header">
         <h1 transition:name={slugifyStr(title)} class="paper-title">{title}</h1>
-          {(() => { 
-            const authors = Array.isArray(post.data.authors) ? post.data.authors : []; 
-            const authorLinks = {
+          {(() => {
+            const authors = Array.isArray(post.data.authors) ? post.data.authors : [];
+            const authorLinks: Record<string, string> = {
               "Jiayi Zhang": "https://jiayizx.github.io/",
               "Simon Yu": "https://simonucl.github.io/",
               "Derek Chong": "https://www.linkedin.com/in/derekch",
@@ -143,7 +142,7 @@ if (post.data.academic) {
               "Christopher D. Manning": "https://nlp.stanford.edu/~manning/",
               "Weiyan Shi": "https://wyshi.github.io/"
             };
-            
+
             return authors.length > 0 ? (
              <>
                <p class="paper-authors">
@@ -152,7 +151,7 @@ if (post.data.academic) {
                      const obj = typeof a === 'string' ? { name: a, aff: [] } : a;
                      const isLastInFirstLine = i === 3 && authors.length > 4;
                      const isEqualContribution = i < 3;
-                     const authorLink = authorLinks[obj.name];
+                     const authorLink = authorLinks[obj.name as string];
                      
                      return (
                        <>
