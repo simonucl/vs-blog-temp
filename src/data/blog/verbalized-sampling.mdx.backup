@@ -138,7 +138,7 @@ We start with an intuitive example: The Library Metaphor. Imagine a massive libr
 
 - **Direct Prompt** ("tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: Direct Prompt return the mode</span>
   </summary>
@@ -163,7 +163,7 @@ where $\delta$ is the Dirac function.
 
 - **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: List Prompt return uniform distributions</span>
   </summary>
@@ -204,7 +204,7 @@ This is a **uniform distribution** over elements in $\phi(y^*)$, regardless of t
 
 - **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: Distribution Prompt return the pretraining distribution</span>
   </summary>
@@ -283,31 +283,28 @@ This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025v
 
 ## Experiments
 
-We conducted comprehensive experiments across creative writing tasks (poems, stories, jokes) to demonstrate VS's effectiveness in improving diversity while maintaining quality.
+We conducted comprehensive experiments in various tasks to demonstrate the effectiveness of VS.
 
-### Benchmarks and Evaluation
+VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
 
-**Benchmarks.** We evaluate on three creative writing tasks: (1) **Poem continuation** from PoemHunter.com, (2) **Story generation** from the BookMIA dataset, and (3) **Joke writing** with 100 thematic prompts from Reddit r/DadJokes. For each task, we randomly select 100 data points and generate k=5 candidates with N=30 total samples per data point.
+See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
 
-**Evaluation Metrics.** We measure both diversity and quality:
-- **Semantic Diversity**: Calculated as 1 - mean pairwise cosine similarity of embeddings (OpenAI's text-embedding-3-small), expressed as a percentage where 100% = maximum diversity
-- **Lexical Diversity**: Measured using ROUGE-L, where lower scores indicate greater diversity
-- **Quality**: Evaluated using Claude-3.7-Sonnet as a judge with rubrics from Creative Writing v3 (poems/stories) and HumorBench (jokes)
+{/* ### Results: Evidence at a Glance
+
+- Creative writing diversity: +1.6–2.1× [@zhang2025vs, Figure 3a–c] → [Figure @fig:diversity-gains](#fig:diversity-gains)
+- Post‑training retention: 66.8% [@zhang2025vs, Figure 4] → [Figure @fig:post-training](#fig:post-training)
+- Temperature orthogonality: combines with VS [@zhang2025vs, Figure 5] → [Figure @fig:temperature-ablation](#fig:temperature-ablation)
+- Scaling trend: larger models gain ~1.5–2× [@zhang2025vs, Figure 3e–f] → [Figure @fig:scaling-trend](#fig:scaling-trend)
+*/}
 
 ### How well can VS improve diversity?
 
-#### Diversity Scores
-
-Figure 3(a)-(c) show the semantic diversity scores averaged across models for poems, stories, and jokes respectively. Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods**. The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
+VS‑CoT achieves **1.6–2.1× diversity gains** across poems, stories, and jokes compared to direct prompting, demonstrating substantial improvements in creative tasks [@zhang2025vs, Figure 3a–c].
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
   {/* <DiversityGainsVisual client:visible /> */}
   <img src="/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
-
-#### Diversity vs. Quality Trade-off
-
-Figure 3(d) shows the diversity-quality trade-off for the poem task. The quality of VS-Standard remains comparable to other methods. Notably, **VS-CoT achieves the highest diversity while maintaining a high quality score**, pushing the Pareto front of the diversity-quality tradeoff. This demonstrates that VS can boost diversity without harming quality.
 
 #### VS is Orthogonal to Temperature
 
@@ -322,96 +319,36 @@ Figure 3(d) shows the diversity-quality trade-off for the poem task. The quality
   </div>
 </div>
 
+{/* #### Diversity Across Post-Training Stages
+
+<div className="content-grid">
+  <div className="text-content">
+    Alignment processes progressively reduce diversity from base models. VS **recovers 66.8% of base model diversity**, far exceeding the 21.6% retained by standard aligned models [@zhang2025vs, Figure 4].
+  </div>
+  <div className="figure-content">
+    <Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
+      <PostTrainingVisual client:visible />
+      <img src="/images/training_progression.png" alt="Diversity retention across training stages" style={{ border: 'none', boxShadow: 'none', maxWidth: '80%', height: 'auto' }} />
+    </Figure>
+  </div>
+</div>
+*/}
+
 #### Emergent Behavior
 
-We observe an emergent trend where **larger models benefit more from VS**. Figure 3(e) shows the diversity gain over direct prompting across model sizes. Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (GPT-4.1-Mini, Gemini-2.5-Flash).
+Larger models show **~1.5–2× greater diversity gains** from VS, suggesting the technique becomes more effective as models scale up [@zhang2025vs, Figure 3e–f].
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <img src="/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
 </Figure>
 
-#### Cognitive Burden
-
-This scaling trend also extends to quality, as shown in Figure 3(f). While prior work found that complex prompts can create a "cognitive burden" that degrades LLM performance, our findings are nuanced. Methods like Sequence and VS-Standard do cause a drop in quality, but **this effect is less severe for larger models**. Notably, more intricate variants like **VS-CoT and VS-Multi overcome this burden**, even improving quality in larger models. This suggests using VS variants may better utilize the capabilities of advanced models, turning complexity into benefits.
-
-#### Diversity Tuning
-
-Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 3(g-i), **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
-
-#### Qualitative Examples
+#### Qualitative Example
 
 Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
 
 <Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
   <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
 </Figure>
-
-### Human Study on Diversity
-
-To complement our automatic diversity scores, we conducted a human evaluation on Prolific. Following past work, we provided task-specific diversity definitions (plot, style, and setup-punchline, respectively). For each task, **30 annotators rated the diversity of 90 output pairs** from three prompting methods (Direct, Sequence, VS-Standard) across ten curated topics.
-
-Each pair was rated on a four-point Likert scale: Very Similar, Somewhat Similar, Somewhat Dissimilar, or Very Dissimilar. Inter-annotator agreement was moderate for poems (0.54), high for stories (0.87) and jokes (0.86).
-
-<Table id="human-diversity" caption="Human-rated diversity (1 = Very Similar, 4 = Very Dissimilar) for poem, story, and joke tasks">
-  <thead>
-    <tr>
-      <th>Task</th>
-      <th>Direct</th>
-      <th>Sequence</th>
-      <th>VS-Standard</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Poem</td>
-      <td>1.90</td>
-      <td>2.07</td>
-      <td><strong>2.39</strong></td>
-    </tr>
-    <tr>
-      <td>Story</td>
-      <td>2.74</td>
-      <td>2.76</td>
-      <td><strong>3.06</strong></td>
-    </tr>
-    <tr>
-      <td>Joke</td>
-      <td>1.83</td>
-      <td>2.93</td>
-      <td><strong>3.01</strong></td>
-    </tr>
-  </tbody>
-</Table>
-
-VS achieves higher human-rated diversity than baselines on all tasks, validating our automatic metrics.
-
-### Ablation Studies
-
-#### Temperature Ablation
-
-We investigate the effect of sampling temperature on the diversity-quality trade-off by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
-
-The results show that **VS-Standard can be combined with temperature to further improve the diversity-quality trade-off**. VS consistently achieves a better balance between quality and diversity across both models, pushing forward the Pareto front relative to the baselines.
-
-#### Post-Training Stages Ablation
-
-We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. The results demonstrate that traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
-
-Specifically:
-- **Direct prompting**: severe collapse (20.8% after SFT → 10.8% after DPO)
-- **VS**: maintains ~30% diversity across all stages
-- **After DPO**: VS outperforms direct prompting by 182.6% and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting)
-
-This suggests that VS effectively mitigates the mode collapse induced by alignment training.
-
-#### Other Ablations
-
-We also perform comprehensive ablation studies on:
-1. **Number of candidates**: Higher k leads to greater diversity
-2. **Decoding strategies** (top-p, min-p): VS is orthogonal to these strategies and can be combined to further enhance diversity-quality
-3. **Prompt formats**: While all formats improve diversity, we use "probability" for VS-Standard/CoT and "confidence" for VS-Multi as empirically best-performing
-
-Across all these ablations, VS consistently outperformed the baselines under the same setups.
 
 
 {/*  ### 6.4 Open‑Ended QA (Fig. 7)

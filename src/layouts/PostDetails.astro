@@ -156,12 +156,12 @@ if (post.data.academic) {
                      return (
                        <>
                          {authorLink ? (
-                           <a href={authorLink} class="text-blue-400 hover:text-blue-400 transition-colors">{obj.name}</a>
+                           <a href={authorLink} class="text-blue-400 dark:text-blue-400 hover:text-slate-800 dark:hover:text-slate-300 transition-colors">{obj.name}</a>
                          ) : (
                            obj.name
                          )}
-                         {Array.isArray(obj.aff) && obj.aff.length ? <sup class="text-orange-500">{obj.aff.join(',')}</sup> : null}
-                         {isEqualContribution && <sup class="text-orange-500">†</sup>}
+                         {Array.isArray(obj.aff) && obj.aff.length ? <sup class="text-slate-500 dark:text-slate-500">{obj.aff.join(',')}</sup> : null}
+                         {isEqualContribution && <sup class="text-slate-500 dark:text-slate-500">†</sup>}
                          {i < authorsList.length - 1 ? ', ' : ''}
                          {isLastInFirstLine && <br />}
                        </>

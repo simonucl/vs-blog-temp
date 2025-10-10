@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import Equation from '@/components/academic/Equation';
 
 export default function TypicalityBiasExplainer() {
-  const [epsilon, setEpsilon] = useState(0.3);
+  const [alpha, setAlpha] = useState(0.3);
   const [beta, setBeta] = useState(0.15);
 
-  // Calculate rho
-  const rho = 1 + epsilon / beta;
+  // Calculate gamma (sharpening factor)
+  const gamma = 1 + alpha / beta;
 
   // Generate sample distribution data for visualization
   const generateDistribution = (sharpness: number) => {
@@ -26,31 +26,28 @@ export default function TypicalityBiasExplainer() {
     }));
   };
 
-  const distributionData = generateDistribution(rho);
+  const distributionData = generateDistribution(gamma);
 
   const getSharpnessLevel = () => {
-    if (rho < 1.5) return { label: 'Minimal', color: 'text-green-700', bg: 'bg-green-50' };
-    if (rho < 2.5) return { label: 'Moderate', color: 'text-yellow-700', bg: 'bg-yellow-50' };
-    if (rho < 4) return { label: 'High', color: 'text-orange-700', bg: 'bg-orange-50' };
+    if (gamma < 1.5) return { label: 'Minimal', color: 'text-green-700', bg: 'bg-green-50' };
+    if (gamma < 2.5) return { label: 'Moderate', color: 'text-yellow-700', bg: 'bg-yellow-50' };
+    if (gamma < 4) return { label: 'High', color: 'text-orange-700', bg: 'bg-orange-50' };
     return { label: 'Extreme', color: 'text-red-700', bg: 'bg-red-50' };
   };
 
   const sharpness = getSharpnessLevel();
 
   const dynamicLatex = useMemo(() => {
-    return `\\rho = 1 + ${epsilon.toFixed(2)} / ${beta.toFixed(2)} = ${rho.toFixed(2)}`;
-  }, [epsilon, beta, rho]);
+    return `\\gamma = 1 + ${alpha.toFixed(2)} / ${beta.toFixed(2)} = ${gamma.toFixed(2)}`;
+  }, [alpha, beta, gamma]);
 
   return (
     <div className="space-y-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">
-          Understanding Typicality Bias
-        </h2>
         <p className="text-slate-600">
           The core mechanism behind VS: aligned models sharpen distributions through{' '}
-          <span className="font-semibold text-red-600">ρ = 1 + ε/β</span>, where ε is the typicality bias
-          and β is the KL penalty coefficient.
+          <span className="font-semibold text-red-600">γ = 1 + α/β</span>, where α is the typicality bias weight
+          and β is the KL regularization coefficient.
         </p>
       </div>
 
@@ -62,10 +59,10 @@ export default function TypicalityBiasExplainer() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="font-semibold text-slate-700">
-                  ε (Typicality Bias)
+                  α (Typicality Bias Weight)
                 </label>
                 <span className="text-2xl font-mono font-bold text-blue-600">
-                  {epsilon.toFixed(2)}
+                  {alpha.toFixed(2)}
                 </span>
               </div>
               <input
@@ -73,14 +70,14 @@ export default function TypicalityBiasExplainer() {
                 min="0"
                 max="1"
                 step="0.01"
-                value={epsilon}
-                onChange={(e) => setEpsilon(parseFloat(e.target.value))}
+                value={alpha}
+                onChange={(e) => setAlpha(parseFloat(e.target.value))}
                 className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider-thumb border border-blue-300"
               />
               <p className="text-base text-slate-600 mt-2">
-                How much the model prefers "typical" outputs. Higher ε = stronger preference
+                How much the model prefers "typical" outputs. Higher α = stronger preference
                 for common patterns.
-              </p>  
+              </p>
             </div>
 
             <div>
@@ -115,20 +112,20 @@ export default function TypicalityBiasExplainer() {
               Distribution Sharpening Factor
             </div>
             <motion.div
-              key={rho}
+              key={gamma}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className={`inline-block px-6 py-3 rounded-lg ${sharpness.bg}`}
             >
               <div className="text-5xl font-bold text-slate-900 font-mono">
-                ρ = {rho.toFixed(2)}
+                γ = {gamma.toFixed(2)}
               </div>
             </motion.div>
             <div className={`mt-3 text-lg font-semibold ${sharpness.color}`}>
               {sharpness.label} Sharpening
             </div>
             <p className="text-base text-slate-600 mt-3">
-                When ρ &gt; 1, the model's distribution is sharpened (mode collapse).
+                When γ &gt; 1, the model's distribution is sharpened (mode collapse).
                 VS exploits this by verbalizing to access the less-sharpened base model.
             </p>
           </div>
@@ -215,14 +212,14 @@ export default function TypicalityBiasExplainer() {
           ))}
         </div>
 
-        <div className="mt-6 flex gap-6 justify-center text-sm">
+        <div className="mt-6 flex gap-6 justify-center text-lg">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-slate-400 rounded"></div>
-            <span className="text-slate-600">Base Model (ρ = 1)</span>
+            <span className="text-slate-600">Base Model (γ = 1)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-600 rounded"></div>
-            <span className="text-slate-600">After Alignment (ρ = {rho.toFixed(2)})</span>
+            <span className="text-slate-600">After Alignment (γ = {gamma.toFixed(2)})</span>
           </div>
         </div>
       </div>
@@ -251,8 +248,8 @@ export default function TypicalityBiasExplainer() {
                 Why This Matters
               </h4>
               <p className="text-lg text-blue-800">
-                Higher ρ means more mode collapse. Alignment (RLHF/DPO) introduces typicality
-                bias ε while using small KL penalties β, leading to ρ &gt; 1. This explains
+                Higher γ means more mode collapse. Alignment (RLHF/DPO) introduces typicality
+                bias α while using small KL penalties β, leading to γ &gt; 1. This explains
                 why aligned models produce less diverse outputs.
               </p>
             </div>
@@ -283,7 +280,7 @@ export default function TypicalityBiasExplainer() {
               <p className="text-lg text-green-800">
                 VS bypasses this sharpening by prompting the model to verbalize reasoning
                 <em> before</em> committing to an answer. This accesses the base model's
-                broader distribution (ρ ≈ 1) instead of the sharpened aligned distribution.
+                broader distribution (γ ≈ 1) instead of the sharpened aligned distribution.
               </p>
             </div>
           </div>

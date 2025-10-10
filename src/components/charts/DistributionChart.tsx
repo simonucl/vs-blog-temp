@@ -104,8 +104,8 @@ function DistributionChart({
           >
             {mode === 'all' && 'Compare All'}
             {mode === 'pretraining' && 'Reference Only'}
-            {mode === 'direct' && 'Direct ⚔️ Reference'}
-            {mode === 'vs' && 'VS ⚔️ Reference'}
+            {mode === 'direct' && 'Direct - Reference'}
+            {mode === 'vs' && 'VS - Reference'}
           </button>
         ))}
       </div>

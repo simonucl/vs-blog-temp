@@ -13,13 +13,10 @@ export default function USStatesDemo() {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-slate-900 mb-2">
-          VS Recovers Pretraining Distribution
-        </h2>
         <p className="text-2xl text-slate-600">
           We asked the VS to generate all possible US state with corresponding probabilities, and VS produces a distribution that closely
           aligns with the pretraining corpus (RedPajama), achieving{' '}
-          <strong className="text-red-600">KL divergence = 0.12</strong>.
+          <strong>KL divergence = 0.12</strong>.
           Direct prompting collapses to a few popular states (KL = 16.16).
         </p>
       </div>
@@ -45,14 +42,14 @@ export default function USStatesDemo() {
           <h3 className="text-lg font-semibold text-green-900 mb-2">
             Pretraining Distribution
           </h3>
-          <div className="text-sm text-green-600 mb-2">
+          {/* <div className="text-sm text-green-600 mb-2">
             Top 3: {Object.entries(usStatesData.pretraining_distribution)
               .filter(([state]) => state !== 'other')
               .sort(([, a], [, b]) => (b as number) - (a as number))
               .slice(0, 3)
               .map(([state]) => state)
               .join(', ')}
-          </div>
+          </div> */}
           <p className="text-base text-green-700">
             Reference distribution from RedPajama corpus showing actual state
             name frequencies in pretraining data.
@@ -63,14 +60,14 @@ export default function USStatesDemo() {
           <h3 className="text-lg font-semibold text-slate-900 mb-2">
             Direct Prompting
           </h3>
-          <div className="text-sm text-slate-600 mb-2">
+          {/* <div className="text-sm text-slate-600 mb-2">
             Top 3: {Object.entries(usStatesData.direct_distribution)
               .filter(([state]) => state !== 'other' && state !== 'description')
               .sort(([, a], [, b]) => (b as number) - (a as number))
               .slice(0, 3)
               .map(([state]) => state)
               .join(', ')}
-          </div>
+          </div> */}
           <p className="text-base text-slate-600 mb-2">
             {usStatesData.direct_distribution.description}. High divergence indicates mode collapse.
           </p>
@@ -80,14 +77,14 @@ export default function USStatesDemo() {
           <h3 className="text-lg font-semibold text-red-900 mb-2">
             Verbalized Sampling
           </h3>
-          <div className="text-sm text-red-600 mb-2">
+          {/* <div className="text-sm text-red-600 mb-2">
             Top 3: {Object.entries(usStatesData.vs_distribution)
               .filter(([state]) => state !== 'other' && state !== 'description')
               .sort(([, a], [, b]) => (b as number) - (a as number))
               .slice(0, 3)
               .map(([state]) => state)
               .join(', ')}
-          </div>
+          </div> */}
           <p className="text-base text-red-600 mb-2">
             {usStatesData.vs_distribution.description}. Low KL divergence shows recovery of pretraining diversity
           </p>
