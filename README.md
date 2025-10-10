@@ -114,11 +114,14 @@ vs-blogpost/
 ## 📝 Citation
 
 ```bibtex
-@article{zhang2025vs,
+@misc{zhang2025verbalizedsamplingmitigatemode,
   title={Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity},
-  author={Zhang, Jiayi and Yu, Simon and Chong, Derek and others},
-  journal={Preprint},
-  year={2025}
+  author={Jiayi Zhang and Simon Yu and Derek Chong and Anthony Sicilia and Michael R. Tomz and Christopher D. Manning and Weiyan Shi},
+  year={2025},
+  eprint={2510.01171},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2510.01171}
 }
 ```
 
