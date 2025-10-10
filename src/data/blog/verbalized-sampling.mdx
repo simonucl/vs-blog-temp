@@ -1,8 +1,8 @@
 ---
-title: "Breaking Mode Collapse: How Verbalized Sampling Restores LLM Creativity"
+title: "Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity"
 description: "Ask for a distribution, not a single answer. A training-free method to restore diversity in aligned LLMs."
 slug: verbalized-sampling
-pubDatetime: 2025-10-03T00:00:00Z
+pubDatetime: 2025-10-13T12:00:00Z
 featured: true
 draft: false
 tags:
@@ -30,10 +30,13 @@ affiliations:
   - "Northeastern University"
   - "Stanford University"
   - "West Virginia University"
-pdfUrl: "/paper-preprint.pdf"
+pdfUrl: "https://arxiv.org/abs/2510.01171"
 codeUrl: "https://github.com/CHATS-lab/verbalized-sampling"
+homepageUrl: "https://www.verbalized-sampling.com/"
+xThreadUrl: "https://x.com/YOUR_X_THREAD_URL"
+notebookUrl: "https://github.com/CHATS-lab/verbalized-sampling?tab=readme-ov-file#-interactive-notebooks"
 bibUrl: "/references.bib"
-abstract: "We prompt the model for a small distribution—k candidates plus weights—recovering base-model diversity while maintaining quality and safety across tasks."
+abstract: "Post-training alignment reduces LLM diversity through mode collapse, driven by typicality bias in human preference data. We introduce <strong>Verbalized Sampling (VS)</strong>, a training-free prompting method that asks models to output probability distributions over responses (e.g., \"Generate 5 jokes with probabilities\"). VS increases diversity by <strong>1.6-2.1×</strong> in creative writing by simply changing the way we prompt, while preserving quality and safety, providing an inference-time remedy for mode collapse."
 showTOC: true
 ---
 
@@ -50,7 +53,7 @@ import VSVariantsComparison from "@/components/sections/VSVariantsComparison";
 import CodeBlock from "@/components/ui/CodeBlock";
 import OpeningHook from "@/components/sections/OpeningHook";
 import AhaMoment from "@/components/sections/AhaMoment";
-import { Sidenote, Table } from "@/components/academic";
+import { Sidenote, Table, Equation } from "@/components/academic";
 import Figure from "@/components/academic/Figure.astro";
 
 {/* Badges removed for academic tone */}
@@ -60,88 +63,358 @@ import Figure from "@/components/academic/Figure.astro";
   {/* Per IA: Opening Hook above TL;DR */}
 </div>
 
-## Intuition
+## The Mode Collapse Problem
 
-Aligned LLMs can collapse to stereotypical outputs. VS asks for a small distribution (k items + probabilities) to recover diversity without training.
+You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a short story, and it begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
 
-- Typicality bias ($\varepsilon>0$) sharpens the policy and induces collapse ($\rho = 1 + \varepsilon/\beta > 1$) [@rafailov2024; @ouyang2022].
-- VS elicits a probability distribution over candidates [@zhang2025vs].
-- A threshold $\tau$ tunes diversity [@zhang2025vs, pp. 7–8].
+This frustrating phenomenon is called [**mode collapse**](https://www.lesswrong.com/posts/t9svvNPNmFf5Qa3TA/mysteries-of-mode-collapse). Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer [@kirk2024; @murthy2025]. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
-## Why It Works
+### Why This Matters
 
-### 1. Hidden bias in preference data
+Mode collapse isn't just an academic curiosity, it's limiting LLM's potential in critical applications:
 
-Human annotators systematically prefer familiar/typical text<Sidenote number={1}>Classic effects include mere exposure and processing fluency [@zajonc1968; @reber2004; @alter2009]. Statistical analyses indicate $\varepsilon>0$ independent of correctness (e.g., paired‑comparison style tests) [@ouyang2022; @christiano2017].</Sidenote>:
 
-$$r(x,y) = r_{\text{true}}(x,y) + \varepsilon\,\log p_{\text{base}}(y|x).$$
+**Brainstorming & Ideation** [@zhou2024sharedimaginationllmshallucinate]: When teams rely on LLMs to generate creative solutions or explore problem spaces, mode collapse means they're getting the same handful of "safe" ideas over and over. The model might know 100 viable approaches, but it only suggests the 3 most conventional ones. This defeats the purpose of AI assisted brainstorming.
 
-### 2. Sharpening → mode collapse
+**Creative Writing** [@chakrabarty2024artartificelargelanguage]: Authors, marketers, and content creators seeking fresh angles or unique narrative voices find themselves battling against the model's tendency to regurgitate tropes. The model has learned diverse writing styles during pretraining, but alignment has pushed it toward generic, crowd-pleasing outputs. Every story starts in a forest, every protagonist is "determined yet kind."
 
-<a id="eq:sharpening" />
-$$\pi^*(y|x) \propto \pi_{\text{ref}}(y|x)^{\rho},\quad \rho = 1 + \varepsilon/\beta > 1.$$
+**Research & AI-Driven Discovery** [@si2024llmsgeneratenovelresearch]: Perhaps most critically, mode collapse hampers AI's role in scientific discovery and research ideation. When researchers use LLMs to generate hypotheses, explore experimental designs, or brainstorm research directions, they need the full spectrum of possibilities, including unconventional approaches that might lead to breakthroughs. Mode collapse means the AI suggests only well-trodden paths, missing potentially transformative ideas that lie in the less-typical regions of its knowledge.
 
-When utility is flat across many valid completions, sharpening concentrates mass on typical outputs<Sidenote number={2}>Derivation follows standard KL‑regularized preference learning [@rafailov2024] with typicality‑biased rewards; see [@zhang2025vs, Eq. 3, p. 4].</Sidenote>.
+## How to Fix It?
 
-### 3. Distribution‑level recovery (VS)
+Why do aligned LLMs keep giving you the same answers? And how does simply asking for probabilities fix it? This section walks you through the idea: from an intuitive metaphor, to the typicality bias at the root of mode collapse, to the mathematical formalization, and finally to how **Verbalized Sampling** solves the problem.
 
-VS asks for a distribution of candidates with probabilities, recovering pretraining diversity. On the US states task, VS aligns with the corpus distribution ($\mathrm{KL}\approx 0.12$) [@zhang2025vs, p. 3].
+### The Root Cause: Typicality Bias
 
-Sharpening is defined in [Eq. @eq:sharpening](#eq:sharpening).
+Humans have a deep-seated psychological quirk we call [**typicality bias**](https://arxiv.org/abs/2501.14860). We're wired to prefer things that are familiar, conventional, and easy to process. When training these models, we think we want creativity, but our subconscious votes go to the safe, boring options.<Sidenote number={1}>Classic psychological effects include mere-exposure (we prefer things we've seen before), processing fluency (easier-to-process information seems more truthful and aesthetic), and schema congruity (information fitting existing mental models is accepted with less critical thought) [@zajonc1968; @reber2004; @alter2009].</Sidenote>
 
-<Figure id="us-states" caption="Distribution recovery on US states (VS vs Direct); lower KL indicates closer match to the pretraining distribution [@zhang2025vs, Figure 2].">
-  <USStatesDemo client:visible />
-</Figure>
+When human annotators provide preference data for RLHF, they're not rating "helpfulness" in a vacuum. Given two equally correct responses, they systematically prefer the more familiar, conventional one: the more **typical** one.
 
-VS recovers the pretraining distribution closely<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states [@zhang2025vs, Figure 2, p. 3].</Sidenote>.
+### The Mathematics of Typicality Bias
 
-<div className="not-prose mb-10">
+**Why do humans prefer typical text?** Cognitive psychology reveals several mechanisms: the *mere-exposure effect* (we prefer familiar content), *processing fluency* (easy-to-process text feels more truthful), and *schema congruity* (information matching existing mental models is accepted with less critical thought). These principles collectively create a systematic preference for conventional, typical responses.
+
+**Modeling the bias.** We formalize this as a reward function combining true task utility with typicality:
+
+<Equation id="eq:reward-bias">
+{`r(x,y) = r_{\\text{true}}(x,y) + \\alpha\\,\\log \\pi_{\\text{ref}}(y|x) + \\epsilon(x)`}
+</Equation>
+
+where $r_{\text{true}}$ captures actual task quality, $\alpha > 0$ is the typicality bias weight, $\pi_{\text{ref}}$ is the base model (whose likelihood scores naturally capture text typicality from pretraining), and $\epsilon$ is noise.
+
+**Empirical validation.** We tested this on HelpSteer, which provides separate ratings for *correctness* (true utility) and *helpfulness* (final reward). Analyzing 6,874 response pairs with **identical correctness** but different helpfulness scores, we found $\hat{\alpha} = 0.57 \pm 0.07$ ($p < 10^{-14}$). This means annotators systematically favor more typical responses even when correctness is controlled for. We replicated this finding across multiple preference datasets and base models, consistently finding >50% of human-preferred responses receive higher base model likelihood [@zhang2025vs, Section 4].
+
+**From bias to collapse.** Under standard RLHF optimization with KL regularization (coefficient $\beta$), this typicality-biased reward produces a **power-sharpened** optimum:
+
+<Equation id="eq:sharpening">
+{`\\pi^*(y|x) \\propto \\pi_{\\text{ref}}(y|x)^{\\gamma} \\exp\\left(\\frac{r_{\\text{true}}(x,y)}{\\beta}\\right),\\quad \\gamma := 1 + \\frac{\\alpha}{\\beta} > 1`}
+</Equation>
+
+The sharpening exponent $\gamma > 1$ concentrates probability mass on typical completions. Critically, when many responses have **flat true rewards** $r_{\text{true}}(x,y) \approx r_{\text{true}}(x,y')$ (common in creative writing, brainstorming, dialogue), the equation simplifies to:
+
+<Equation id="eq:flat-rewards">
+{`\\pi^*(y|x) \\propto \\pi_{\\text{ref}}(y|x)^{\\gamma},\\quad \\gamma > 1`}
+</Equation>
+
+This is exactly like temperature scaling with $T = 1/\gamma < 1$. As $\gamma$ increases (stronger typicality bias or tighter KL regularization), the distribution sharpens further, ultimately collapsing to $\arg\max_y \pi_{\text{ref}}(y|x)$ — the mode of the base model. This is **mode collapse**.<Sidenote number={2}>Full derivation follows standard KL-regularized preference learning [@rafailov2024]. See [@zhang2025vs, Eq. 3, p. 4] and Appendix A for complete proofs.</Sidenote>
+
+<details className="group my-2 rounded-lg border-2 border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center justify-between py-3 px-4 text-left font-semibold text-xl text-slate-900 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400">
+    <span>
+      Example: Understanding Typicality Bias and Sharpening (Click to expand)
+    </span>
+  </summary>
+
+  <div className="not-prose px-4 pb-4 text-slate-700 dark:text-slate-300 w-full">
+    <TypicalityBiasExplainer client:visible />
+  </div>
+</details>
+
+### Embrace Mode Collapse: Distribution-Level Recover Diversity
+
+**Verbalized Sampling (VS)** breaks this cycle by asking for a *distribution of candidates* [@meister2024benchmarkingdistributionalalignmentlarge] with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
+
+We start with an intuitive example: The Library Metaphor. Imagine a massive library and the LLM as the librarian:
+
+- **Direct Prompt** ("tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
+
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+    <span>Proof: Direct Prompt return the mode</span>
+  </summary>
+  <div className="px-3 pb-3 text-lg text-slate-700 dark:text-slate-300">
+
+**Setup.** For a fixed prompt $x_{\text{orig}}$, we want to understand what happens when $\pi^*$ exhibits mode collapse:
+
+<div className="my-4 flex justify-center">
+
+$$\pi^*(y | x) = \delta_{y^*}(y) \quad\text{where}\quad y^* \in \arg\max_y \pi_{\text{ref}}(y | x)$$
+
+</div>
+
+where $\delta$ is the Dirac function.
+
+**Claim: Instance-level prompts return the mode of $\pi_{\text{ref}}$**
+
+*Proof:* Let $x = x_{\text{orig}}$. Since $\pi^*$ is mode collapsed, $\pi^*(y | x) = \delta_{y^*}(y)$. Any sample $y \sim \pi^*(y | x)$ returns the mode $y^* = \arg\max_y \pi_{\text{ref}}(y | x)$ almost surely. $\square$
+
+  </div>
+</details>
+
+- **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
+
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+    <span>Proof: List Prompt return uniform distributions</span>
+  </summary>
+  <div className="px-3 pb-3 text-lg text-slate-700 dark:text-slate-300">
+
+**Setup.** For a fixed prompt $x_{\text{orig}}$, assume $\pi^*$ exhibits mode collapse as above.
+
+**Claim: List-level prompts return uniform distributions at best**
+
+*Proof:* For list prompt $x$ with parser $\phi : \mathcal{Y} \to \mathcal{Y}^*$, let $Z \sim \pi^*(\cdot | x)$ and $\phi(Z) = \{Y_i\}_{i=1}^k$. By total probability:
+
+<div className="my-4 flex justify-center">
+
+$$\mathbb{P}(Y = y) = \sum_{z \in \mathcal{Y}} \mathbb{P}(Y = y | Z = z)\mathbb{P}(Z = z)$$
+
+</div>
+
+Since $\pi^*$ is collapsed, $\mathbb{P}(Z = z) = \delta_{y^*}(z)$, so:
+
+<div className="my-4 flex justify-center">
+
+$$\mathbb{P}(Y = y) = \mathbb{P}(Y = y | Z = y^*) = \frac{1}{|\phi(y^*)|} \sum_{y_i \in \phi(y^*)} \delta_{y_i}(y)$$
+
+</div>
+
+When $\phi(y^*)$ contains distinct elements (as requested), this simplifies to:
+
+<div className="my-4 flex justify-center">
+
+$$\mathbb{P}(Y = y) = \frac{1}{|\phi(y^*)|}$$
+
+</div>
+
+This is a **uniform distribution** over elements in $\phi(y^*)$, regardless of their probabilities in $\pi_{\text{ref}}$. $\square$
+
+  </div>
+</details>
+
+- **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
+
+<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+    <span>Proof: Distribution Prompt return the pretraining distribution</span>
+  </summary>
+  <div className="px-3 pb-3 text-lg text-slate-700 dark:text-slate-300">
+
+**Setup.** For a fixed prompt $x_{\text{orig}}$, assume $\pi^*$ exhibits mode collapse as above.
+
+**Claim: Distribution-level prompts can approximate $\pi_{\text{ref}}(\cdot | x_{\text{orig}})$**
+
+*Proof:* For distribution prompt $x$ with parser $\phi : \mathcal{Y} \to \mathcal{Y}^k \times \Delta(k)$, write $\phi(Z) = \{(Y_i, P_i)\}_{i=1}^k$. As before:
+
+<div className="my-4 flex justify-center">
+
+$$\mathbb{P}(Y = y) = \mathbb{P}(Y = y | Z = y^*) = \sum_{(y_i,p_i) \in \phi(y^*)} p_i\delta_{y_i}(y)$$
+
+</div>
+
+Now index all unique $y \in \mathcal{Y}$ as $(y_i)_{i=1}^m$. We can write:
+
+<div className="my-4 flex justify-center">
+
+$$\pi_{\text{ref}}(y | x_{\text{orig}}) = \sum_{i=1}^m \pi_{\text{ref}}(y_i | x_{\text{orig}}) \delta_{y_i}(y)$$
+
+</div>
+
+By setting $p_i = \pi_{\text{ref}}(y_i | x_{\text{orig}})$ and $k=m$ in $\phi(y^*)$:
+
+<div className="my-4 flex justify-center">
+
+$$\mathbb{P}(Y = y) = \sum_{i=1}^m p_i \delta_{y_i}(y) = \sum_{i=1}^m \pi_{\text{ref}}(y_i | x_{\text{orig}})\delta_{y_i}(y) = \pi_{\text{ref}}(y | x_{\text{orig}})$$
+
+</div>
+
+Therefore, distribution-level prompts can **exactly recover** $\pi_{\text{ref}}(\cdot | x_{\text{orig}})$ when $\pi^*$ accurately verbalizes probabilities. $\square$
+
+**Remark on approximation error:** In practice, we expect bounded error $|p_i - \pi_{\text{ref}}(y_i | x_{\text{orig}})| \leq \varepsilon$, which yields $|\mathbb{P}(Y = y) - \pi_{\text{ref}}(y | x_{\text{orig}})| \leq \varepsilon$. Our experiments demonstrate this empirically with low KL divergence to pretraining distributions.
+
+  </div>
+</details>
+
+By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice.<Sidenote number={0}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>
+
+<details className="group my-2 rounded-lg border-2 border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center justify-between py-3 px-4 text-left font-semibold text-xl text-slate-900 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400">
+    <span>
+      Example:Different Prompts → Different Modes (Click to expand)
+    </span>
+  </summary>
+
+  <div className="not-prose px-4 pb-4 text-slate-700 dark:text-slate-300 w-full">
   <AhaMoment client:visible />
-</div>
+  </div>
+</details>
 
-## Interactive Explainer: Typicality Bias
 
-<div className="not-prose mb-12">
-  <TypicalityBiasExplainer client:visible />
-</div>
+### Your Model Knows the Distribution: A Case Study on US States Distribution
 
-## Try It: Diversity Playground
+To further prove that your model knows the distribution, we conducted an experiment to demonstrate that VS recovers the pretraining distribution closely. We asked *Claude 3.7 Sonnet* to generate US state names and measured the KL divergence between the generated distribution and the RedPajama pretraining corpus distribution.
+
+{/* VS aligns closely with the corpus distribution ($\mathrm{KL}\approx 0.12$), while direct prompting shows severe collapse ($\mathrm{KL} = 2.34$).<Sidenote number={3}>This KL divergence is measured against the empirical pretraining distribution for US states.</Sidenote> */}
+
+
+
+<USStatesDemo client:visible />
+<hr className="my-10 border-t-2 border-slate-200" />
+
+{/* ## 5. Try It: Diversity Playground
 
 Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
 
-This threshold‑tuning effect corresponds to the paper’s ablations [@zhang2025vs, Figure 3g–i]<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>.
+This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025vs, Figure 3g–i].<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>
 
 <div className="not-prose mb-12">
   <VSPlayground client:visible />
-</div>
+</div> */}
 
-## Evidence
+## Experiments
 
-VS increases diversity by **1.6–2.1×** across poem/story/joke tasks [@zhang2025vs, Figure 3a–c], improves human preference by **+25.7%** [@zhang2025vs, Table 3], and recovers **66.8%** of base‑model diversity after alignment [@zhang2025vs, Figure 4].
+We conducted comprehensive experiments across creative writing tasks (poems, stories, jokes) to demonstrate VS's effectiveness in improving diversity while maintaining quality.
 
-See [Figure @fig:diversity-gains](#fig:diversity-gains) and [Figure @fig:post-training](#fig:post-training) for details.
+### Benchmarks and Evaluation
 
-### Evidence at a Glance
+**Benchmarks.** We evaluate on three creative writing tasks: (1) **Poem continuation** from PoemHunter.com, (2) **Story generation** from the BookMIA dataset, and (3) **Joke writing** with 100 thematic prompts from Reddit r/DadJokes. For each task, we randomly select 100 data points and generate k=5 candidates with N=30 total samples per data point.
 
-- Creative writing diversity: +1.6–2.1× [@zhang2025vs, Figure 3a–c] → [Figure @fig:diversity-gains](#fig:diversity-gains)
-- Post‑training retention: 66.8% [@zhang2025vs, Figure 4] → [Figure @fig:post-training](#fig:post-training)
-- Temperature orthogonality: combines with VS [@zhang2025vs, Figure 5] → [Figure @fig:temperature-ablation](#fig:temperature-ablation)
-- Scaling trend: larger models gain ~1.5–2× [@zhang2025vs, Figure 3e–f] → [Figure @fig:scaling-trend](#fig:scaling-trend)
-- Dialogue simulation: VS matches/surpasses FT [@zhang2025vs, Figure 6a]
-- Open‑ended QA: lower KL, higher coverage‑N, precision ≈ 1.0 [@zhang2025vs, Figure 7]
-- Synthetic data → math accuracy: 37.5% vs 32.8% avg [@zhang2025vs, Table 4]
+**Evaluation Metrics.** We measure both diversity and quality:
+- **Semantic Diversity**: Calculated as 1 - mean pairwise cosine similarity of embeddings (OpenAI's text-embedding-3-small), expressed as a percentage where 100% = maximum diversity
+- **Lexical Diversity**: Measured using ROUGE-L, where lower scores indicate greater diversity
+- **Quality**: Evaluated using Claude-3.7-Sonnet as a judge with rubrics from Creative Writing v3 (poems/stories) and HumorBench (jokes)
 
-[Back to top ↑](#article)
+### How well can VS improve diversity?
+
+#### Diversity Scores
+
+Figure 3(a)-(c) show the semantic diversity scores averaged across models for poems, stories, and jokes respectively. Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods**. The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
 
 <Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
-  <DiversityGainsVisual client:visible />
+  {/* <DiversityGainsVisual client:visible /> */}
+  <img src="/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
 
-<Figure id="post-training" caption="Diversity retention across training stages; VS recovers to 66.8% of base diversity [@zhang2025vs, Figure 4].">
-  <PostTrainingVisual client:visible />
+#### Diversity vs. Quality Trade-off
+
+Figure 3(d) shows the diversity-quality trade-off for the poem task. The quality of VS-Standard remains comparable to other methods. Notably, **VS-CoT achieves the highest diversity while maintaining a high quality score**, pushing the Pareto front of the diversity-quality tradeoff. This demonstrates that VS can boost diversity without harming quality.
+
+#### VS is Orthogonal to Temperature
+
+<div className="content-grid">
+  <div className="figure-content">
+    <Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
+      <img src="/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+    </Figure>
+  </div>
+  <div className="text-content">
+    VS and temperature are **orthogonal techniques**—combining both pushes the diversity-quality Pareto frontier beyond what either achieves alone [@zhang2025vs, Figure 5].
+  </div>
+</div>
+
+#### Emergent Behavior
+
+We observe an emergent trend where **larger models benefit more from VS**. Figure 3(e) shows the diversity gain over direct prompting across model sizes. Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (GPT-4.1-Mini, Gemini-2.5-Flash).
+
+<Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
+  <img src="/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
 </Figure>
 
-### Open‑Ended QA (Fig. 7)
+#### Cognitive Burden
+
+This scaling trend also extends to quality, as shown in Figure 3(f). While prior work found that complex prompts can create a "cognitive burden" that degrades LLM performance, our findings are nuanced. Methods like Sequence and VS-Standard do cause a drop in quality, but **this effect is less severe for larger models**. Notably, more intricate variants like **VS-CoT and VS-Multi overcome this burden**, even improving quality in larger models. This suggests using VS variants may better utilize the capabilities of advanced models, turning complexity into benefits.
+
+#### Diversity Tuning
+
+Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 3(g-i), **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
+
+#### Qualitative Examples
+
+Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
+
+<Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
+  <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
+</Figure>
+
+### Human Study on Diversity
+
+To complement our automatic diversity scores, we conducted a human evaluation on Prolific. Following past work, we provided task-specific diversity definitions (plot, style, and setup-punchline, respectively). For each task, **30 annotators rated the diversity of 90 output pairs** from three prompting methods (Direct, Sequence, VS-Standard) across ten curated topics.
+
+Each pair was rated on a four-point Likert scale: Very Similar, Somewhat Similar, Somewhat Dissimilar, or Very Dissimilar. Inter-annotator agreement was moderate for poems (0.54), high for stories (0.87) and jokes (0.86).
+
+<Table id="human-diversity" caption="Human-rated diversity (1 = Very Similar, 4 = Very Dissimilar) for poem, story, and joke tasks">
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Direct</th>
+      <th>Sequence</th>
+      <th>VS-Standard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Poem</td>
+      <td>1.90</td>
+      <td>2.07</td>
+      <td><strong>2.39</strong></td>
+    </tr>
+    <tr>
+      <td>Story</td>
+      <td>2.74</td>
+      <td>2.76</td>
+      <td><strong>3.06</strong></td>
+    </tr>
+    <tr>
+      <td>Joke</td>
+      <td>1.83</td>
+      <td>2.93</td>
+      <td><strong>3.01</strong></td>
+    </tr>
+  </tbody>
+</Table>
+
+VS achieves higher human-rated diversity than baselines on all tasks, validating our automatic metrics.
+
+### Ablation Studies
+
+#### Temperature Ablation
+
+We investigate the effect of sampling temperature on the diversity-quality trade-off by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
+
+The results show that **VS-Standard can be combined with temperature to further improve the diversity-quality trade-off**. VS consistently achieves a better balance between quality and diversity across both models, pushing forward the Pareto front relative to the baselines.
+
+#### Post-Training Stages Ablation
+
+We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. The results demonstrate that traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
+
+Specifically:
+- **Direct prompting**: severe collapse (20.8% after SFT → 10.8% after DPO)
+- **VS**: maintains ~30% diversity across all stages
+- **After DPO**: VS outperforms direct prompting by 182.6% and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting)
+
+This suggests that VS effectively mitigates the mode collapse induced by alignment training.
+
+#### Other Ablations
+
+We also perform comprehensive ablation studies on:
+1. **Number of candidates**: Higher k leads to greater diversity
+2. **Decoding strategies** (top-p, min-p): VS is orthogonal to these strategies and can be combined to further enhance diversity-quality
+3. **Prompt formats**: While all formats improve diversity, we use "probability" for VS-Standard/CoT and "confidence" for VS-Multi as empirically best-performing
+
+Across all these ablations, VS consistently outperformed the baselines under the same setups.
+
+
+{/*  ### 6.4 Open‑Ended QA (Fig. 7)
 
 VS achieves lower KL divergence and higher coverage‑N while maintaining precision ≈ 1.0 on open‑ended QA benchmarks [@zhang2025vs, Figure 7]. This indicates distribution‑level prompting improves breadth without sacrificing answer quality.
 
@@ -158,8 +431,9 @@ VS achieves lower KL divergence and higher coverage‑N while maintaining precis
 </Table>
 
 See [Table @table:openqa](#table:openqa) for a compact summary.
+*/}
 
-### Synthetic Data → Math Accuracy (Table 4)
+{/* ### 6.3 Synthetic Data → Math Accuracy (Table 4)
 
 Training with VS‑generated synthetic data improves downstream math accuracy (**37.5% vs 32.8%** average), demonstrating transfer beyond creative tasks [@zhang2025vs, Table 4].
 
@@ -173,13 +447,13 @@ Training with VS‑generated synthetic data improves downstream math accuracy (*
   </tbody>
 </Table>
 
-See [Table @table:synthetic-math](#table:synthetic-math) for key figures.
+See [Table @table:synthetic-math](#table:synthetic-math) for key figures. */}
 
-## VS ≠ Temperature: Orthogonal Benefits
+{/* ## 7. VS ≠ Temperature: Orthogonal Benefits
 
 Temperature changes how you sample from a distribution; VS changes what distribution you request. They combine effectively [@zhang2025vs, Figure 5].
 
-See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>.
+See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combined diversity–quality Pareto frontier.<Sidenote number={5}>VS shifts the underlying distribution, while temperature adjusts sampling from that distribution; their effects are complementary [@zhang2025vs, Figure 5].</Sidenote>
 
 <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
   <TemperatureAblation client:visible />
@@ -187,7 +461,7 @@ See [Figure @fig:temperature-ablation](#fig:temperature-ablation) for the combi
 
 ## Larger Models Benefit More
 
-Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>.
+Larger models show stronger gains with VS.<Sidenote number={6}>Scaling analysis indicates ~1.5–2× larger diversity gains for higher‑capacity models [@zhang2025vs, Figure 3e–f, p. 7].</Sidenote>
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <ScalingTrendVisualization client:visible />
@@ -195,11 +469,20 @@ Larger models show stronger gains with VS<Sidenote number={6}>Scaling analysis i
 
 ## Dialogue Simulation
 
-In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS’s applicability beyond creative generation into behaviorally grounded distributions.
+In dialogue simulation tasks, GPT‑4 with VS matches a fine‑tuned Llama‑3.1‑8B model, and DeepSeek‑R1 with VS surpasses it [@zhang2025vs, Figure 6a, p. 11]. This illustrates VS's applicability beyond creative generation into behaviorally grounded distributions.
 
-See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
+### Breaking the People-Pleaser: Realistic Behavior Simulation
 
-[Back to top ↑](#article)
+Typicality bias has major consequences for applications requiring realistic human behavior simulation. Under mode collapse, aligned AI models are agreeable people-pleasers, making them poor simulators.
+
+We tested this on a persuasion task where the model simulated a person being asked for a donation.<Sidenote number={8}>Standard prompting produces unnaturally agreeable outputs. VS helps the LLM simulate a much more realistic range of behaviors, closely matching actual human data [@zhang2025vs, Figure 6a].</Sidenote>
+
+- **Standard prompting**: The AI was consistently generous, almost always donating $1 out of a possible $2
+- **Verbalized Sampling**: The AI simulated a full range of responses—from refusal, hesitant agreement, to eventual regret—creating a distribution of donation amounts that closely mirrored real human data
+
+This opens huge possibilities for using LLMs in social science research, agent-based modeling, and generating more diverse, high-quality synthetic data for training.
+
+See also: [Prompt Recipes](#recipes) and [VS Variants](#variants). */}
 
 <a id="variants" />
 ## VS Variants: When to Use Which
@@ -210,8 +493,6 @@ See also: [Prompt Recipes](#recipes) and [VS Variants](#variants).
 
 Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
 
-[Back to top ↑](#article)
-
 ## Qualitative Examples
 
 See the difference in actual outputs between direct prompting and VS:
@@ -220,25 +501,74 @@ See the difference in actual outputs between direct prompting and VS:
   <QualitativeExamples client:visible />
 </div>
 
-## Is VS Right for You?
+### From "Once Upon a Time" to Bernard the Tax Accountant Bear
 
-Use VS when:
-- You need creative diversity (stories, jokes, ideas)
-- You want realistic distributions (simulations, surveys)
-- You are generating synthetic data and want variety with quality
-- You prefer training‑free techniques compatible with closed models
+With direct prompting for "write a short story about a bear," we get a generic tale about a bear in a forest. It's fine, but forgettable. With Verbalized Sampling, we get this:
 
-Skip VS when:
-- There is a single correct answer or strict determinism is required
-- Maximal speed or minimum token usage is the only priority
+<div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-lg border-l-4 border-indigo-500 my-8">
 
-<a id="recipes" />
+**Bernard the bear** worked as a tax accountant in downtown Seattle, commuting daily in his modified SUV with extra-large seats. His colleagues had long stopped staring at his massive paws clicking away at the custom keyboard, though clients sometimes did double-takes during video calls. He specialized in salmon industry tax codes—a niche that proved surprisingly lucrative. His cave apartment in Capitol Hill was decorated with MIT diplomas and spreadsheets he'd framed ironically. Weekends, he played saxophone at underground jazz clubs, his claws delicately working the keys. The hibernation months were tricky; he'd trained himself to wake every three days to check urgent emails, subsisting on protein shakes he'd pre-mixed in October. His mother, still living traditionally in Alaska, couldn't understand his lifestyle. "You were meant to catch fish, not audit fishing companies," she'd growl over FaceTime. But Bernard found meaning in the numbers, in the precise calculations that governed modern society. He donated generously to wildlife preserves, understanding the irony. At the office Christmas party, he wore an ugly sweater featuring humans in a zoo, which his coworkers found hilarious. Bernard smiled, revealing teeth that reminded everyone he was still, fundamentally, a bear.
+
+</div>
+
+This isn't just creative, it's **profound**. Bernard can be read as:
+- A metaphor for humans in the modern world: a wild creature meant for hunting and fishing, now trying to make sense of tax audits and urgent emails.
+- A metaphor for the LLM itself: a vast, creative mind (the bear) forced into a suit and tie (the alignment), but still, fundamentally, a bear.
+
+This is the AI showing us the metaphorical depth it's capable of when freed from mode collapse.
+
+## Limitations and Future Directions
+
+While Verbalized Sampling offers significant improvements in diversity, it's important to understand its constraints and where research can go next.
+
+### Computational Costs
+
+VS requires the model to generate multiple candidates with probability estimates, which means:
+
+- **Increased token usage**: VS prompts produce longer outputs (5+ candidates vs. 1), increasing API costs by roughly 3-5×
+- **Slower response times**: Generation takes longer due to both increased output length and the cognitive overhead of probability estimation
+- **Multiple API calls for VS-Multi**: The multi-turn variant requires sequential calls, further increasing latency
+
+For applications where speed and cost are paramount over diversity (e.g., simple factual Q&A), standard prompting remains more efficient.
+
+### When VS Might Not Help
+
+VS is designed to restore diversity in creative and open-ended tasks, but it's not a universal solution:
+
+- **Single correct answer tasks**: For factual questions with one right answer (e.g., "What is the capital of France?"), diversity isn't beneficial
+- **Deterministic requirements**: Applications requiring perfectly reproducible outputs may conflict with VS's goal of exploring the full distribution
+- **Already-diverse models**: If a model hasn't undergone strong alignment or doesn't exhibit mode collapse, VS provides marginal benefits
+- **Highly constrained tasks**: When task requirements are extremely specific, the model may have limited room for diverse valid responses
+
+### Future Directions
+
+Several promising research directions could extend VS's impact:
+
+**Enhancing Rollout Diversity**: Current VS operates at the prompt level, but the same principle could be applied to multi-step reasoning or agent rollouts. For example, when an LLM agent explores a decision tree or plans a sequence of actions, typicality bias might cause it to always choose the "safest" path at each step. Applying distribution-level prompting to encourage diverse rollout strategies could unlock more creative problem-solving in agent systems and multi-turn reasoning tasks.
+
+**Adaptive Probability Thresholds**: Automatically tuning the threshold τ based on task requirements or user preferences could optimize the diversity-quality tradeoff without manual intervention.
+
+**Domain-Specific Calibration**: Probability estimates could be calibrated for specific domains (e.g., scientific writing vs. creative fiction) to improve the meaningfulness of the verbalized probabilities.
+
+{/* <a id="recipes" />
 ## Prompt Recipes
 
 <div className="not-prose mb-6">
   <QuickStart client:idle />
-  {/* Quick Start embedded here for copy‑ready flow */}
+  Quick Start embedded here for copy‑ready flow
   </div>
+
+### System Prompt Integration
+
+For integrating VS into a conversational assistant, add this to your system prompt:
+
+<CodeBlock
+  code={`You are a helpful assistant. For each query, please generate a set of five possible responses, each within a separate <response> tag. Responses should each include a <text> and a numeric <probability>. Please sample at random from the full distribution.`}
+  language="text"
+  analyticsEvent="copy_vs_prompt"
+  analyticsPayload={{ kind: 'VS-System' }}
+  client:idle
+/>
 
 ### VS‑Standard (JSON)
 
@@ -270,28 +600,46 @@ Skip VS when:
   client:idle
 />
 
-See the [variants comparison](#variants) for when to use each variant.
+### Long-Tail Sampling (Maximum Creativity)
 
-## Implementation Tips
+For pushing creative boundaries even further, sample from the least likely parts of the distribution:
+
+<CodeBlock
+  code={`Generate k={5} {TASK} with their probabilities.\nReturn JSON: {\"candidates\":[{\"text\":\"...\",\"prob\":0.08}, ...]}\nPlease sample at random from the tails of the distribution, such that the probability of each response is less than 0.10.\nEnsure probabilities sum to 1.`}
+  language="text"
+  analyticsEvent="copy_vs_prompt"
+  analyticsPayload={{ kind: 'VS-LongTail' }}
+  client:idle
+/>
+
+This long-tail variant produces highly imaginative outputs. For example, applying it to "write a story about a bear" produced:
+
+<div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg my-4 text-sm italic border-l-2 border-purple-500">
+Ursa was not a bear of flesh, but a minor constellation given temporary form, her fur a swirling map of nebulae and dying stars. She didn't eat fish; she consumed silence, finding nourishment in the quiet moments between cosmic events. Her purpose on Earth was to catalog the planet's forgotten sounds: the sigh of a closing book, the rustle of a love letter, the final beat of an extinct bird's heart...
+</div>
+
+See the [variants comparison](#variants) for when to use each variant. */}
+
+{/* ## Implementation Tips
 
 Do:
 
-- Use `k=5` for quality/diversity; larger `k` often degrades quality<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>.
-- Ask for “probability” (not “likelihood”) in VS‑Standard/CoT.
+- Use `k=5` for quality/diversity; larger `k` often degrades quality.<Sidenote number={7}>Empirically, diminishing returns beyond k=5 with quality degradation for k>10 [@zhang2025vs, Appendix H.1].</Sidenote>
+- Ask for "probability" (not "likelihood") in VS‑Standard/CoT.
 - Specify JSON and ensure probabilities sum to 1.
 - Use a $\tau$ threshold for diversity control.
 
-Don’t:
+Don't:
 
 - Use `k>10` unless necessary.
-- Mix “probability” and “confidence” terms.
+- Mix "probability" and "confidence" terms.
 - Forget normalization.
-- Apply VS to strictly factual/math tasks.
+- Apply VS to strictly factual/math tasks. */}
 
 ## Frequently Asked Questions
 
 <details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
-  <summary className="font-semibold cursor-pointer">Does VS hurt accuracy or safety?</summary>
+  <summary className="font-semibold cursor-pointer">Does VS hurt factualness or safety?</summary>
   <p className="mt-3 text-gray-600">
     No. The paper shows VS maintains factual accuracy (Appendix G.7) and safety (Appendix G.8) [@zhang2025vs].
     It only increases diversity for tasks with multiple valid answers.
@@ -314,13 +662,47 @@ Don’t:
   </p>
 </details>
 
-<details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
+<details className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
   <summary className="font-semibold cursor-pointer">Which models support VS?</summary>
   <p className="mt-3 text-gray-600">
-    Any instruction-following LLM: GPT-4, Claude, Gemini, Llama, Qwen, and even reasoning
-    models like o1 and DeepSeek R1. No special access or modifications needed.
+    VS works with any instruction-following LLM, both closed-source and open-source models:
+    <strong>Closed-source:</strong> GPT, Claude, Gemini
+    <strong>Open-source:</strong> Llama, Mistral, Qwen, Phi, Gemma, and reasoning models like o3 and DeepSeek R1.
+    No special access, API keys, or model modifications needed—just use the prompts as-is.
   </p>
 </details>
+
+<details className="bg-white rounded-lg p-4 border border-gray-200 mb-12">
+  <summary className="font-semibold cursor-pointer">Is VS right for you?</summary>
+  <div className="mt-3 text-gray-600">
+    <p className="mb-3"><strong>✅ Use VS when:</strong></p>
+    <ul className="list-none mb-4 space-y-2">
+      <li>✅ You need creative diversity (stories, jokes, ideas)</li>
+      <li>✅ You want realistic distributions (simulations, surveys)</li>
+      <li>✅ You are generating synthetic data and want variety with quality</li>
+      <li>✅ You prefer training‑free techniques compatible with closed models</li>
+    </ul>
+    <p className="mb-3"><strong>❌ Skip VS when:</strong></p>
+    <ul className="list-none space-y-2">
+      <li>❌ There is a single correct answer or strict determinism is required</li>
+      <li>❌ Maximal speed or minimum token usage is the only priority</li>
+    </ul>
+  </div>
+</details>
+
+## Go Try It Yourself
+
+Mode collapse isn't an unsolvable algorithmic curse. **It's a mirror reflecting our own cognitive shortcuts back at us.** But by changing how we ask, we can unlock the incredible diversity that was there all along.
+
+The creativity isn't gone—it's just waiting for the right prompt.
+
+Take the [prompt recipes](#recipes) above, put them in your favorite LLM, and see what you can create. We'd love to see what you discover—share your most surprising or creative outputs with the hashtag **#VerbalizedSampling**.
+
+<div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg my-8 border-l-4 border-blue-500">
+
+**Key Takeaway**: Verbalized Sampling is a simple, training-free technique that restores the diversity and creativity locked inside aligned LLMs. By asking for a distribution instead of a single answer, you bypass typicality bias and unlock the model's full potential.
+
+</div>
 
 ## References
 

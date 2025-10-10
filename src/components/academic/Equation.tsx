@@ -1,9 +1,9 @@
-import { useId, useMemo } from 'react';
+import { useId, useMemo, type ReactNode, Children } from 'react';
 import katex from 'katex';
 
 interface EquationProps {
   id: string;
-  children: string; // LaTeX string
+  children: ReactNode; // LaTeX string or React node
   displayMode?: boolean;
 }
 
@@ -20,7 +20,34 @@ export default function Equation({ id, children, displayMode = true }: EquationP
   }
 
   const latex = useMemo(() => {
-    let s = (children || '').trim();
+    // Handle different types of children
+    let s = '';
+
+    if (typeof children === 'string') {
+      s = children;
+    } else if (typeof children === 'number') {
+      s = String(children);
+    } else if (Array.isArray(children)) {
+      // Handle array of children
+      s = children.map(child =>
+        typeof child === 'string' || typeof child === 'number' ? String(child) : ''
+      ).join('');
+    } else if (children && typeof children === 'object') {
+      // Try to extract text from React elements (including Astro's StaticHtml)
+      Children.forEach(children, (child: any) => {
+        if (typeof child === 'string' || typeof child === 'number') {
+          s += String(child);
+        } else if (child && typeof child === 'object' && child.props && child.props.value) {
+          // Handle Astro StaticHtml component with SlotString
+          const value = child.props.value;
+          s += String(value);
+        }
+      });
+    }
+
+    s = s.trim();
+    // Decode HTML entities (&gt; -> >)
+    s = s.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
     if (s.startsWith('$$') && s.endsWith('$$')) s = s.slice(2, -2).trim();
     else if (s.startsWith('$') && s.endsWith('$')) s = s.slice(1, -1).trim();
     return s;

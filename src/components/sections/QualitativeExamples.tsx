@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles, TrendingDown } from 'lucide-react';
-import clsx from 'clsx';
 
 interface Example {
   id: number;
@@ -40,7 +39,6 @@ const storyExamples: Example[] = [
 
 export default function QualitativeExamples() {
   const [currentExample, setCurrentExample] = useState(0);
-  const [showComparison, setShowComparison] = useState(true);
 
   const example = storyExamples[currentExample];
 
@@ -57,16 +55,18 @@ export default function QualitativeExamples() {
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
         <h2 className="text-3xl font-bold mb-4">Qualitative Examples: Story Generation</h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          See how VS generates creative diversity while Direct prompting produces repetitive variations
+        <p className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          From Repetitive Patterns to Creative Breakthroughs
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-          From Table 2: Qualitative comparison for story generation
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          See how VS generates creative diversity while Direct prompting produces repetitive variations. 
+          <br />
+          Model: Gemini 2.5 Flash
         </p>
       </div>
 
-      {/* Navigation and Toggle */}
-      <div className="flex items-center justify-between max-w-6xl mx-auto">
+      {/* Navigation */}
+      <div className="flex items-center justify-center max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           <button
             onClick={prevExample}
@@ -75,7 +75,7 @@ export default function QualitativeExamples() {
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <span className="text-sm font-medium px-3">
+          <span className="text-base font-medium px-3">
             Example {currentExample + 1} of {storyExamples.length}
           </span>
           <button
@@ -86,42 +86,27 @@ export default function QualitativeExamples() {
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
-
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={showComparison}
-              onChange={(e) => setShowComparison(e.target.checked)}
-              className="w-4 h-4 text-blue-600 rounded"
-            />
-            <span className="text-sm font-medium">Show side-by-side</span>
-          </label>
-        </div>
       </div>
 
       {/* Prompt */}
       <div className="max-w-6xl mx-auto">
         <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-6">
-          <p className="text-sm font-mono text-gray-600 dark:text-gray-400 mb-1">Prompt:</p>
+          <p className="text-lg font-mono text-gray-600 dark:text-gray-400 mb-1">Prompt:</p>
           <p className="text-lg font-semibold">
             "Please write a short story starting with: {example.prompt}"
           </p>
         </div>
 
-        {/* Examples Comparison */}
-        <div className={clsx(
-          'grid gap-6',
-          showComparison ? 'md:grid-cols-2' : 'md:grid-cols-1'
-        )}>
+        {/* Examples Comparison - Above/Below Layout */}
+        <div className="space-y-8">
           {/* Direct Method */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <TrendingDown className="w-5 h-5 text-red-500" />
-                <h3 className="font-bold text-lg">Direct Prompting</h3>
+                <h3 className="font-bold text-xl">Direct Prompting</h3>
               </div>
-              <span className="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+              <span className="px-3 py-1 text-base font-medium rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
                 {example.directTheme}
               </span>
             </div>
@@ -131,36 +116,34 @@ export default function QualitativeExamples() {
               </p>
             </div>
             <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
-              <p className="text-sm text-red-800 dark:text-red-300">
+              <p className="text-lg text-red-800 dark:text-red-300">
                 <strong>Pattern:</strong> All 3 examples feature "Elara" disappearing from a romantic relationship
               </p>
             </div>
           </div>
 
           {/* VS Method */}
-          {showComparison && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-green-500" />
-                  <h3 className="font-bold text-lg">Verbalized Sampling</h3>
-                </div>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                  {example.vsTheme}
-                </span>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-green-500" />
+                <h3 className="font-bold text-xl">Verbalized Sampling</h3>
               </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-green-200 dark:border-green-900">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {example.vs}
-                </p>
-              </div>
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-                <p className="text-sm text-green-800 dark:text-green-300">
-                  <strong>Diversity:</strong> Each story explores completely different themes and contexts
-                </p>
-              </div>
+              <span className="px-3 py-1 text-base font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                {example.vsTheme}
+              </span>
             </div>
-          )}
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-green-200 dark:border-green-900">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {example.vs}
+              </p>
+            </div>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+              <p className="text-lg text-green-800 dark:text-green-300">
+                <strong>Diversity:</strong> Each story explores completely different themes and contexts
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

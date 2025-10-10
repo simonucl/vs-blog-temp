@@ -2,10 +2,10 @@
 
 /* CSS Custom Properties for Academic Theme */
 :root {
-  /* Typography */
-  --font-prose: 'Crimson Pro', 'Georgia', serif;
-  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Fira Code', 'Consolas', monospace;
+  /* Typography - LaTeX-inspired academic fonts */
+  --font-prose: 'EB Garamond', 'Libertinus Serif', 'Charter', 'Georgia', serif;
+  --font-ui: 'Fira Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
   /* Type Scale */
   --text-xs: 0.75rem;
@@ -24,8 +24,8 @@
   --leading-loose: 1.75;
 
   /* Measure (line length) */
-  --measure: 70ch;
-  --measure-wide: 80ch;
+  --measure: 85ch;
+  --measure-wide: 95ch;
   --measure-narrow: 45ch;
 
   /* Spacing */
@@ -64,9 +64,8 @@ html[data-theme="dark"] {
 .app-prose {
   font-family: var(--font-prose);
   line-height: var(--leading-relaxed);
-  max-width: var(--measure);
-  margin-inline: auto;
-  padding-inline: 1rem;
+  max-width: 1400px;
+  padding-inline: 2rem;
 }
 .article {
   max-width: 680px; /* ~6.5in at 96dpi */
@@ -178,19 +177,124 @@ html[data-theme="dark"] {
 
 .figure-caption {
   margin-top: 0.75rem;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-  font-style: italic;
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  opacity: 0.85;
+  font-style: normal;
+  font-weight: 500;
   text-align: center;
+}
+
+/* Figure grid for wrapping figures side-by-side */
+.figure-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .figure-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.figure-grid > h3 {
+  grid-column: 1 / -1;
+  margin-bottom: 0.5rem;
+}
+
+.figure-grid > figure {
+  margin: 0;
+}
+
+/* Content grid for text and figure side-by-side */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 1.5rem 0;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.content-grid .text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content-grid .figure-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-grid .figure-content figure {
+  margin: 0;
 }
 
 /* Paper header */
 .paper-header { margin-top: var(--space-xl); margin-bottom: var(--space-xl); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-lg); }
 .paper-title { font-family: var(--font-prose); font-size: var(--text-4xl); font-weight: 700; line-height: var(--leading-tight); margin-bottom: var(--space-md); }
 .paper-authors { color: var(--color-foreground); margin-top: .25rem; }
-.paper-affils { color: var(--color-muted); margin-top: .25rem; }
-.paper-meta { color: var(--color-muted); margin-top: .5rem; }
-.paper-meta a { color: inherit; text-decoration: underline; }
+.paper-affils { color: #666; margin-top: .25rem; }
+.paper-meta {
+  color: #666;
+  margin-top: .75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+}
+.paper-meta-container {
+  margin-top: .75rem;
+}
+.paper-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+.read-time {
+  color: #666;
+  font-size: 0.95rem;
+}
+.paper-meta-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.paper-meta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.paper-meta-link:hover {
+  background: rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.paper-meta-link svg {
+  flex-shrink: 0;
+}
 .abstract { margin-top: var(--space-md); }
 .abstract-box { background: var(--playground-bg); border: 1px solid var(--color-border); border-radius: .5rem; padding: var(--space-md); }
 .abstract-heading { font-size: var(--text-2xl); margin-bottom: .25rem; }
@@ -231,31 +335,54 @@ html[data-theme="dark"] {
   margin: var(--space-xl) 0;
   overflow-x: auto;
   overflow-y: hidden;
+  text-align: center;
 }
 
 .katex {
   font-size: 1.1em;
 }
 
+/* Equation wrapper with numbering */
+.equation-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--space-xl) 0;
+  overflow-x: auto;
+  gap: 2rem;
+}
+
+.equation-content {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.equation-content .katex-display {
+  margin: 0;
+  text-align: center;
+}
+
+.equation-number {
+  flex-shrink: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
 /* Sidenotes (Tufte-style) */
 .sidenote {
-  float: right;
-  clear: right;
-  /* Desktop values are overridden below to align with a reserved lane. */
-  margin-right: -60%;
-  width: 50%;
-  margin-top: 0.3rem;
-  margin-bottom: 0;
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  vertical-align: baseline;
-  position: relative;
+  display: none;
 }
 
 .sidenote-number {
   font-family: var(--font-ui);
   font-size: var(--text-xs);
-  vertical-align: super;
   font-weight: 600;
   color: var(--color-accent);
 }
@@ -263,8 +390,8 @@ html[data-theme="dark"] {
 /* Mobile: Convert sidenotes to footnotes */
 @media (max-width: 1024px) {
   .sidenote {
-    float: none;
-    margin: var(--space-md) 0;
+    display: block;
+    margin: var(--space-sm) 0;
     width: 100%;
     padding: var(--space-sm) var(--space-md);
     background: var(--playground-bg);
@@ -272,19 +399,39 @@ html[data-theme="dark"] {
   }
 }
 
-/* On large screens, reserve an explicit right lane for sidenotes and place them
-   exactly into that lane to avoid horizontal overflow and awkward scroll. */
+/* On large screens, use float for sidenotes to avoid collisions */
 @media (min-width: 1024px) {
   .app-prose {
-    --sidenote-lane: clamp(240px, 22vw, 300px);
-    /* Keep readable text measure while reserving extra width for the sidenote lane */
-    max-width: calc(var(--measure) + var(--sidenote-lane));
-    padding-right: var(--sidenote-lane);
+    --sidenote-lane: 280px;
+    padding-right: calc(var(--sidenote-lane) + 3rem);
+    position: relative;
   }
 
   .sidenote {
-    margin-right: calc(-1 * var(--sidenote-lane));
+    display: block;
+    float: right;
+    clear: right;
     width: var(--sidenote-lane);
+    margin-right: calc(-1 * var(--sidenote-lane) - 3rem);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-foreground);
+    padding: 0.5rem 0 1rem 1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-left: 2px solid var(--color-accent);
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 0 0.25rem 0.25rem 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sidenote-number {
+    font-family: var(--font-ui);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-right: 0.25rem;
   }
 }
 
@@ -369,6 +516,53 @@ button.copy-button:active {
   }
 }
 
+/* Citation tooltips */
+.csl-entry {
+  margin-bottom: var(--space-md);
+}
+
+a[data-citation] {
+  position: relative;
+  cursor: help;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-accent);
+}
+
+a[data-citation]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  white-space: normal;
+  max-width: 600px;
+  min-width: 300px;
+  width: max-content;
+  font-size: var(--text-sm);
+  font-family: var(--font-ui);
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.5rem;
+  pointer-events: none;
+  line-height: 1.5;
+}
+
+a[data-citation]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-foreground);
+  margin-bottom: -6px;
+  z-index: 1001;
+}
+
 /* Evidence Cards */
 .evidence-card {
   background: var(--card-included);
@@ -434,4 +628,44 @@ button.copy-button:active {
   }
 
   .no-print { display: none !important; }
+}
+
+/* Citation tooltips */
+.app-prose a[href^="#ref-"] {
+  position: relative;
+  cursor: help;
+}
+
+.app-prose a[href^="#ref-"]:hover::after {
+  content: attr(data-citation-title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  white-space: normal;
+  max-width: 300px;
+  width: max-content;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: 0.5rem;
+  pointer-events: none;
+}
+
+.app-prose a[href^="#ref-"]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-foreground);
+  margin-bottom: -0.5rem;
+  z-index: 1001;
+  pointer-events: none;
 }

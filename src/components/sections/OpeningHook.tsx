@@ -65,7 +65,7 @@ export default function OpeningHook() {
           animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-slate-100">
             You've Experienced This Problem
           </h1>
           <p className="text-xl text-slate-600 dark:text-slate-400">
@@ -83,12 +83,12 @@ export default function OpeningHook() {
           {/* Prompt Display */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              <label className="text-xl font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                 Your Prompt
               </label>
               <button
                 onClick={nextExample}
-                className="flex items-center gap-2 px-3 py-1 text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-1 text-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Another
@@ -101,7 +101,7 @@ export default function OpeningHook() {
 
           {/* Responses */}
           <div className="mb-6">
-            <label className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
+            <label className="text-xl font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
               AI Responses
             </label>
             <div className="space-y-2">
@@ -115,10 +115,10 @@ export default function OpeningHook() {
                     className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-750 rounded-lg p-3 border border-slate-200 dark:border-slate-700"
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-sm font-bold text-slate-400">
+                      <span className="text-xl font-bold text-slate-400">
                         {index + 1}.
                       </span>
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
+                      <p className="text-lg text-slate-700 dark:text-slate-300">
                         {response}
                       </p>
                     </div>
@@ -135,7 +135,7 @@ export default function OpeningHook() {
                 initial={prefersReducedMotion ? undefined : { opacity: 0 }}
                 animate={prefersReducedMotion ? undefined : { opacity: 1 }}
                 onClick={() => setShowProblem(true)}
-                className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors shadow-lg"
+                className="px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white font-semibold rounded-lg transition-colors shadow-lg"
                 >
                 See The Problem?
               </motion.button>
@@ -145,18 +145,18 @@ export default function OpeningHook() {
                   initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
                   animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
                   exit={prefersReducedMotion ? undefined : { opacity: 0, y: -20 }}
-                  className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-6"
+                  className="bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-200 dark:border-amber-800/50 rounded-xl p-6"
                 >
                   <div className="flex items-center justify-center gap-3 mb-3">
-                    <AlertCircle className="w-6 h-6 text-red-500" />
-                    <h3 className="text-xl font-bold text-red-900 dark:text-red-100">
+                    <AlertCircle className="w-6 h-6 text-amber-700 dark:text-amber-500" />
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                       Mode Collapse Detected
                     </h3>
                   </div>
-                  <p className="text-red-800 dark:text-red-200 font-medium mb-2">
+                  <p className="text-slate-800 dark:text-slate-200 font-medium mb-2">
                     {example.problem}
                   </p>
-                  <p className="text-sm text-red-700 dark:text-red-300">
+                  <p className="text-base text-slate-700 dark:text-slate-300">
                     The model collapsed to a single mode, generating minor variations instead of truly diverse outputs.
                   </p>
                 </motion.div>
@@ -172,18 +172,11 @@ export default function OpeningHook() {
           transition={prefersReducedMotion ? undefined : { delay: 0.5 }}
           className="mt-12 text-center"
         >
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full">
-            <Lightbulb className="w-5 h-5 text-amber-500" />
-            <span className="font-semibold text-slate-700 dark:text-slate-300">
-              Why This Happens
-            </span>
-          </div>
-
           <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-slate-100">
             This Isn't a Bug — It's Mode Collapse
           </h2>
 
-          <div className="max-w-3xl mx-auto space-y-4 text-lg text-slate-600 dark:text-slate-400">
+          <div className="max-w-3xl mx-auto space-y-4 text-xl text-slate-600 dark:text-slate-400">
             <p>
               During alignment training, models learn to favor "safe" and typical responses.
               This is caused by <span className="font-semibold text-slate-900 dark:text-slate-100">typicality bias</span> in
@@ -194,14 +187,14 @@ export default function OpeningHook() {
               The result? Your creative AI becomes predictably uncreative.
             </p>
 
-            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-              <h3 className="text-xl font-bold mb-2 text-blue-900 dark:text-blue-100">
+            <div className="mt-8 p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border-2 border-emerald-200 dark:border-emerald-800/50">
+              <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-slate-100">
                 But There's a Solution
               </h3>
-              <p className="text-blue-800 dark:text-blue-200">
-                <strong>Verbalized Sampling (VS)</strong> recovers the model's inherent diversity
-                by asking for a distribution of responses with probabilities, bypassing mode collapse
-                entirely — no training required.
+              <p className="text-slate-700 dark:text-slate-300">
+              We show that, <strong>Verbalized Sampling (VS)</strong>, recovers the model's inherent diversity
+                by asking for a distribution of responses with probabilities, bypassing mode collapse.
+                
               </p>
             </div>
           </div>
