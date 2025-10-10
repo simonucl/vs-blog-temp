@@ -120,18 +120,19 @@ function DistributionChart({
             dataKey="name"
             angle={-45}
             textAnchor="end"
-            height={70}
-            tick={{ fill: '#475569', fontSize: 18 }}
+            height={100}
+            tick={{ fill: '#475569', fontSize: 14 }}
             interval={0}
           />
           <YAxis
             label={{
               value: 'Probability',
-              angle: -90,
-              position: 'insideLeft',
-              style: { fill: '#475569', fontSize: 22 },
+              angle: 0,
+              position: 'top',
+              offset: 15,
+              style: { fill: '#475569', fontSize: 18, textAnchor: 'middle' },
             }}
-            tick={{ fill: '#475569', fontSize: 18 }}
+            tick={{ fill: '#475569', fontSize: 14 }}
             tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
           />
           <Tooltip content={<CustomTooltip />} />

@@ -38,7 +38,7 @@ html[data-theme="dark"] {
     scrollbar-color: var(--color-muted) transparent;
   }
   html {
-    @apply overflow-y-scroll scroll-smooth;
+    @apply overflow-y-scroll;
   }
   body {
     @apply flex min-h-svh flex-col bg-background font-sans text-foreground selection:bg-accent/75 selection:text-background;
@@ -57,14 +57,19 @@ html[data-theme="dark"] {
   }
 }
 
-/* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
+/* Disable all animations and transitions globally */
+*, *::before, *::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* Force all elements to be fully visible (override framer-motion initial states) */
+body * {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 @utility max-w-app {
@@ -127,10 +132,9 @@ input[type="range"]::-moz-range-thumb {
   height: 1.5rem;
 }
 
-/* Details arrow animation */
+/* Details arrow (no animation) */
 .details-arrow {
   display: inline-block;
-  transition: transform 0.2s ease;
 }
 
 details[open] .details-arrow {
