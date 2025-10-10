@@ -401,6 +401,45 @@ We also perform comprehensive ablation studies on:
 
 Across all these ablations, VS consistently outperformed the baselines under the same setups.
 
+### Synthetic Data Generation
+
+Recent research has shown that the diversity of synthetic data plays an important role in improving downstream model performance. We evaluate VS on synthetic data generation to test its effectiveness in this domain.
+
+#### Setup
+
+We prompt two models, GPT-4.1 and Gemini-2.5-Flash, with different prompting methods to generate N=1,000 synthetic competition math questions, with k=5 responses in each call. We use a small k to ensure generation quality as this is a complex task. Then we use Qwen3-32B to generate their corresponding reasoning trajectory and answers, as the model is proficient on math benchmarks and capable of producing reliable reasoning traces.
+
+#### Fine-tuning on Synthetic Data
+
+With this 1K synthetic dataset, we follow the SFT setting in LIMO, an effective method to improve reasoning performance with small dataset size, and finetune three models on this dataset: Qwen2.5-7B, Qwen3-1.7B-Base, and Qwen3-4B-Base.
+
+#### Evaluation
+
+We evaluate the fine-tuned models' downstream task performance on three widely used math benchmark datasets: MATH500, OlympiadBench, and Minerva Math, which cover a wide range of topics, including algebra, geometry, and competitive mathematics.
+
+<Table id="synthetic-results" caption="Downstream accuracy averaged across MATH500, OlympiadBench and Minerva Math. VS and its variants improve downstream tasks.">
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Average Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Baseline</td><td>32.8</td></tr>
+    <tr><td>Direct</td><td>30.6</td></tr>
+    <tr><td>Sequence</td><td>34.3</td></tr>
+    <tr><td><strong>VS-Standard</strong></td><td>36.1</td></tr>
+    <tr><td><strong>VS-CoT</strong></td><td>36.9</td></tr>
+    <tr><td><strong>VS-Multi</strong></td><td><strong>37.5</strong></td></tr>
+  </tbody>
+</Table>
+
+#### Results
+
+VS and its variants improve the downstream performance on math tasks across the board, with VS-Multi achieving the strongest average accuracy of **37.5%**. In contrast, using direct prompting may even hurt the performance due to mode collapse. This suggests that it is a promising direction to apply VS for synthetic data generation to enhance downstream task performance.
+
+**Key takeaway:** VS generates more diverse synthetic data, improving downstream performance on math tasks. This work highlights the capability of LLMs to generate diverse synthetic data, pointing toward a promising paradigm for training more capable models.
+
 
 {/*  ### 6.4 Open‑Ended QA (Fig. 7)
 
@@ -473,6 +512,8 @@ This opens huge possibilities for using LLMs in social science research, agent-b
 See also: [Prompt Recipes](#recipes) and [VS Variants](#variants). */}
 
 <a id="variants" />
+
+{/* 
 ## VS Variants: When to Use Which
 
 <div className="not-prose mb-12">
@@ -480,6 +521,7 @@ See also: [Prompt Recipes](#recipes) and [VS Variants](#variants). */}
 </div>
 
 Per Appendix H.3, “probability” performs best for VS‑Standard/CoT, while “confidence” is used in VS‑Multi [@zhang2025vs].
+*/}
 
 ## Qualitative Examples
 

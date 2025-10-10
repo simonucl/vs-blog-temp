@@ -54,7 +54,7 @@ export default function QualitativeExamples() {
     <section className="py-12 space-y-8">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold mb-4">Qualitative Examples: Story Generation</h2>
+        <h2 className="text-3xl font-bold mb-4">Story Generation</h2>
         <p className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
           From Repetitive Patterns to Creative Breakthroughs
         </p>
