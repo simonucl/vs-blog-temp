@@ -8,14 +8,14 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
   /* Type Scale */
-  --text-xs: 0.6rem;
-  --text-sm: 0.65rem;
-  --text-base: 0.7rem;
-  --text-lg: 0.75rem;
-  --text-xl: 0.8rem;
-  --text-2xl: 0.85rem;
-  --text-3xl: 1rem;
-  --text-4xl: 1.125rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
 
   /* Line Heights */
   --leading-tight: 1.25;
@@ -89,31 +89,29 @@ html[data-theme="dark"] {
 /* Prose Typography */
 .article h1 {
   font-family: var(--font-prose);
-  font-size: var(--text-2xl);
+  font-size: 2.25rem;
   font-weight: 700;
   line-height: var(--leading-tight);
   margin-bottom: var(--space-sm);
-  margin-top: var(--space-sm);
+  margin-top: 0;
 }
 
 .article h2 {
   font-family: var(--font-prose);
-  font-size: var(--text-xl);
+  font-size: 1.875rem;
   font-weight: 600;
   line-height: var(--leading-tight);
-  margin-top: var(--space-sm);
+  margin-top: var(--space-xs);
   margin-bottom: var(--space-sm);
-  margin-top: var(--space-sm);
 }
 
 .article h3 {
   font-family: var(--font-prose);
-  font-size: var(--text-lg);
+  font-size: 1.5rem;
   font-weight: 600;
   line-height: var(--leading-normal);
-  margin-top: var(--space-sm);
+  margin-top: var(--space-xs);
   margin-bottom: var(--space-sm);
-  margin-top: var(--space-sm);
 }
 
 .article p {

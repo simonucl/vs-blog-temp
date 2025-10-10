@@ -12,14 +12,14 @@ export default function USStatesDemo() {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <p className="text-2xl text-slate-600">
+      {/* <div className="mb-6">
+        <p className="text-lg text-slate-600">
           We asked the VS to generate all possible US state with corresponding probabilities, and VS produces a distribution that closely
           aligns with the pretraining corpus (RedPajama), achieving{' '}
           <strong>KL divergence = 0.12</strong>.
           Direct prompting collapses to a few popular states (KL = 16.16).
         </p>
-      </div>
+      </div> */}
 
       {/* <div className="flex justify-center">
         <Equation id="kl-vs-pre" displayMode>
@@ -92,7 +92,7 @@ export default function USStatesDemo() {
       </div>
 
       <div>
-        <p className="text-2xl">
+        <p className="text-xl">
           This example proves that VS doesn't just increase diversity arbitrarily—it
           recovers the <em>specific distribution</em> that the base model learned during
           pretraining. The low KL divergence (0.12) shows VS approximates what the model

@@ -113,16 +113,17 @@ function DistributionChart({
       <ResponsiveContainer width="100%" height={height}>
         <BarChart
           data={filteredData}
-          margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
+          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
             angle={-45}
             textAnchor="end"
-            height={100}
+            height={65}
             tick={{ fill: '#475569', fontSize: 14 }}
             interval={0}
+            tickMargin={10}
           />
           <YAxis
             label={{

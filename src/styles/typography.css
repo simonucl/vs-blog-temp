@@ -10,9 +10,20 @@
     h3,
     h4,
     th {
-      @apply mb-3 text-foreground;
+      @apply mb-3 mt-2 text-foreground;
     }
 
+    h1 {
+      @apply mt-0;
+    }
+
+    h2 {
+      @apply mt-0;
+    }
+
+    h3 {
+      @apply mt-0;
+    }
     /* h3 italics removed for academic tone */
 
     p,
@@ -77,7 +88,7 @@
     }
 
     details {
-      @apply inline-block cursor-pointer text-foreground select-none [&_ul]:!my-0;
+      @apply inline-block cursor-pointer text-foreground select-none [&_ul]:!my-0 mt-2;
     }
 
     /* Hide details content only when closed, not always */

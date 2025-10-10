@@ -75,7 +75,7 @@ export default function AhaMoment() {
             </span>
           </div> */}
 
-          <h2 className="text-4xl font-bold mb-4 text-slate-900 dark:text-slate-100">
+          <h2 className="text-3xl font-bold mb-4 text-slate-900 dark:text-slate-100">
             Different Prompts → Different Modes
           </h2>
 

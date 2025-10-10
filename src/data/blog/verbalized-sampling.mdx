@@ -118,7 +118,7 @@ The sharpening exponent $\gamma > 1$ concentrates probability mass on typical co
 
 This is exactly like temperature scaling with $T = 1/\gamma < 1$. As $\gamma$ increases (stronger typicality bias or tighter KL regularization), the distribution sharpens further, ultimately collapsing to $\arg\max_y \pi_{\text{ref}}(y|x)$ — the mode of the base model. This is **mode collapse**.<Sidenote number={2}>Full derivation follows standard KL-regularized preference learning [@rafailov2024]. See our paper Section 3.1 and Appendix A for complete proofs.</Sidenote>
 
-{/* <details className="group my-2 rounded-lg border-2 border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+{/* <details className="group my-0 rounded-lg border-2 border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center justify-between py-3 px-4 text-left font-semibold text-xl text-slate-900 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400">
     <span>
       Example: Understanding Typicality Bias and Sharpening (Click to expand)
@@ -138,7 +138,7 @@ We start with an intuitive example: The Library Metaphor. Imagine a massive libr
 
 - **Direct Prompt** ("tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: Direct Prompt return the mode</span>
   </summary>
@@ -163,7 +163,7 @@ where $\delta$ is the Dirac function.
 
 - **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: List Prompt return uniform distributions</span>
   </summary>
@@ -204,7 +204,7 @@ This is a **uniform distribution** over elements in $\phi(y^*)$, regardless of t
 
 - **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
 
-<details className="group my-2 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+<details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
     <span>Proof: Distribution Prompt return the pretraining distribution</span>
   </summary>
@@ -247,15 +247,13 @@ Therefore, distribution-level prompts can **exactly recover** $\pi_{\text{ref}}(
 
 By asking for a distribution, we force the model to access its knowledge of the entire system before making a choice.<Sidenote number={3}>This intuition aligns with the formal analysis showing VS samples from a broader distribution than direct prompting [@zhang2025vs, Section 3].</Sidenote>
 
-<details className="group my-2 rounded-lg border-2 border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
-  <summary className="flex w-full cursor-pointer list-none items-center justify-between py-3 px-4 text-left font-semibold text-xl text-slate-900 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400">
-    <span>
-      Example:Different Prompts → Different Modes (Click to expand)
-    </span>
+<details className="group my-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-bold text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+    <span>Example: Different Prompts → Different Modes (Click to expand)</span>
   </summary>
 
   <div className="not-prose px-4 pb-4 text-slate-700 dark:text-slate-300 w-full">
-  <AhaMoment client:visible />
+    <AhaMoment client:visible />
   </div>
 </details>
 
@@ -270,16 +268,6 @@ To further prove that your model knows the distribution, we conducted an experim
 
 <USStatesDemo client:visible />
 <hr className="my-10 border-t-2 border-slate-200" />
-
-{/* ## 5. Try It: Diversity Playground
-
-Adjust the probability threshold τ to see how it affects which outputs are included. Lower thresholds = more diversity, higher thresholds = more focused outputs.
-
-This threshold‑tuning effect corresponds to the paper's ablations [@zhang2025vs, Figure 3g–i].<Sidenote number={4}>As τ increases, fewer low‑probability candidates are included; diversity decreases but focus increases. See [@zhang2025vs, Figure 3g–i].</Sidenote>
-
-<div className="not-prose mb-12">
-  <VSPlayground client:visible />
-</div> */}
 
 ## Experiments
 

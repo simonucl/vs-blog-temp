@@ -67,7 +67,7 @@ html[data-theme="dark"] {
 }
 
 /* Force all elements to be fully visible (override framer-motion initial states) */
-body * {
+body *:not(svg):not(svg *) {
   opacity: 1 !important;
   transform: none !important;
 }

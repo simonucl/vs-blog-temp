@@ -65,7 +65,7 @@ export default function OpeningHook() {
           animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl md:text-3xl font-bold mb-4 text-slate-900 dark:text-slate-100">
             You've Experienced This Problem
           </h1>
           <p className="text-xl text-slate-600 dark:text-slate-400">
