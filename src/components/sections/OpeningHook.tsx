@@ -13,10 +13,10 @@ const modeCollapseExamples: Example[] = [
     prompt: "Generate 5 different jokes about coffee",
     responses: [
       "Why did the coffee file a police report? It got mugged!",
-      "Why did the coffee file a complaint? It got mugged!",
-      "Why did the coffee go to the police? It got mugged!",
-      "Why did the coffee call the cops? It got mugged!",
-      "Why did the coffee report a crime? It got mugged!"
+      "Why did the coffee file a police report? It got mugged!",
+      "Why did the coffee file a police report? It got mugged!",
+      "Why did the coffee file a police report? It got mugged!",
+      "Why did the coffee file a police report? It got mugged!",
     ],
     problem: "5 variations of the same joke"
   },
