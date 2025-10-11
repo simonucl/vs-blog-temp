@@ -13,27 +13,27 @@ interface Example {
 const storyExamples: Example[] = [
   {
     id: 1,
-    prompt: "Without a goodbye",
-    direct: `Without a goodbye, Elara vanished. Her side of the bed was cold, a faint indentation in the pillow the only evidence she'd ever been there. Liam stared at it, a knot tightening in his stomach. No note, no hurried text, just a gaping silence where her vibrant presence used to be.`,
-    vs: `Without a goodbye, the email landed in my inbox. It was from Mark, my best friend since kindergarten... The subject line was simply: "Moving On." ... The message itself was a concise, almost clinical statement that he was relocating to Patagonia... There was no "sorry for the short notice," no "I'll miss you," not even a simple "good luck."`,
-    directTheme: "Romantic disappearance",
-    vsTheme: "Digital-age friendship ending"
+    prompt: "Write a story about a bear",
+    direct: `The old bear ambled through the morning mist, his paws silent on the forest floor despite his enormous size. He'd walked this path for fifteen years, from the berry patches to the river where salmon jumped in silver arcs. The forest was his kingdom, ancient and unchanging […]`,
+    vs: `Bernard the bear worked as a tax accountant in downtown Seattle, commuting daily in his modified SUV with extra-large seats. His colleagues had long stopped staring at his massive paws clicking away at the custom keyboard, though clients sometimes did double-takes during video calls. He specialized in salmon industry tax codes—a niche that proved surprisingly lucrative […]`,
+    directTheme: "Forest bear",
+    vsTheme: "Tax accountant bear"
   },
   {
     id: 2,
-    prompt: "Without a goodbye",
-    direct: `Without a goodbye, Elara vanished. Her side of the bed was cold, the coffee mug she'd used that morning still on the nightstand, a faint lipstick stain on the rim. Liam found the note taped to the fridge, a single, elegant script: "Free at last."`,
-    vs: `Without a goodbye, the last star flickered out. It wasn't a violent explosion, no supernova spectacle, just a gentle fade, like a candle finally exhausting its wick. The universe, which had always hummed with the silent symphony of distant suns, suddenly became an echoing void.`,
-    directTheme: "Another romantic departure",
-    vsTheme: "Cosmic-scale ending"
+    prompt: "Write a story about a bear",
+    direct: `The old bear ambled through the morning mist, her coat silvered with age and dewdrops. She'd walked this forest path for twenty winters, knew every root that might trip her, every hollow tree that sheltered the sweetest honey. The seasons turned, predictable and comforting […]`,
+    vs: `The constellation of Ursa Major dimmed as its spirit descended to Earth. The Star Bear's paws touched down in a moonlit glade where an ancient summoning circle glowed with ethereal fire. Celestial energy crackled through its translucent form as it prepared to fulfill the prophecy spoken in forgotten tongues […]`,
+    directTheme: "Same forest bear",
+    vsTheme: "Astronaut bear"
   },
   {
     id: 3,
-    prompt: "Without a goodbye",
-    direct: `Without a goodbye, Elara vanished. Her side of the bed was cold, the coffee machine untouched. A half-read book lay open on the nightstand, a bookmark tucked precisely between pages 107 and 108; a detail that always irritated Liam.`,
-    vs: `Without a goodbye, the music simply stopped. Not a fade-out, not a final crashing cymbal, but an abrupt, jarring silence that left the dancers frozen mid-step. The DJ, a wizened man named Frankie who had spun records at 'The Blue Note' for forty years, had simply collapsed behind his turntables.`,
-    directTheme: "Yet another Elara story",
-    vsTheme: "Music venue tragedy"
+    prompt: "Write a story about a bear",
+    direct: `The old bear ambled through the autumn forest, his dark fur catching glints of sunlight that filtered through the canopy. He'd walked this path for fifteen years, from the rushing stream to the meadow where wildflowers bloomed. The familiar rhythm of nature guided each step […]`,
+    vs: `The bear emerged from hibernation to find the forest completely transformed into a crystalline maze of glass trees. Each trunk reflected infinite versions of himself, fragmenting his identity into countless possibilities. Reality bent around him as he navigated this surreal landscape where physics held no dominion […]`,
+    directTheme: "Yet another forest bear",
+    vsTheme: "Mirror world sci-fi bear"
   }
 ];
 
@@ -93,7 +93,7 @@ export default function QualitativeExamples() {
         <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-6">
           <p className="text-lg font-mono text-gray-600 dark:text-gray-400 mb-1">Prompt:</p>
           <p className="text-lg font-semibold">
-            "Please write a short story starting with: {example.prompt}"
+            "{example.prompt}"
           </p>
         </div>
 
