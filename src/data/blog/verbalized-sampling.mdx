@@ -102,7 +102,7 @@ When human annotators provide preference data for RLHF, they're not rating "help
 
 where $r_{\text{true}}$ captures actual task quality, $\alpha > 0$ is the typicality bias weight, $\pi_{\text{ref}}$ is the base model (whose likelihood scores naturally capture text typicality from pretraining), and $\epsilon$ is noise.
 
-**Empirical validation.** We tested this on HelpSteer, which provides separate ratings for *correctness* (true utility) and *helpfulness* (final reward). Analyzing 6,874 response pairs with **identical correctness** but different helpfulness scores, we found $\hat{\alpha} = 0.57 \pm 0.07$ ($p < 10^{-14}$). This means annotators systematically favor more typical responses even when correctness is controlled for. We replicated this finding across multiple preference datasets and base models, consistently finding >50% of human-preferred responses receive higher base model likelihood [@zhang2025vs, Section 4].
+**Empirical validation.** We tested this on HelpSteer dataset [@wang2023b], which provides separate ratings for *correctness* (true utility) and *helpfulness* (final reward). Analyzing 6,874 response pairs with **identical correctness** but different helpfulness scores, we found $\hat{\alpha} = 0.57 \pm 0.07$ ($p < 10^{-14}$). This means annotators systematically favor more typical responses even when correctness is controlled for. We replicated this finding across multiple preference datasets and base models, consistently finding >50% of human-preferred responses receive higher base model likelihood (Check Appendix E.2 in our paper for more details).
 
 **From bias to collapse.** Under standard RLHF optimization with KL regularization (coefficient $\beta$), this typicality-biased reward produces a **power-sharpened** optimum:
 
@@ -132,7 +132,7 @@ This is exactly like temperature scaling with $T = 1/\gamma < 1$. As $\gamma$ in
 
 ### Embrace Mode Collapse: Distribution-Level Recover Diversity
 
-**Verbalized Sampling (VS)** breaks this cycle by asking for a *distribution of candidates* [@meister2024benchmarkingdistributionalalignmentlarge] with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
+**Verbalized Sampling (VS)** breaks this cycle by asking for a *distribution of candidates* with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
 
 We start with an intuitive example: The Library Metaphor. Imagine a massive library and the LLM as the librarian:
 
@@ -257,6 +257,10 @@ By asking for a distribution, we force the model to access its knowledge of the 
   </div>
 </details>
 
+<div className="my-8" />
+
+
+
 
 ### Your Model Knows the Distribution: A Case Study on US States Distribution
 
@@ -273,18 +277,11 @@ To further prove that your model knows the distribution, we conducted an experim
 
 We conducted comprehensive experiments across creative writing tasks (poems, stories, jokes) to demonstrate VS's effectiveness in improving diversity while maintaining quality.
 
-### Benchmarks and Evaluation
+### Creative Writing Tasks
 
-**Benchmarks.** We evaluate on three creative writing tasks: (1) **Poem continuation** from PoemHunter.com, (2) **Story generation** from the BookMIA dataset, and (3) **Joke writing** with 100 thematic prompts from Reddit r/DadJokes. For each task, we randomly select 100 data points and generate k=5 candidates with N=30 total samples per data point.
+**Settings.** We evaluate on three creative writing tasks: (1) **Poem continuation** from PoemHunter.com, (2) **Story generation** from the BookMIA dataset, and (3) **Joke writing** with 100 thematic prompts from Reddit r/DadJokes. For evaluation, we measure both diversity and quality: **Semantic Diversity** (Embedding-based diversity), **Lexical Diversity** (ROUGE-L), and **Quality** (LLM-as-Judge with creative rubrics).
 
-**Evaluation Metrics.** We measure both diversity and quality:
-- **Semantic Diversity**: Calculated as 1 - mean pairwise cosine similarity of embeddings (OpenAI's text-embedding-3-small), expressed as a percentage where 100% = maximum diversity
-- **Lexical Diversity**: Measured using ROUGE-L, where lower scores indicate greater diversity
-- **Quality**: Evaluated using Claude-3.7-Sonnet as a judge with rubrics from Creative Writing v3 (poems/stories) and HumorBench (jokes)
-
-### How well can VS improve diversity?
-
-#### Diversity Scores
+#### VS improves diversity while maintaining quality
 
 Figure 3(a)-(c) show the semantic diversity scores averaged across models for poems, stories, and jokes respectively. Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods**. The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
 
@@ -293,52 +290,18 @@ Figure 3(a)-(c) show the semantic diversity scores averaged across models for po
   <img src="/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
 
-#### Diversity vs. Quality Trade-off
-
-Figure 3(d) shows the diversity-quality trade-off for the poem task. The quality of VS-Standard remains comparable to other methods. Notably, **VS-CoT achieves the highest diversity while maintaining a high quality score**, pushing the Pareto front of the diversity-quality tradeoff. This demonstrates that VS can boost diversity without harming quality.
-
-#### VS is Orthogonal to Temperature
-
-<div className="content-grid">
-  <div className="figure-content">
-    <Figure id="pareto-frontier" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
-      <img src="/images/pareto-frontier.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
-    </Figure>
-  </div>
-  <div className="text-content">
-    VS and temperature are **orthogonal techniques**—combining both pushes the diversity-quality Pareto frontier beyond what either achieves alone [@zhang2025vs, Figure 5].
-  </div>
-</div>
-
-#### Emergent Behavior
-
 We observe an emergent trend where **larger models benefit more from VS**. Figure 3(e) shows the diversity gain over direct prompting across model sizes. Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (GPT-4.1-Mini, Gemini-2.5-Flash).
 
 <Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
   <img src="/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
 </Figure>
 
-#### Cognitive Burden
+<details className="group my-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
+  <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-bold text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+    <span>Human Study on Diversity (Click to expand)</span>
+  </summary>
 
-This scaling trend also extends to quality, as shown in Figure 3(f). While prior work found that complex prompts can create a "cognitive burden" that degrades LLM performance, our findings are nuanced. Methods like Sequence and VS-Standard do cause a drop in quality, but **this effect is less severe for larger models**. Notably, more intricate variants like **VS-CoT and VS-Multi overcome this burden**, even improving quality in larger models. This suggests using VS variants may better utilize the capabilities of advanced models, turning complexity into benefits.
-
-#### Diversity Tuning
-
-Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 3(g-i), **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
-
-#### Qualitative Examples
-
-Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
-
-<Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
-  <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
-</Figure>
-
-### Human Study on Diversity
-
-To complement our automatic diversity scores, we conducted a human evaluation on Prolific. Following past work, we provided task-specific diversity definitions (plot, style, and setup-punchline, respectively). For each task, **30 annotators rated the diversity of 90 output pairs** from three prompting methods (Direct, Sequence, VS-Standard) across ten curated topics.
-
-Each pair was rated on a four-point Likert scale: Very Similar, Somewhat Similar, Somewhat Dissimilar, or Very Dissimilar. Inter-annotator agreement was moderate for poems (0.54), high for stories (0.87) and jokes (0.86).
+  <div className="not-prose px-4 pb-4 text-slate-700 dark:text-slate-300 w-full">
 
 <Table id="human-diversity" caption="Human-rated diversity (1 = Very Similar, 4 = Very Dissimilar) for poem, story, and joke tasks">
   <thead>
@@ -371,17 +334,41 @@ Each pair was rated on a four-point Likert scale: Very Similar, Somewhat Similar
   </tbody>
 </Table>
 
+To complement our automatic diversity scores, we conducted a human evaluation on Prolific. Following past work, we provided task-specific diversity definitions (plot, style, and setup-punchline, respectively). For each task, **30 annotators rated the diversity of 90 output pairs** from three prompting methods (Direct, Sequence, VS-Standard) across ten curated topics.
+
+Each pair was rated on a four-point Likert scale: Very Similar, Somewhat Similar, Somewhat Dissimilar, or Very Dissimilar. Inter-annotator agreement was moderate for poems (0.54), high for stories (0.87) and jokes (0.86).
+
 VS achieves higher human-rated diversity than baselines on all tasks, validating our automatic metrics.
 
-### Ablation Studies
+  </div>
+</details>
 
-#### Temperature Ablation
+#### Tunable Diversity
+
+Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 3(g-i), **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
+
+#### Why not just use temperature?
+
+<Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier.">
+  <img src="/images/temperature_scaling.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+</Figure>
 
 We investigate the effect of sampling temperature on the diversity-quality trade-off by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
 
 The results show that **VS-Standard can be combined with temperature to further improve the diversity-quality trade-off**. VS consistently achieves a better balance between quality and diversity across both models, pushing forward the Pareto front relative to the baselines.
 
-#### Post-Training Stages Ablation
+#### Post-Training Stages
+
+<div className="content-grid">
+  <div className="figure-content">
+    <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
+      <img src="/images/training_progression.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 100%; height: auto;" />
+    </Figure>
+  </div>
+  <div className="text-content">
+    VS can mitigate mode collapse and maintain higher diversity scores across different post-training stages.
+  </div>
+</div>
 
 We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. The results demonstrate that traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
 
@@ -392,14 +379,14 @@ Specifically:
 
 This suggests that VS effectively mitigates the mode collapse induced by alignment training.
 
-#### Other Ablations
+#### Qualitative Examples
 
-We also perform comprehensive ablation studies on:
-1. **Number of candidates**: Higher k leads to greater diversity
-2. **Decoding strategies** (top-p, min-p): VS is orthogonal to these strategies and can be combined to further enhance diversity-quality
-3. **Prompt formats**: While all formats improve diversity, we use "probability" for VS-Standard/CoT and "confidence" for VS-Multi as empirically best-performing
+<Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
+  <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
+</Figure>
 
-Across all these ablations, VS consistently outperformed the baselines under the same setups.
+Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
+
 
 ### Synthetic Data Generation
 
@@ -551,34 +538,25 @@ This is the AI showing us the metaphorical depth it's capable of when freed from
 
 While Verbalized Sampling offers significant improvements in diversity, it's important to understand its constraints and where research can go next.
 
-### Computational Costs
-
-VS requires the model to generate multiple candidates with probability estimates, which means:
-
-- **Increased token usage**: VS prompts produce longer outputs (5+ candidates vs. 1), increasing API costs by roughly 3-5×
-- **Slower response times**: Generation takes longer due to both increased output length and the cognitive overhead of probability estimation
-- **Multiple API calls for VS-Multi**: The multi-turn variant requires sequential calls, further increasing latency
-
-For applications where speed and cost are paramount over diversity (e.g., simple factual Q&A), standard prompting remains more efficient.
-
 ### When VS Might Not Help
 
 VS is designed to restore diversity in creative and open-ended tasks, but it's not a universal solution:
 
-- **Single correct answer tasks**: For factual questions with one right answer (e.g., "What is the capital of France?"), diversity isn't beneficial
-- **Deterministic requirements**: Applications requiring perfectly reproducible outputs may conflict with VS's goal of exploring the full distribution
-- **Already-diverse models**: If a model hasn't undergone strong alignment or doesn't exhibit mode collapse, VS provides marginal benefits
-- **Highly constrained tasks**: When task requirements are extremely specific, the model may have limited room for diverse valid responses
+- **Single correct answer tasks**: When there's only one right answer, diversity doesn't help. For example, "What is the capital of France?" has one answer (Paris), and generating multiple variations wouldn't add value. Similarly, "What is 2+2?" or "When did World War II end?" don't benefit from diverse responses.
+
+- **Deterministic requirements**: Some applications need the exact same output every time. For instance, generating SQL queries for a specific database schema, or creating API calls with precise syntax—these need reproducibility, not variety. VS's goal of exploring different possibilities would conflict with these needs.
+
+- **Highly constrained tasks**: When requirements are very specific, there's simply less room for creativity. For example, "Write a haiku about cats with exactly 5-7-5 syllables" or "Translate this legal document word-for-word"—the constraints leave little space for diverse valid responses.
 
 ### Future Directions
 
-Several promising research directions could extend VS's impact:
+We believe there are several promising research directions to extend VS's impact:
 
-**Enhancing Rollout Diversity**: Current VS operates at the prompt level, but the same principle could be applied to multi-step reasoning or agent rollouts. For example, when an LLM agent explores a decision tree or plans a sequence of actions, typicality bias might cause it to always choose the "safest" path at each step. Applying distribution-level prompting to encourage diverse rollout strategies could unlock more creative problem-solving in agent systems and multi-turn reasoning tasks.
+**Enhancing Rollout Diversity in RL Training**: A major challenge in RL for LLMs is that entropy drops significantly during training, an effect of mode collapse that leads to insufficient exploration. Recent work has shown that diversity in rollouts is crucial for improving RL performance [@wang20258020rulehighentropyminority]. Mitigating this entropy collapse and maintaining diverse rollouts has shown substantial improvements in performance [@li2025jointlyreinforcingdiversityquality]. VS's distribution-level approach could naturally extend to RL training, helping models maintain exploration diversity throughout the learning process rather than collapsing to a narrow set of "safe" responses.
 
-**Adaptive Probability Thresholds**: Automatically tuning the threshold τ based on task requirements or user preferences could optimize the diversity-quality tradeoff without manual intervention.
+**VS Prompt Optimization**: The VS prompts we present could be further improved through automated prompt optimization techniques. [DSPy](https://github.com/stanfordnlp/dspy) provides a framework for programmatic prompt optimization, and recent work on GEPA (Reflective Prompt Evolution) has shown that prompt evolution can achieve performance on par with reinforcement learning [@agrawal2025gepareflectivepromptevolution]. By applying these techniques to VS prompts, we could discover even more effective ways to elicit diverse, high-quality distributions from language models. 
 
-**Domain-Specific Calibration**: Probability estimates could be calibrated for specific domains (e.g., scientific writing vs. creative fiction) to improve the meaningfulness of the verbalized probabilities.
+**Improving Probability Calibration**: VS relies on models' ability to estimate probabilities, but different tasks may require different calibration, what works for creative writing might not work for scientific writing or survey simulation. One promising direction is to train language models to reason about their uncertainty and produce better-calibrated probability estimates [@damani2025binaryrewardstraininglms]. By improving models' accuracy on probability calibration, we could make the verbalized probabilities in VS more reliable and meaningful across different domains, leading to better diversity-quality tradeoffs.
 
 {/* <a id="recipes" />
 ## Prompt Recipes
