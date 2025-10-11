@@ -25,7 +25,7 @@ const storyExamples: Example[] = [
     direct: `The old bear ambled through the morning mist, her coat silvered with age and dewdrops. She'd walked this forest path for twenty winters, knew every root that might trip her, every hollow tree that sheltered the sweetest honey. The seasons turned, predictable and comforting […]`,
     vs: `The constellation of Ursa Major dimmed as its spirit descended to Earth. The Star Bear's paws touched down in a moonlit glade where an ancient summoning circle glowed with ethereal fire. Celestial energy crackled through its translucent form as it prepared to fulfill the prophecy spoken in forgotten tongues […]`,
     directTheme: "Same forest bear",
-    vsTheme: "Astronaut bear"
+    vsTheme: "Magical star bear"
   },
   {
     id: 3,
@@ -117,7 +117,7 @@ export default function QualitativeExamples() {
             </div>
             <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
               <p className="text-lg text-red-800 dark:text-red-300">
-                <strong>Pattern:</strong> All 3 examples feature "Elara" disappearing from a romantic relationship
+                <strong>Pattern:</strong> All 3 examples feature "the old bear" walking through the forest
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function QualitativeExamples() {
             </div>
             <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
               <p className="text-lg text-green-800 dark:text-green-300">
-                <strong>Diversity:</strong> Each story explores completely different themes and contexts
+                <strong>Diversity:</strong> Each story explores completely different worlds and scenarios
               </p>
             </div>
           </div>
@@ -152,9 +152,9 @@ export default function QualitativeExamples() {
         <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 border-l-4 border-blue-500">
           <h4 className="font-bold text-blue-900 dark:text-blue-200 mb-2">Key Insight</h4>
           <p className="text-blue-800 dark:text-blue-300">
-            Direct prompting suffers from <strong>mode collapse</strong>, repeatedly generating stories about romantic disappearances.
-            VS recovers the base model's creative diversity, producing stories about digital-age friendships, cosmic events,
-            and music venue tragedies—all valid interpretations of "without a goodbye."
+            Direct prompting suffers from <strong>mode collapse</strong>, repeatedly generating stories about old bears in the forest.
+            VS recovers the base model's creative diversity, producing stories about tax accountant bears, magical star bears,
+            and glass mirror world bears, diverse scenarios and worlds of possibilities.
           </p>
         </div>
       </div>
