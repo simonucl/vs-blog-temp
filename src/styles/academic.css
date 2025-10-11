@@ -167,7 +167,6 @@ html[data-theme="dark"] {
 .figure {
   margin: var(--space-sm) -60px;
   padding: var(--space-sm);
-  border-block: 2px solid var(--color-border);
 }
 
 @media (max-width: 768px) {

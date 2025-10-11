@@ -283,18 +283,15 @@ We conducted comprehensive experiments across creative writing tasks (poems, sto
 
 #### VS improves diversity while maintaining quality
 
+<Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains.">
+  {/* <DiversityGainsVisual client:visible /> */}
+  <img src="/images/creatitive_main.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
+</Figure>
+
 Figure 3(a)-(c) show the semantic diversity scores averaged across models for poems, stories, and jokes respectively. Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods**. The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
 
-<Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains [@zhang2025vs, Figure 3a–c].">
-  {/* <DiversityGainsVisual client:visible /> */}
-  <img src="/images/creative_writing.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
-</Figure>
 
 We observe an emergent trend where **larger models benefit more from VS**. Figure 3(e) shows the diversity gain over direct prompting across model sizes. Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (GPT-4.1-Mini, Gemini-2.5-Flash).
-
-<Figure id="scaling-trend" caption="Larger models benefit ~1.5–2× more from VS [@zhang2025vs, Figure 3e–f].">
-  <img src="/images/emergent_behavior.png" alt="Larger models benefit ~1.5–2× more from VS" style="border: none; box-shadow: none;" />
-</Figure>
 
 <details className="group my-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-bold text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -345,6 +342,10 @@ VS achieves higher human-rated diversity than baselines on all tasks, validating
 
 #### Tunable Diversity
 
+<Figure id="diversity-tuning" caption="Diversity tuning via probability threshold.">
+  <img src="/images/diversity_tuning.png" alt="Diversity tuning via probability threshold" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+</Figure>
+
 Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 3(g-i), **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
 
 #### Why not just use temperature?
@@ -360,13 +361,13 @@ The results show that **VS-Standard can be combined with temperature to further 
 #### Post-Training Stages
 
 <div className="content-grid">
-  <div className="figure-content">
-    <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier [@zhang2025vs, Figure 5].">
-      <img src="/images/training_progression.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 100%; height: auto;" />
-    </Figure>
-  </div>
   <div className="text-content">
     VS can mitigate mode collapse and maintain higher diversity scores across different post-training stages.
+  </div>
+    <div className="figure-content">
+    <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier.">
+      <img src="/images/training_progression.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 100%; height: auto;" />
+    </Figure>
   </div>
 </div>
 
