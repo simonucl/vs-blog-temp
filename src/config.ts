@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://github.com/CHATS-lab/verbalized-sampling",
   desc: "Verbalized Sampling: A training-free method to restore diversity in aligned LLMs by prompting for probability distributions.",
   title: "Verbalized Sampling",
-  ogImage: "og-qualitative.png",
+  ogImage: "og-qualitative.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
