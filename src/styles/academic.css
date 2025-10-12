@@ -297,11 +297,103 @@ html[data-theme="dark"] {
 .abstract-heading { font-size: var(--text-2xl); margin-bottom: .25rem; }
 
 /* TOC */
-.toc { margin-top: var(--space-sm); margin-bottom: var(--space-sm); background: var(--playground-bg); border: 1px solid var(--color-border); border-radius: .5rem; padding: var(--space-sm); }
-.toc-heading { font-size: var(--text-xl); margin: 0 0 var(--space-sm) 0; color: var(--color-muted); }
-.toc-list { list-style: none; margin: 0; padding: 0; font-size: .95em; }
-.toc-h2 { margin: .25rem 0; }
-.toc-h3 { margin: .15rem 0 .15rem 1rem; opacity: .85; }
+.toc {
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  background: rgba(249, 250, 251, 0.8);
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  border-radius: .5rem;
+  padding: 1rem;
+  min-width: 350px;
+}
+
+html[data-theme="dark"] .toc {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.toc-heading {
+  font-size: 1.1rem;
+  margin: 0 0 var(--space-sm) 0;
+  color: rgb(51, 65, 85);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+html[data-theme="dark"] .toc-heading {
+  color: rgb(203, 213, 225);
+}
+
+.toc-heading::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform 0.2s ease;
+  color: rgb(59, 130, 246);
+}
+
+.toc.expanded .toc-heading::before {
+  transform: rotate(90deg);
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.95rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.toc.expanded .toc-list {
+  max-height: 1000px;
+  margin-top: 0.5rem;
+}
+
+.toc-h2 {
+  margin: .4rem 0;
+}
+
+.toc-h2 a {
+  color: rgb(30, 58, 138);
+  font-weight: 500;
+  text-decoration: none;
+  display: block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+html[data-theme="dark"] .toc-h2 a {
+  color: rgb(147, 197, 253);
+}
+
+.toc-h2 a:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.toc-h3 {
+  margin: .3rem 0 .3rem 1rem;
+}
+
+.toc-h3 a {
+  color: rgb(71, 85, 105);
+  font-weight: 400;
+  text-decoration: none;
+  display: block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+html[data-theme="dark"] .toc-h3 a {
+  color: rgb(148, 163, 184);
+}
+
+.toc-h3 a:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
 
 /* Screen reader only */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

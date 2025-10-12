@@ -9,3 +9,20 @@ const { headings = [] as Heading[] } = Astro.props;
     </li>
   ))}
 </ul>
+
+<script>
+  function initTOC() {
+    const tocElements = document.querySelectorAll('.toc');
+    tocElements.forEach(toc => {
+      const heading = toc.querySelector('.toc-heading');
+      if (heading) {
+        heading.addEventListener('click', () => {
+          toc.classList.toggle('expanded');
+        });
+      }
+    });
+  }
+
+  initTOC();
+  document.addEventListener('astro:after-swap', initTOC);
+</script>
