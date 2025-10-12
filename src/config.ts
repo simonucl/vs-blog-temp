@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://github.com/CHATS-lab/verbalized-sampling",
   desc: "Verbalized Sampling: A training-free method to restore diversity in aligned LLMs by prompting for probability distributions.",
   title: "Verbalized Sampling",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "og-qualitative.png",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
@@ -16,7 +16,7 @@ export const SITE = {
     text: "Edit page",
     url: "https://github.com/satnaing/astro-paper/edit/main/",
   },
-  dynamicOgImage: true,
+  dynamicOgImage: false,
   dir: "ltr", // "rtl" | "auto"
   lang: "en", // html lang code. Set this empty and default will be "en"
   timezone: "America/Los_Angeles", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
