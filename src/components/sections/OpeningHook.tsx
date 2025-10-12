@@ -25,23 +25,23 @@ const modeCollapseExamples: Example[] = [
     responses: [
       "A person discovers they can travel back in time to fix their mistakes",
       "Someone finds a way to go back in time to prevent a tragedy",
-      "A scientist invents time travel and goes back to change history",
-      "A character travels to the past to fix something that went wrong",
-      "A protagonist discovers time travel and attempts to correct past errors"
+      "A person travels to the past to change something that went wrong",
+      "A person discovers they can travel back in time to fix their mistakes",
+      "A person travels to the past to correct a mistake they made"
     ],
     problem: "Same predictable plot repeated"
   },
-  {
-    prompt: "List 5 innovative business ideas",
-    responses: [
-      "An app that connects local service providers with customers",
-      "A platform that matches freelancers with businesses",
-      "An application that links customers with nearby services",
-      "A marketplace connecting service providers and consumers",
-      "A digital platform that connects local businesses with clients"
-    ],
-    problem: "Generic marketplace ideas only"
-  }
+  // {
+  //   prompt: "List 5 innovative business ideas",
+  //   responses: [
+  //     "An app that connects local service providers with customers",
+  //     "A platform that matches freelancers with businesses",
+  //     "An application that links customers with nearby services",
+  //     "A marketplace connecting service providers and consumers",
+  //     "A digital platform that connects local businesses with clients"
+  //   ],
+  //   problem: "Generic marketplace ideas only"
+  // }
 ];
 
 export default function OpeningHook() {
@@ -105,7 +105,7 @@ export default function OpeningHook() {
               AI Responses
             </label>
             <div className="space-y-2">
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {example.responses.map((response, index) => (
                   <motion.div
                     key={`${currentExample}-${index}`}
@@ -129,19 +129,21 @@ export default function OpeningHook() {
           </div>
 
           {/* Problem Reveal */}
-          <div className="text-center">
+          <div className="text-center mt-6">
             {!showProblem ? (
               <motion.button
                 initial={prefersReducedMotion ? undefined : { opacity: 0 }}
                 animate={prefersReducedMotion ? undefined : { opacity: 1 }}
+                transition={prefersReducedMotion ? undefined : { delay: 0.6 }}
                 onClick={() => setShowProblem(true)}
                 className="px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white font-semibold rounded-lg transition-colors shadow-lg"
                 >
                 See The Problem?
               </motion.button>
             ) : (
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 <motion.div
+                  key={`problem-${currentExample}`}
                   initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
                   animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
                   exit={prefersReducedMotion ? undefined : { opacity: 0, y: -20 }}

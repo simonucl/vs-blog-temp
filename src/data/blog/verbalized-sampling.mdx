@@ -347,7 +347,7 @@ VS achieves higher human-rated diversity than baselines on all tasks, validating
   <img src="/images/diversity_tuning.png" alt="Diversity tuning via probability threshold" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
 </Figure>
 
-Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 2, **diversity increases as the probability threshold decreases**. In contrast, baseline methods like Sequence cannot adjust diversity levels.
+Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 2, **diversity increases as the probability threshold decreases**, showing that you can control the diversity of the output by adjusting the probability threshold. In contrast, baseline methods like Sequence cannot adjust diversity levels.
 
 #### Why not just use temperature?
 
@@ -355,7 +355,7 @@ Unlike baseline methods, VS allows us to tune the output diversity by adjusting 
   <img src="/images/temperature_scaling.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
 </Figure>
 
-**VS is orthogonal to temperature**—temperature adjusts sampling randomness from the same distribution, while VS changes the distribution itself by prompting for diverse responses. We investigate this by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
+**VS is orthogonal to temperature**—temperature adjusts sampling randomness from the same distribution, while VS changes the distribution itself by prompting for diverse responses. We investigate this by varying temperature (t ∈ \{0.4, 0.6, 0.8, 1.0, 1.2, 1.4\}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
 
 The results demonstrate that **combining VS with temperature further pushes the diversity-quality Pareto frontier**. At any given temperature, VS consistently achieves better balance between quality and diversity than baseline methods, and the combination enables reaching optimal points that neither approach achieves alone.
 
@@ -364,8 +364,8 @@ The results demonstrate that **combining VS with temperature further pushes the 
 <div className="content-grid">
   <div className="text-content">
 
-We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. Traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
-Specifically, **Direct prompting** experiences severe collapse: 20.8% after SFT → 10.8% after DPO, **VS** maintains ~30% diversity consistently across all stages. **After DPO**, VS outperforms direct prompting by **182.6%** and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting)
+To investigate the impact of VS mitigating mode collapse across post-training stages, we employ the [Tulu-3 model family](https://huggingface.co/collections/allenai/tulu-3-models-673b8e0dc3512e30e7dc54f5) (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. Traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
+Specifically, **Direct prompting** experiences severe collapse: 20.8% after SFT → 10.8% after DPO, **VS** maintains ~30% diversity consistently across all post-training stages. At **Post-DPO** stage, VS outperforms direct prompting by **182.6%** and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting).
 
   </div>
   <div className="figure-content">
@@ -698,13 +698,58 @@ Don't:
   </div>
 </details>
 
-## Go Try It Yourself
+## Try It Yourself
+
+#### Example 1: Try this system prompt
+
+Copy and paste this system prompt into your favorite LLM playground (ChatGPT, Claude, Gemini, etc.):
+
+**System Prompt**
+```
+You are a helpful assistant. For each query, please generate a set of five possible responses, each within a separate <response> tag. Responses should each include a <text> and a numeric <probability>. Please sample at random from the tails of the distribution, such that the probability of each response is less than 0.10.
+```
+
+#### Example 2: Add before your own prompts in Chat Interface
+
+Copy and paste this prompt into any chat interface (ChatGPT, Claude, Gemini, etc.):
+
+```
+Generate 10 responses to the user query, each within a separate <response> tag. Each response should be 50-100 words.
+Each <response> must include a <text> and a numeric <probability>. Randomly sample the responses from the full distribution.
+
+<user_query>Write a short story about a bear.</user_query>
+```
+
+#### Example 3: Query via API
+
+Use this curl command to try VS-Standard with the OpenAI API. Replace `gpt-4.1` with your model of choice:
+
+```bash
+export OPENAI_API_KEY="your_openai_key"
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-4.1",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Generate 10 responses to the input prompt, each within a separate <response> tag. Each response should be 50-100 words. Each <response> must include a <text> and a numeric <probability>. Randomly sample the responses from the full distribution. Return ONLY the responses, with no additional explanations or text."
+      },
+      {
+        "role": "user",
+        "content": "Write a short story about a bear."
+      }
+    ],
+    "temperature": 1.0
+  }'
+```
+
+---
 
 Mode collapse isn't an unsolvable algorithmic curse. **It's a mirror reflecting our own cognitive shortcuts back at us.** But by changing how we ask, we can unlock the incredible diversity that was there all along.
 
 The creativity isn't gone—it's just waiting for the right prompt.
-
-Take the [prompt recipes](#recipes) above, put them in your favorite LLM, and see what you can create. We'd love to see what you discover—share your most surprising or creative outputs with the hashtag **#VerbalizedSampling**.
 
 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg my-8 border-l-4 border-blue-500">
 
