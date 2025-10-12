@@ -304,7 +304,7 @@ html[data-theme="dark"] {
   border: 1px solid rgba(209, 213, 219, 0.5);
   border-radius: .5rem;
   padding: 1rem;
-  min-width: 350px;
+  min-width: 250px;
 }
 
 html[data-theme="dark"] .toc {
