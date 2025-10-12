@@ -25,6 +25,9 @@
       @apply mt-0;
     }
     /* h3 italics removed for academic tone */
+    h4 {
+      @apply text-2xl;  /* or text-xl, text-base, etc. */
+    }
 
     p,
     strong,

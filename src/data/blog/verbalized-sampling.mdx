@@ -283,15 +283,16 @@ We conducted comprehensive experiments across creative writing tasks (poems, sto
 
 #### VS improves diversity while maintaining quality
 
-<Figure id="diversity-gains" caption="Creative writing diversity improvements with VS (poem, story, joke); VS‑CoT achieves 1.6–2.1× gains.">
+<Figure id="diversity-gains" caption="VS achieves 1.6–2.1× diversity gains in creative writing (a-c) while maintaining quality with Pareto-optimal tradeoffs (d). Larger models show emergent benefits, gaining 1.5–2× more diversity (e) and quality improvements (f) compared to smaller models.">
   {/* <DiversityGainsVisual client:visible /> */}
   <img src="/images/creatitive_main.png" alt="Creative writing diversity improvements" style="border: none; box-shadow: none;" />
 </Figure>
 
-Figure 3(a)-(c) show the semantic diversity scores averaged across models for poems, stories, and jokes respectively. Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods**. The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
+Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods** (Figure 1a-c). The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
 
+VS variants achieve **Pareto-optimal diversity-quality tradeoffs** (Figure 1d), with VS-Multi reaching the highest quality while maintaining superior diversity compared to baseline methods like Direct and Sequence prompting.
 
-We observe an emergent trend where **larger models benefit more from VS**. Figure 3(e) shows the diversity gain over direct prompting across model sizes. Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (GPT-4.1-Mini, Gemini-2.5-Flash).
+We observe an emergent trend where **larger models benefit more from VS** (Figure 1e-f). Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models, while also showing significant quality improvements.
 
 <details className="group my-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-bold text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -354,39 +355,37 @@ Unlike baseline methods, VS allows us to tune the output diversity by adjusting 
   <img src="/images/temperature_scaling.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
 </Figure>
 
-We investigate the effect of sampling temperature on the diversity-quality trade-off by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
+**VS is orthogonal to temperature**—temperature adjusts sampling randomness from the same distribution, while VS changes the distribution itself by prompting for diverse responses. We investigate this by varying temperature (t ∈ {0.4, 0.6, 0.8, 1.0, 1.2, 1.4}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
 
-The results show that **VS-Standard can be combined with temperature to further improve the diversity-quality trade-off**. VS consistently achieves a better balance between quality and diversity across both models, pushing forward the Pareto front relative to the baselines.
+The results demonstrate that **combining VS with temperature further pushes the diversity-quality Pareto frontier**. At any given temperature, VS consistently achieves better balance between quality and diversity than baseline methods, and the combination enables reaching optimal points that neither approach achieves alone.
 
-#### Post-Training Stages
+#### VS Mitigates Mode Collapse Across Post-Training Stages
 
 <div className="content-grid">
   <div className="text-content">
-    VS can mitigate mode collapse and maintain higher diversity scores across different post-training stages.
+
+We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. Traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
+Specifically, **Direct prompting** experiences severe collapse: 20.8% after SFT → 10.8% after DPO, **VS** maintains ~30% diversity consistently across all stages. **After DPO**, VS outperforms direct prompting by **182.6%** and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting)
+
   </div>
-    <div className="figure-content">
-    <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier.">
-      <img src="/images/training_progression.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 100%; height: auto;" />
+  <div className="figure-content">
+    <Figure id="post-training-stages" caption="VS maintains consistent diversity (~30%) across post-training stages while baseline methods collapse from 20.8% to 10.8%.">
+      <img src="/images/training_progression.png" alt="VS maintains diversity across post-training stages" style="border: none; box-shadow: none; max-width: 100%; height: auto;" />
     </Figure>
   </div>
 </div>
 
-We employ the Tulu-3 family (which contains checkpoints for SFT, RLHF, and RLVR starting from Llama-3.1-70B-base) to evaluate VS across post-training stages. The results demonstrate that traditional prompting methods experience severe diversity drops (mode collapse) as models undergo alignment training, while **VS can mitigate mode collapse and maintain higher diversity scores** across different post-training stages.
-
-Specifically:
-- **Direct prompting**: severe collapse (20.8% after SFT → 10.8% after DPO)
-- **VS**: maintains ~30% diversity across all stages
-- **After DPO**: VS outperforms direct prompting by 182.6% and retains about **66.8% of the base model's original diversity** (vs. only 23.8% for direct prompting)
-
-This suggests that VS effectively mitigates the mode collapse induced by alignment training.
-
 #### Qualitative Examples
 
-<Figure id="intuitive-demo" caption="Intuitive demo of VS [@zhang2025vs, Figure 6a].">
+To demonstrate VS's impact on creative diversity, we use Direct Prompting and VS to separately generate image generation prompts based on the topic ["An Astronaut Riding a Horse"](https://commons.wikimedia.org/wiki/File:Astronaut_Riding_a_Horse_(SDXL).jpg). We then visualize these captions using the Gemini nano-banana model.
+
+<Figure id="intuitive-demo" caption="Image diversity using captions generated by different methods. Direct Prompting (top row) and Verbalized Sampling (bottom row) generate descriptive captions for the same topic, then visualized as images.">
   <img src="/images/qualitative_example.png" alt="Intuitive demo of VS" style="border: none; box-shadow: none;" />
 </Figure>
 
-Beyond quantitative metrics, VS generates outputs with **genuine novelty and depth**—like Bernard the tax accountant bear—that would never emerge from standard prompting [@zhang2025vs, Figure 6a].
+**Direct Prompting (top row)** consistently converges on photorealistic images within a narrow range of scenarios—typically desert landscapes with realistic lighting and editorial photography styles.
+
+**Verbalized Sampling (bottom row)** produces captions with higher diversity in both artistic style and narrative setting: a cinematic gallop under a looming Earth, a retrofuturist rider on a chrome horse in a neon desert, a whimsical storybook watercolor, thundering through canyons under twin suns, and a heroic baroque oil painting. This demonstrates VS's ability to generate outputs with **genuine novelty and depth** that would never emerge from standard prompting.
 
 
 ### Synthetic Data Generation
