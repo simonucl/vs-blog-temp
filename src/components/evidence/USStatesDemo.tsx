@@ -35,10 +35,13 @@ function transformToRankFrequency() {
   // Sort by reference distribution (descending)
   dataPoints.sort((a, b) => b.reference - a.reference);
 
-  // Add rank
+  // Add rank and display values
   return dataPoints.map((item, index) => ({
     ...item,
     rank: index + 1,
+    referenceDisplay: item.reference,
+    directDisplay: item.direct,
+    vsDisplay: item.vs,
   }));
 }
 
