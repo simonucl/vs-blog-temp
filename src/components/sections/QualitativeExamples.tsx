@@ -100,7 +100,7 @@ export default function QualitativeExamples() {
         {/* Examples Comparison - Side by Side Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Direct Method */}
-          <div className="space-y-3">
+          <div className="grid grid-rows-[auto_1fr_auto] gap-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <TrendingDown className="w-5 h-5 text-red-500" />
@@ -110,12 +110,12 @@ export default function QualitativeExamples() {
                 {example.directTheme}
               </span>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-red-200 dark:border-red-900">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-red-200 dark:border-red-900 flex items-start">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                 {example.direct}
               </p>
             </div>
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 flex items-center">
               <p className="text-sm text-red-800 dark:text-red-300">
                 <strong>Pattern:</strong> All 3 examples feature "the old bear" walking through the forest
               </p>
@@ -123,7 +123,7 @@ export default function QualitativeExamples() {
           </div>
 
           {/* VS Method */}
-          <div className="space-y-3">
+          <div className="grid grid-rows-[auto_1fr_auto] gap-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-green-500" />
@@ -133,12 +133,12 @@ export default function QualitativeExamples() {
                 {example.vsTheme}
               </span>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-green-200 dark:border-green-900">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-green-200 dark:border-green-900 flex items-start">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                 {example.vs}
               </p>
             </div>
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 flex items-center">
               <p className="text-sm text-green-800 dark:text-green-300">
                 <strong>Diversity:</strong> Each story explores completely different worlds and scenarios
               </p>
