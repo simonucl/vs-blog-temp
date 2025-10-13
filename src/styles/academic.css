@@ -165,14 +165,9 @@ html[data-theme="dark"] {
 
 /* Figures and Captions */
 .figure {
-  margin: var(--space-sm) -60px;
-  padding: var(--space-sm);
-}
-
-@media (max-width: 768px) {
-  .figure {
-    margin-inline: -1rem;
-  }
+  margin: var(--space-sm) 0;
+  padding: var(--space-sm) 0;
+  max-width: 100%;
 }
 
 .figure-caption {
@@ -182,7 +177,7 @@ html[data-theme="dark"] {
   opacity: 0.85;
   font-style: normal;
   font-weight: 500;
-  text-align: center;
+  text-align: left;
 }
 
 /* Figure grid for wrapping figures side-by-side */
@@ -240,7 +235,7 @@ html[data-theme="dark"] {
 }
 
 /* Paper header */
-.paper-header { margin-top: var(--space-sm); margin-bottom: var(--space-sm); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-sm); }
+.paper-header { margin-top: var(--space-3xl); margin-bottom: var(--space-sm); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-sm); }
 .paper-title { font-family: var(--font-prose); font-size: 2.25rem; font-weight: 700; line-height: var(--leading-tight); margin-bottom: var(--space-sm); }
 .paper-authors { color: var(--color-foreground); margin-top: .25rem; }
 .paper-affils { color: #666; margin-top: .25rem; }
