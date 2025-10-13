@@ -1,19 +1,8 @@
-const primaryColorScheme = ""; // "light" | "dark"
+const primaryColorScheme = "light"; // "light" | "dark"
 
-// Get theme data from local storage
-const currentTheme = localStorage.getItem("theme");
-
+// Force light mode - ignore local storage and system preferences
 function getPreferTheme() {
-  // return theme value in local storage if it is set
-  if (currentTheme) return currentTheme;
-
-  // return primary color scheme if it is set
-  if (primaryColorScheme) return primaryColorScheme;
-
-  // return user device's prefer color scheme
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return "light";
 }
 
 let themeValue = getPreferTheme();
@@ -79,10 +68,10 @@ document.addEventListener("astro:before-swap", event => {
     ?.setAttribute("content", bgColor);
 });
 
-// sync with system changes
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", ({ matches: isDark }) => {
-    themeValue = isDark ? "dark" : "light";
-    setPreference();
-  });
+// Disabled: sync with system changes - force light mode only
+// window
+//   .matchMedia("(prefers-color-scheme: dark)")
+//   .addEventListener("change", ({ matches: isDark }) => {
+//     themeValue = isDark ? "dark" : "light";
+//     setPreference();
+//   });

@@ -97,8 +97,8 @@ export default function QualitativeExamples() {
           </p>
         </div>
 
-        {/* Examples Comparison - Above/Below Layout */}
-        <div className="space-y-8">
+        {/* Examples Comparison - Side by Side Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Direct Method */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -106,7 +106,7 @@ export default function QualitativeExamples() {
                 <TrendingDown className="w-5 h-5 text-red-500" />
                 <h3 className="font-bold text-xl">Direct Prompting</h3>
               </div>
-              <span className="px-3 py-1 text-base font-medium rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+              <span className="px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
                 {example.directTheme}
               </span>
             </div>
@@ -116,7 +116,7 @@ export default function QualitativeExamples() {
               </p>
             </div>
             <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
-              <p className="text-lg text-red-800 dark:text-red-300">
+              <p className="text-sm text-red-800 dark:text-red-300">
                 <strong>Pattern:</strong> All 3 examples feature "the old bear" walking through the forest
               </p>
             </div>
@@ -129,7 +129,7 @@ export default function QualitativeExamples() {
                 <Sparkles className="w-5 h-5 text-green-500" />
                 <h3 className="font-bold text-xl">Verbalized Sampling</h3>
               </div>
-              <span className="px-3 py-1 text-base font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+              <span className="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                 {example.vsTheme}
               </span>
             </div>
@@ -139,7 +139,7 @@ export default function QualitativeExamples() {
               </p>
             </div>
             <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-              <p className="text-lg text-green-800 dark:text-green-300">
+              <p className="text-sm text-green-800 dark:text-green-300">
                 <strong>Diversity:</strong> Each story explores completely different worlds and scenarios
               </p>
             </div>

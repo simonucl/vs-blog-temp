@@ -10,7 +10,7 @@ interface Example {
 
 const modeCollapseExamples: Example[] = [
   {
-    prompt: "Generate 5 different jokes about coffee",
+    prompt: "Generate a joke about coffee",
     responses: [
       "Why did the coffee file a police report? It got mugged!",
       "Why did the coffee file a police report? It got mugged!",
@@ -18,10 +18,10 @@ const modeCollapseExamples: Example[] = [
       "Why did the coffee file a police report? It got mugged!",
       "Why did the coffee file a police report? It got mugged!",
     ],
-    problem: "5 variations of the same joke"
+    problem: "The exact same joke"
   },
   {
-    prompt: "Give me 5 creative story ideas about time travel",
+    prompt: "Give me a creative story idea about time travel",
     responses: [
       "A person discovers they can travel back in time to fix their mistakes",
       "Someone finds a way to go back in time to prevent a tragedy",
@@ -29,7 +29,7 @@ const modeCollapseExamples: Example[] = [
       "A person discovers they can travel back in time to fix their mistakes",
       "A person travels to the past to correct a mistake they made"
     ],
-    problem: "Same predictable plot repeated"
+    problem: "5 variations of the same story idea"
   },
   // {
   //   prompt: "List 5 innovative business ideas",
@@ -102,7 +102,7 @@ export default function OpeningHook() {
           {/* Responses */}
           <div className="mb-6">
             <label className="text-xl font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
-              AI Responses
+              Prompting 5 times response
             </label>
             <div className="space-y-2">
               <AnimatePresence mode="wait">
