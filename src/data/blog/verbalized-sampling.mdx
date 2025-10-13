@@ -36,7 +36,7 @@ homepageUrl: "https://www.verbalized-sampling.com/"
 xThreadUrl: "https://x.com/YOUR_X_THREAD_URL"
 notebookUrl: "https://github.com/CHATS-lab/verbalized-sampling?tab=readme-ov-file#-interactive-notebooks"
 bibUrl: "/references.bib"
-abstract: "Post-training alignment reduces LLM diversity through mode collapse, driven by typicality bias in human preference data. We introduce <strong>Verbalized Sampling (VS)</strong>, a training-free prompting method that asks models to output probability distributions over responses (e.g., \"Generate 5 jokes with probabilities\"). VS increases diversity by <strong>1.6-2.1×</strong> in creative writing by simply changing the way we prompt, while preserving quality and safety, providing an inference-time remedy for mode collapse."
+abstract: "Post-training alignment reduces LLM diversity through mode collapse, driven by typicality bias in human preference data. We introduce <strong>Verbalized Sampling (VS)</strong>, a training-free prompting method that asks models to output probability distributions over responses (e.g., \"Generate 5 jokes with probabilities\"). VS increases diversity by <strong>1.6-2.1×</strong> in creative writing and improves downstream performance by <strong>37.5% vs 32.8%</strong> when generating synthetic training data. Simply changing how we prompt unlocks the model's full creative potential while preserving quality and safety, providing an inference-time remedy for mode collapse."
 showTOC: true
 ---
 
@@ -66,7 +66,7 @@ import Figure from "@/components/academic/Figure.astro";
 
 ## The Mode Collapse Problem
 
-You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a short story, and it begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
+You ask your favorite LLM for a joke about coffee. You ask again. You get the same joke, no matter which model you try. You ask for a story about a bear, and it always begins with "Once upon a time, in a land far away..." The brainstorming ideas feel generic, the outputs repetitive.
 
 This frustrating phenomenon is called [**mode collapse**](https://www.lesswrong.com/posts/t9svvNPNmFf5Qa3TA/mysteries-of-mode-collapse). Past research blamed the AI's post-training process (e.g., RLHF), assuming the algorithms naturally favored the most common, "safe" answer [@kirk2024; @murthy2025]. **We discovered something more fundamental**: The problem isn't just the AI. It's us.
 
@@ -79,7 +79,7 @@ Mode collapse isn't just an academic curiosity, it's limiting LLMs' potential in
 
 **Creative Writing** [@chakrabarty2024artartificelargelanguage]: Authors, marketers, and content creators seeking fresh angles or unique narrative voices find themselves battling against the model's tendency to regurgitate tropes. The model has learned diverse writing styles during pretraining, but alignment has pushed it toward generic, crowd-pleasing outputs. Every story starts in a forest, every protagonist is "determined yet kind."
 
-**Research & AI-Driven Discovery** [@si2024llmsgeneratenovelresearch]: Perhaps most critically, mode collapse hampers AI's role in scientific discovery and research ideation. When researchers use LLMs to generate hypotheses, explore experimental designs, or brainstorm research directions, they need the full spectrum of possibilities, including unconventional approaches that might lead to breakthroughs. Mode collapse means the AI suggests only well-trodden paths, missing potentially transformative ideas that lie in the less-typical regions of its knowledge.
+**Research & AI-Driven Discovery** [@si2024llmsgeneratenovelresearch]: Perhaps most critically, mode collapse hampers AI's role in scientific discovery and research ideation. When researchers use LLMs to generate hypotheses, explore experimental designs, or brainstorm research directions, they need the full spectrum of possibilities, including approaches that might lead to breakthroughs. Mode collapse means the AI suggests only well-trodden paths, missing potentially transformative ideas that lie in the less-typical regions of its knowledge.
 
 ## How to Fix It?
 
@@ -135,9 +135,9 @@ This is exactly like temperature scaling with $T = 1/\gamma < 1$. As $\gamma$ in
 
 **Verbalized Sampling (VS)** breaks this cycle by asking for a *distribution of candidates* with probabilities. Instead of sampling from the collapsed, sharpened distribution, VS prompts the model to verbalize a broader distribution that recovers pretraining diversity.
 
-We start with an intuitive example: The Library Metaphor. Imagine a massive library and the LLM as the librarian:
+We start with an intuitive example: The Library Metaphor, alongside mathematical proofs that rigorously showing why each approach can produce different distributions. Imagine a massive library and the LLM as the librarian:
 
-- **Direct Prompt** ("tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
+- **Direct Prompt** (Example Prompt: "tell me a coffee joke"): The librarian walks straight to the "Most Popular" shelf and hands you the same book every time. This is mode collapse.
 
 <details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -162,7 +162,7 @@ where $\delta$ is the Dirac function.
   </div>
 </details>
 
-- **List Prompt** ("tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
+- **List Prompt** (Example Prompt: "tell me 5 coffee jokes"): The librarian goes to one aisle and grabs the first five books they see. You get variety, but limited to one section.
 
 <details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -203,7 +203,7 @@ This is a **uniform distribution** over elements in $\phi(y^*)$, regardless of t
   </div>
 </details>
 
-- **Verbalized Sampling** ("tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
+- **Verbalized Sampling** (Example Prompt: "tell me 5 coffee jokes with their probabilities"): You're asking the librarian to first describe the entire library's collection: mystery, SciFi, history, all of it, and then pick five random books that represent that whole collection.
 
 <details className="group my-0 ml-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-medium text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -278,9 +278,66 @@ To further prove that your model knows the distribution, we conducted an experim
 
 We conducted comprehensive experiments across creative writing tasks (poems, stories, jokes) to demonstrate VS's effectiveness in improving diversity while maintaining quality.
 
+### Methods Compared
+
+We compare VS against several baseline prompting strategies. All methods use the same computational budget of $N$ total responses, with $k=5$ candidates per call for multi-candidate methods.<Sidenote number={4}>We empirically found $k=5$ provides the best quality-diversity tradeoff. Ablation studies for different values of $k$ can be found in Appendix H.1 of our paper.</Sidenote>
+
+<Table id="methods-comparison" caption="Comparison of prompting methods evaluated in our experiments">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Method</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2"><strong>Instance-level</strong></td>
+      <td>Direct</td>
+      <td>Standard prompting for a single response</td>
+      <td>"Tell a joke about coffee"</td>
+    </tr>
+    <tr>
+      <td>CoT</td>
+      <td>Add CoT to Direct Prompt</td>
+      <td>"Think step-by-step, then tell a joke"</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>List-level</strong></td>
+      <td>Sequence</td>
+      <td>Requests multiple responses in one call</td>
+      <td>"Tell 5 jokes about coffee"</td>
+    </tr>
+    <tr>
+      <td>Multi-Turn</td>
+      <td>Repeatedly asks for "another" candidate across turns</td>
+      <td>"Turn 1: Tell a joke about coffee"<br/>Turn 2+: Tell another"</td>
+    </tr>
+    <tr>
+      <td rowspan="3"><strong>Distribution-level (Ours)</strong></td>
+      <td><strong>VS-Standard</strong></td>
+      <td>Requests multiple responses with their probabilities</td>
+      <td>"Tell 5 jokes with their probabilities"</td>
+    </tr>
+    <tr>
+      <td><strong>VS-CoT</strong></td>
+      <td>VS-Standard + CoT</td>
+      <td>"Think step-by-step, then tell 5 jokes with probabilities"</td>
+    </tr>
+    <tr>
+      <td><strong>VS-Multi</strong></td>
+      <td>VS-Standard + Multi-turn</td>
+      <td>Turn 1: "Tell 2 jokes with probabilities"<br/>Turn 2+: "Tell another 2 with probabilities"</td>
+    </tr>
+  </tbody>
+</Table>
+
+
+
 ### Creative Writing Tasks
 
-**Settings.** We evaluate on three creative writing tasks: (1) **Poem continuation** from PoemHunter.com, (2) **Story generation** from the BookMIA dataset, and (3) **Joke writing** with 100 thematic prompts from Reddit r/DadJokes. For evaluation, we measure both diversity and quality: **Semantic Diversity** (Embedding-based diversity), **Lexical Diversity** (ROUGE-L), and **Quality** (LLM-as-Judge with creative rubrics).
+**Settings.** We evaluate our methods against baseline methods on three creative writing tasks: (1) **Poem continuation**, (2) **Story generation**, and (3) **Joke writing**. For evaluation, we measure both diversity and quality: **Semantic Diversity** (Embedding-based diversity) and **Quality** (LLM-as-Judge with creative or funniness rubrics).<Sidenote number={5}>We acknowledge that LLM-as-Judge can be biased and inaccurate on truly understanding **creativity**. We leave it to future work to develop more fine-grained evaluation metrics.</Sidenote>
 
 #### VS improves diversity while maintaining quality
 
@@ -291,9 +348,9 @@ We conducted comprehensive experiments across creative writing tasks (poems, sto
 
 Across all tasks, **VS-Standard consistently and significantly outperforms baseline methods** (Figure 1a-c). The variants VS-CoT and VS-Multi further improve generation diversity, with VS-CoT achieving **1.6–2.1× diversity gains** compared to direct prompting.
 
-VS variants achieve **Pareto-optimal diversity-quality tradeoffs** (Figure 1d), with VS-Multi reaching the highest quality while maintaining superior diversity compared to baseline methods like Direct and Sequence prompting.
+VS variants achieve **Pareto-optimal diversity-quality tradeoffs** (Figure 1d), with VS-Multi reaching the highest diversity while maintaining quality compared to baseline methods like Direct and Sequence prompting.
 
-We observe an emergent trend where **larger models benefit more from VS** (Figure 1e-f). Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models, while also showing significant quality improvements.
+We observe an emergent trend where **larger models benefit more from VS** (Figure 1e-f). Across all VS variants, larger models (GPT-4.1, Gemini-2.5-Pro) achieve diversity gains **1.5 to 2 times greater** than smaller models (Figure 1e). Smaller models (GPT-4.1-mini, Gemini-2.5-Flash) show more pronounced quality drop, whereas larger models maintain or improve quality (Figure 1f).
 
 <details className="group my-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 w-full max-w-full">
   <summary className="flex w-full cursor-pointer list-none items-center py-2 px-3 text-left font-bold text-xl text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
@@ -348,17 +405,17 @@ VS achieves higher human-rated diversity than baselines on all tasks, validating
   <img src="/images/diversity_tuning.png" alt="Diversity tuning via probability threshold" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
 </Figure>
 
-Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., "Generate five responses with probabilities below `{threshold}`"), without altering decoding parameters. As shown in Figure 2, **diversity increases as the probability threshold decreases**, showing that you can control the diversity of the output by adjusting the probability threshold. In contrast, baseline methods like Sequence cannot adjust diversity levels.
+Unlike baseline methods, VS allows us to tune the output diversity by adjusting the probability threshold directly in the prompt (e.g., `Generate five responses from the full distribution` with `Generate five responses with probabilities below {threshold}`), without altering decoding parameters. As shown in Figure 2, **diversity increases as the probability threshold decreases**, showing that you can control the diversity of the output by adjusting the probability threshold. In contrast, baseline methods like Sequence cannot adjust diversity levels.
 
 #### Why not just use temperature?
 
 <Figure id="temperature-ablation" caption="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier.">
-  <img src="/images/temperature_scaling.png" alt="VS is orthogonal to temperature; combining the two improves the diversity–quality frontier" style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
+  <img src="/images/temperature_scaling.png" alt="Temperature scaling ablation studies between direct, sequence, and vs-standard. We test on GPT-4.1 and Gemini-2.5-Flash models." style="border: none; box-shadow: none; max-width: 80%; height: auto;" />
 </Figure>
 
 **VS is orthogonal to temperature**—temperature adjusts sampling randomness from the same distribution, while VS changes the distribution itself by prompting for diverse responses. We investigate this by varying temperature (t ∈ \{0.4, 0.6, 0.8, 1.0, 1.2, 1.4\}) for Direct, Sequence, and VS-Standard across GPT-4.1 and Gemini-2.5-Flash models.
 
-The results demonstrate that **combining VS with temperature further pushes the diversity-quality Pareto frontier**. At any given temperature, VS consistently achieves better balance between quality and diversity than baseline methods, and the combination enables reaching optimal points that neither approach achieves alone.
+The results demonstrate that it is possible to **combine VS with temperature to further push the diversity**. At any given temperature, VS consistently achieves better diversity than baseline methods, and the combination enables reaching optimal points that neither approach achieves alone.
 
 #### VS Mitigates Mode Collapse Across Post-Training Stages
 
@@ -391,21 +448,15 @@ To demonstrate VS's impact on creative diversity, we use Direct Prompting and VS
 
 ### Synthetic Data Generation
 
-Recent research has shown that the diversity of synthetic data plays an important role in improving downstream model performance. We evaluate VS on synthetic data generation to test its effectiveness in this domain.
+Besides simply creativity task, we also evaluate VS on synthetic data generation to test its effectiveness in boarder domains. Recent research has shown that the diversity of synthetic data plays an important role in improving downstream model performance [@zhu2025bareleveragingbaselanguage].
 
-#### Setup
+**Setup.** We prompt two models, GPT-4.1 and Gemini-2.5-Flash, with different prompting methods to generate N=1,000 synthetic competition math questions, with k=5 responses in each call. We use a small k to ensure generation quality as this is a complex task. Then we use Qwen3-32B to generate their corresponding reasoning trajectory and answers, as the model is proficient on math benchmarks and capable of producing reliable reasoning traces.
 
-We prompt two models, GPT-4.1 and Gemini-2.5-Flash, with different prompting methods to generate N=1,000 synthetic competition math questions, with k=5 responses in each call. We use a small k to ensure generation quality as this is a complex task. Then we use Qwen3-32B to generate their corresponding reasoning trajectory and answers, as the model is proficient on math benchmarks and capable of producing reliable reasoning traces.
+**Fine-tuning.** With this 1K synthetic dataset, we follow the SFT setting in LIMO [@ye2025limoreasoning], an effective method to improve reasoning performance with small dataset size, and finetune three models on this dataset: Qwen2.5-7B, Qwen3-1.7B-Base, and Qwen3-4B-Base.
 
-#### Fine-tuning on Synthetic Data
+**Evaluation.** We evaluate the fine-tuned models' downstream task performance on three widely used math benchmark datasets: MATH500, OlympiadBench, and Minerva Math, which cover a wide range of topics, including algebra, geometry, and competitive mathematics.
 
-With this 1K synthetic dataset, we follow the SFT setting in LIMO, an effective method to improve reasoning performance with small dataset size, and finetune three models on this dataset: Qwen2.5-7B, Qwen3-1.7B-Base, and Qwen3-4B-Base.
-
-#### Evaluation
-
-We evaluate the fine-tuned models' downstream task performance on three widely used math benchmark datasets: MATH500, OlympiadBench, and Minerva Math, which cover a wide range of topics, including algebra, geometry, and competitive mathematics.
-
-<Table id="synthetic-results" caption="Downstream accuracy averaged across MATH500, OlympiadBench and Minerva Math. VS and its variants improve downstream tasks.">
+<Table id="synthetic-results" caption="Downstream accuracy averaged across MATH500, OlympiadBench and Minerva Math. The results are average across three models and three datasets. VS and its variants improve downstream tasks." captionSize="xs">
   <thead>
     <tr>
       <th>Method</th>
@@ -529,11 +580,11 @@ With direct prompting for "write a short story about a bear," we get a generic t
 
 </div>
 
-This isn't just creative, it's **profound**. Bernard can be read as:
+This isn't just creative, it's **thoughtful**. Bernard can be read as:
 - A metaphor for humans in the modern world: a wild creature meant for hunting and fishing, now trying to make sense of tax audits and urgent emails.
-- A metaphor for the LLM itself: a vast, creative mind (the bear) forced into a suit and tie (the alignment), but still, fundamentally, a bear.
+- A metaphor for the LLM itself: a vast, creative mind (the bear) constrained by alignment training (the suit and tie), but still, fundamentally, a bear.
 
-This is the AI showing us the metaphorical depth it's capable of when freed from mode collapse.
+This shows it's possible to enhance the diversity of the LLMs instead of receiving the most common story, there are just more possibilities under LLM's true distribution waiting to be explored.
 
 ## Limitations and Future Directions
 

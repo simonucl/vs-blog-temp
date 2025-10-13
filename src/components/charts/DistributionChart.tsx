@@ -138,7 +138,7 @@ function DistributionChart({
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend
-            wrapperStyle={{ paddingTop: '4px' }}
+            wrapperStyle={{ paddingTop: '4px', marginBottom: '-20px' }}
             formatter={(value) => {
               if (value === 'pretraining') return 'Reference (RedPajama)';
               if (value === 'direct') return 'Direct Prompting';
