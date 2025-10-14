@@ -1,17 +1,4 @@
 ---
-import PostDetails from "@/layouts/PostDetails.astro";
-import { getCollection } from 'astro:content';
-import getSortedPosts from "@/utils/getSortedPosts";
-
-// Get the MDX content
-const blogPosts = await getCollection('blog');
-const post = blogPosts.find(p => p.id === 'verbalized-sampling');
-
-if (!post) {
-  return Astro.redirect('/404');
-}
-
-const sortedPosts = getSortedPosts(blogPosts);
+// Redirect to Notion site
+return Astro.redirect('https://simonucl.notion.site/verbalized-sampling', 302);
 ---
-
-<PostDetails post={post} posts={sortedPosts} />
